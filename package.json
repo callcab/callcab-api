@@ -1,0 +1,25 @@
+{
+  "name": "callcab-api",
+  "version": "1.0.0",
+  "description": "High Mountain Taxi AI Dispatcher API Tools",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:dev": "npm run build && wrangler deploy --env dev",
+    "deploy:prod": "npm run build && wrangler deploy --env production",
+    "build": "cd src/data/locations && node combine.js",
+    "test": "bash tests/test-suite.sh",
+    "tail": "wrangler tail --env production",
+    "tail:dev": "wrangler tail --env dev"
+  },
+  "keywords": ["taxi", "dispatcher", "cloudflare", "workers"],
+  "author": "High Mountain Taxi",
+  "license": "PROPRIETARY",
+  "devDependencies": {
+    "wrangler": "^3.78.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

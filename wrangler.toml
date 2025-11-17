@@ -1,0 +1,27 @@
+name = "callcab-api"
+main = "src/index.js"
+compatibility_date = "2024-01-15"
+node_compat = true
+
+# Production environment
+[env.production]
+name = "callcab-api"
+routes = [
+  { pattern = "api.callcab.ai/*", zone_name = "callcab.ai" }
+]
+
+# Development environment
+[env.dev]
+name = "callcab-api-dev"
+
+# Environment variables (non-secret)
+[vars]
+ENVIRONMENT = "production"
+LOCAL_TZ = "America/Denver"
+
+# Secrets are set via: wrangler secret put SECRET_NAME
+# Required secrets:
+# - GOOGLE_MAPS_API_KEY
+# - ICABBI_APP_KEY
+# - ICABBI_SECRET
+# - ICABBI_BASE_URL
