@@ -1,0 +1,9 @@
+{
+  "town": "el-jebel",
+  "town_display": "El Jebel",
+  "coordinates": {"lat": 39.3925, "lng": -107.1108},
+  "radius_miles": 3,
+  "locations": [
+    {"id": "el-jebel-station", "canonical_name": "El Jebel Park and Ride", "phonetic_variants": ["el jebel station", "el jebel park and ride", "park and ride"], "common_misspellings": ["eljebel"], "address": "0020 Hooks Spur Rd, El Jebel, CO 81623", "coordinates": {"lat": 39.3920, "lng": -107.1110}, "category": "transportation", "subcategory": "park_and_ride", "search_keywords": ["park and ride", "bus", "transportation"], "local_context": {"description": "Major park and ride facility for RFTA buses", "landmarks_nearby": ["Highway 82"], "good_for": ["bus connections", "commuting", "parking"], "atmosphere": "transportation hub", "parking": "free parking lot"}, "restrictions": {"allows_pickup": true, "allows_dropoff": true, "no_cell_signal": false, "prebooking_restricted": false, "requires_radio_dispatch": false}, "claire_knows": {"greeting_phrase": "El Jebel Park and Ride", "confirmation_phrase": "taking you to the park and ride", "destination_context": "Main bus station"}}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "town": "silt",
+  "town_display": "Silt",
+  "coordinates": {"lat": 39.5486, "lng": -107.6556},
+  "radius_miles": 3,
+  "locations": [
+    {"id": "silt-exit", "canonical_name": "Silt I-70 Exit", "phonetic_variants": ["silt exit", "silt", "silt interchange"], "common_misspellings": ["silt"], "address": "I-70 Exit 97, Silt, CO 81652", "coordinates": {"lat": 39.5488, "lng": -107.6560}, "category": "transportation", "subcategory": "highway_exit", "search_keywords": ["exit", "highway", "i-70"], "local_context": {"description": "I-70 exit with services", "landmarks_nearby": ["I-70", "Highway 6"], "good_for": ["highway access", "services"], "atmosphere": "highway exit", "parking": "various businesses"}, "restrictions": {"allows_pickup": true, "allows_dropoff": true, "no_cell_signal": false, "prebooking_restricted": false, "requires_radio_dispatch": false}, "claire_knows": {"greeting_phrase": "Silt exit", "confirmation_phrase": "taking you to Silt", "destination_context": "Off I-70"}}
+  ]
+}

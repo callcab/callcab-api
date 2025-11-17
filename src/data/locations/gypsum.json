@@ -1,0 +1,9 @@
+{
+  "town": "gypsum",
+  "town_display": "Gypsum",
+  "coordinates": {"lat": 39.6483, "lng": -106.9536},
+  "radius_miles": 3,
+  "locations": [
+    {"id": "gypsum-rec-center", "canonical_name": "Gypsum Recreation Center", "phonetic_variants": ["gypsum rec", "rec center", "gypsum recreation"], "common_misspellings": ["gypsom"], "address": "52 Lundgren Blvd, Gypsum, CO 81637", "coordinates": {"lat": 39.6485, "lng": -106.9540}, "category": "recreation", "subcategory": "recreation_center", "search_keywords": ["recreation", "gym", "pool", "fitness"], "local_context": {"description": "Community recreation center", "landmarks_nearby": ["downtown Gypsum"], "good_for": ["fitness", "swimming", "recreation"], "atmosphere": "community center", "parking": "parking lot"}, "restrictions": {"allows_pickup": true, "allows_dropoff": true, "no_cell_signal": false, "prebooking_restricted": false, "requires_radio_dispatch": false}, "claire_knows": {"greeting_phrase": "Gypsum Rec Center", "confirmation_phrase": "taking you to the rec center", "destination_context": "In Gypsum"}}
+  ]
+}

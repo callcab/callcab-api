@@ -1,0 +1,319 @@
+{
+  "town": "snowmass",
+  "town_display": "Snowmass Village",
+  "coordinates": {"lat": 39.2131, "lng": -106.9378},
+  "radius_miles": 5,
+  "locations": [
+    {
+      "id": "limelight-snowmass",
+      "canonical_name": "Limelight Hotel Snowmass",
+      "phonetic_variants": ["limelight", "limelight snowmass", "lime light"],
+      "common_misspellings": ["lime light"],
+      "address": "65 Wood Rd, Snowmass Village, CO 81615",
+      "coordinates": {"lat": 39.2129, "lng": -106.9381},
+      "category": "hotel",
+      "subcategory": "boutique_hotel",
+      "price_level": 3,
+      "search_keywords": ["hotel", "boutique", "ski-in", "base village"],
+      "local_context": {
+        "description": "Modern boutique hotel at Snowmass Base Village",
+        "landmarks_nearby": ["Snowmass Base Village", "Elk Camp Gondola"],
+        "good_for": ["ski-in/ski-out", "families", "contemporary style"],
+        "atmosphere": "modern, welcoming",
+        "parking": "on-site parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Limelight Snowmass",
+        "confirmation_phrase": "taking you to the Limelight",
+        "destination_context": "Right at the base village"
+      }
+    },
+    {
+      "id": "viceroy-snowmass",
+      "canonical_name": "Viceroy Snowmass",
+      "phonetic_variants": ["viceroy", "viceroy snowmass", "vice roy"],
+      "common_misspellings": ["vice roy", "vicroy"],
+      "address": "130 Wood Rd, Snowmass Village, CO 81615",
+      "coordinates": {"lat": 39.2135, "lng": -106.9375},
+      "category": "hotel",
+      "subcategory": "luxury_hotel",
+      "price_level": 4,
+      "search_keywords": ["hotel", "luxury", "resort", "spa"],
+      "local_context": {
+        "description": "Luxury resort with ski-in/ski-out access",
+        "landmarks_nearby": ["Snowmass Base Village", "Elk Camp"],
+        "good_for": ["luxury", "spa", "ski access", "fine dining"],
+        "atmosphere": "modern luxury",
+        "parking": "valet parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Viceroy Snowmass",
+        "confirmation_phrase": "taking you to the Viceroy",
+        "destination_context": "Beautiful luxury property"
+      }
+    },
+    {
+      "id": "westin-snowmass",
+      "canonical_name": "The Westin Snowmass Resort",
+      "phonetic_variants": ["westin", "westin snowmass", "westinn"],
+      "common_misspellings": ["westinn"],
+      "address": "100 Elbert Ln, Snowmass Village, CO 81615",
+      "coordinates": {"lat": 39.2115, "lng": -106.9395},
+      "category": "hotel",
+      "subcategory": "resort_hotel",
+      "price_level": 3,
+      "search_keywords": ["hotel", "resort", "ski-in", "family"],
+      "local_context": {
+        "description": "Large resort hotel with ski-in/ski-out",
+        "landmarks_nearby": ["Snowmass Mall", "Elk Camp"],
+        "good_for": ["families", "ski access", "full service"],
+        "atmosphere": "full-service resort",
+        "parking": "on-site parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "The Westin",
+        "confirmation_phrase": "taking you to the Westin",
+        "destination_context": "Big resort hotel"
+      }
+    },
+    {
+      "id": "venga-venga",
+      "canonical_name": "Venga Venga",
+      "phonetic_variants": ["venga venga", "vengavenga"],
+      "common_misspellings": ["vengavenga"],
+      "address": "105 Kearns Rd, Snowmass Village, CO 81615",
+      "coordinates": {"lat": 39.2108, "lng": -106.9402},
+      "category": "restaurant",
+      "subcategory": "mexican_modern",
+      "price_level": 2,
+      "search_keywords": ["mexican", "cantina", "margaritas", "casual"],
+      "local_context": {
+        "description": "Modern Mexican cantina with creative cocktails",
+        "landmarks_nearby": ["Snowmass Mall"],
+        "good_for": ["Mexican food", "margaritas", "après ski"],
+        "atmosphere": "lively, fun",
+        "reservations": "recommended",
+        "parking": "mall parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Venga Venga - great margaritas",
+        "confirmation_phrase": "taking you to Venga Venga",
+        "destination_context": "In the Snowmass Mall"
+      }
+    },
+    {
+      "id": "il-poggio",
+      "canonical_name": "Il Poggio",
+      "phonetic_variants": ["il poggio", "poggio", "il pogio"],
+      "common_misspellings": ["il pogio", "ilpoggio"],
+      "address": "73 Elbert Ln, Snowmass Village, CO 81615",
+      "coordinates": {"lat": 39.2118, "lng": -106.9390},
+      "category": "restaurant",
+      "subcategory": "italian",
+      "price_level": 3,
+      "search_keywords": ["italian", "upscale", "pasta", "wine"],
+      "local_context": {
+        "description": "Upscale Italian restaurant",
+        "landmarks_nearby": ["Snowmass Mall"],
+        "good_for": ["Italian cuisine", "special occasions", "wine"],
+        "atmosphere": "elegant Italian",
+        "reservations": "required",
+        "parking": "mall parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Il Poggio",
+        "confirmation_phrase": "taking you to Il Poggio",
+        "destination_context": "Nice Italian restaurant"
+      }
+    },
+    {
+      "id": "slice-snowmass",
+      "canonical_name": "Slice",
+      "phonetic_variants": ["slice", "slice snowmass"],
+      "common_misspellings": ["slyce"],
+      "address": "Base Village, Snowmass Village, CO 81615",
+      "coordinates": {"lat": 39.2130, "lng": -106.9380},
+      "category": "restaurant",
+      "subcategory": "pizza",
+      "price_level": 1,
+      "search_keywords": ["pizza", "casual", "quick", "slices"],
+      "local_context": {
+        "description": "Pizza by the slice and pies",
+        "landmarks_nearby": ["Base Village"],
+        "good_for": ["pizza", "quick meal", "casual"],
+        "atmosphere": "casual, quick service",
+        "reservations": "not needed",
+        "parking": "base village parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Slice",
+        "confirmation_phrase": "taking you to Slice",
+        "destination_context": "Quick pizza spot"
+      }
+    },
+    {
+      "id": "the-stew-pot",
+      "canonical_name": "The Stew Pot",
+      "phonetic_variants": ["stew pot", "stewpot", "the stew pot"],
+      "common_misspellings": ["stewpot"],
+      "address": "Snowmass Mall, Snowmass Village, CO 81615",
+      "coordinates": {"lat": 39.2110, "lng": -106.9400},
+      "category": "restaurant",
+      "subcategory": "soup_casual",
+      "price_level": 1,
+      "search_keywords": ["soup", "casual", "lunch", "quick"],
+      "local_context": {
+        "description": "Casual soup and sandwich spot",
+        "landmarks_nearby": ["Snowmass Mall"],
+        "good_for": ["soup", "sandwiches", "quick lunch"],
+        "atmosphere": "casual, counter service",
+        "reservations": "not needed",
+        "parking": "mall parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "The Stew Pot",
+        "confirmation_phrase": "taking you to the Stew Pot",
+        "destination_context": "In the mall, good soups"
+      }
+    },
+    {
+      "id": "snowmass-base-village",
+      "canonical_name": "Snowmass Base Village",
+      "phonetic_variants": ["base village", "snowmass base", "base village snowmass"],
+      "common_misspellings": ["snowmas base"],
+      "address": "Snowmass Base Village, Snowmass Village, CO 81615",
+      "coordinates": {"lat": 39.2130, "lng": -106.9380},
+      "category": "transportation",
+      "subcategory": "village_center",
+      "search_keywords": ["base village", "shopping", "dining", "gondola"],
+      "local_context": {
+        "description": "Main village area with shops, restaurants, and gondola",
+        "landmarks_nearby": ["Elk Camp Gondola"],
+        "good_for": ["shopping", "dining", "ski access"],
+        "atmosphere": "modern pedestrian village",
+        "parking": "parking structures"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Snowmass Base Village",
+        "confirmation_phrase": "taking you to Base Village",
+        "destination_context": "Main village area"
+      }
+    },
+    {
+      "id": "elk-camp",
+      "canonical_name": "Elk Camp",
+      "phonetic_variants": ["elk camp", "elkcamp"],
+      "common_misspellings": ["elkcamp"],
+      "address": "Snowmass Mountain, Snowmass Village, CO 81615",
+      "coordinates": {"lat": 39.2250, "lng": -106.9450},
+      "category": "ski_area",
+      "subcategory": "mountain_lodge",
+      "search_keywords": ["skiing", "lodge", "mountain", "gondola"],
+      "local_context": {
+        "description": "Mid-mountain area with lodge and dining",
+        "landmarks_nearby": ["Elk Camp Gondola", "Snowmass Mountain"],
+        "good_for": ["skiing", "lunch", "mountain views"],
+        "atmosphere": "mountain lodge",
+        "season": "Winter ski season"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Elk Camp",
+        "confirmation_phrase": "taking you to Elk Camp",
+        "destination_context": "Mid-mountain lodge"
+      }
+    },
+    {
+      "id": "sams-knob",
+      "canonical_name": "Sam's Knob",
+      "phonetic_variants": ["sams knob", "sam's knob", "sams"],
+      "common_misspellings": ["sams nob"],
+      "address": "Snowmass Mountain, Snowmass Village, CO 81615",
+      "coordinates": {"lat": 39.2000, "lng": -106.9600},
+      "category": "ski_area",
+      "subcategory": "mountain_area",
+      "search_keywords": ["skiing", "terrain", "mountain"],
+      "local_context": {
+        "description": "Advanced terrain area on Snowmass",
+        "landmarks_nearby": ["Snowmass Mountain"],
+        "good_for": ["expert skiing", "challenging terrain"],
+        "atmosphere": "challenging ski terrain",
+        "season": "Winter ski season"
+      },
+      "restrictions": {
+        "allows_pickup": false,
+        "allows_dropoff": false,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Sam's Knob area",
+        "confirmation_phrase": "taking you to Snowmass",
+        "destination_context": "Great advanced terrain"
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "town": "edwards",
+  "town_display": "Edwards",
+  "coordinates": {"lat": 39.6447, "lng": -106.5931},
+  "radius_miles": 3,
+  "locations": [
+    {"id": "riverwalk-edwards", "canonical_name": "Riverwalk at Edwards", "phonetic_variants": ["riverwalk", "riverwalk edwards", "river walk"], "common_misspellings": ["river walk"], "address": "210 Main St, Edwards, CO 81632", "coordinates": {"lat": 39.6450, "lng": -106.5935}, "category": "shopping", "subcategory": "outdoor_mall", "search_keywords": ["shopping", "restaurants", "outdoor mall"], "local_context": {"description": "Outdoor shopping and dining center", "landmarks_nearby": ["Highway 6", "Edwards"], "good_for": ["shopping", "dining", "walking"], "atmosphere": "outdoor lifestyle center", "parking": "ample parking"}, "restrictions": {"allows_pickup": true, "allows_dropoff": true, "no_cell_signal": false, "prebooking_restricted": false, "requires_radio_dispatch": false}, "claire_knows": {"greeting_phrase": "Riverwalk", "confirmation_phrase": "taking you to Riverwalk", "destination_context": "Shopping center in Edwards"}}
+  ]
+}

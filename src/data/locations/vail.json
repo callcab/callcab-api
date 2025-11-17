@@ -1,0 +1,741 @@
+{
+  "town": "vail",
+  "town_display": "Vail",
+  "coordinates": {"lat": 39.6403, "lng": -106.3742},
+  "radius_miles": 8,
+  "locations": [
+    {
+      "id": "matsuhisa-vail",
+      "canonical_name": "Matsuhisa Vail",
+      "phonetic_variants": [
+        "matsu hisa",
+        "matsuhisha",
+        "matsuhisha vail",
+        "nobu vail"
+      ],
+      "common_misspellings": [
+        "matsuhisha",
+        "matshuhisa"
+      ],
+      "address": "141 E Meadow Dr, Vail, CO 81657",
+      "coordinates": {"lat": 39.6432, "lng": -106.3725},
+      "category": "restaurant",
+      "subcategory": "japanese_fine_dining",
+      "price_level": 4,
+      "search_keywords": ["sushi", "japanese", "fine dining", "nobu"],
+      "confusion_matrix": [
+        {
+          "confused_with": "matsuhisa-aspen",
+          "reason": "Same restaurant chain, different town",
+          "disambiguation": "The Vail location is in Solaris, Aspen's is on Main Street"
+        }
+      ],
+      "local_context": {
+        "description": "Nobu Matsuhisa's Vail outpost in Solaris",
+        "landmarks_nearby": ["Solaris", "Vail Village"],
+        "good_for": ["sushi", "fine dining", "special occasions"],
+        "atmosphere": "elegant, upscale",
+        "famous_for": "Celebrity chef Nobu's cuisine",
+        "reservations": "required",
+        "parking": "Solaris parking structure"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Matsuhisa in Vail",
+        "confirmation_phrase": "taking you to Matsuhisa",
+        "destination_context": "In Solaris"
+      }
+    },
+    {
+      "id": "sweet-basil-vail",
+      "canonical_name": "Sweet Basil",
+      "phonetic_variants": [
+        "sweet basil",
+        "sweetbasil"
+      ],
+      "common_misspellings": [
+        "sweetbasil"
+      ],
+      "address": "193 E Gore Creek Dr, Vail, CO 81657",
+      "coordinates": {"lat": 39.6425, "lng": -106.3750},
+      "category": "restaurant",
+      "subcategory": "contemporary_american",
+      "price_level": 3,
+      "search_keywords": ["contemporary", "american", "upscale"],
+      "confusion_matrix": [
+        {
+          "confused_with": "sweet-basil",
+          "reason": "Same restaurant name in Aspen",
+          "disambiguation": "Vail's Sweet Basil is in Vail Village, Aspen's is on Main Street"
+        }
+      ],
+      "local_context": {
+        "description": "Contemporary American cuisine in Vail Village",
+        "landmarks_nearby": ["Vail Village", "Gore Creek"],
+        "good_for": ["upscale dining", "seasonal menus"],
+        "atmosphere": "sophisticated casual",
+        "reservations": "recommended",
+        "parking": "Vail Village parking structures"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Sweet Basil in Vail",
+        "confirmation_phrase": "taking you to Sweet Basil",
+        "destination_context": "In the heart of Vail Village"
+      }
+    },
+    {
+      "id": "mountain-standard-vail",
+      "canonical_name": "Mountain Standard",
+      "phonetic_variants": [
+        "mountain standard",
+        "mtn standard"
+      ],
+      "common_misspellings": [
+        "mtn standard"
+      ],
+      "address": "193 E Gore Creek Dr, Vail, CO 81657",
+      "coordinates": {"lat": 39.6425, "lng": -106.3749},
+      "category": "restaurant",
+      "subcategory": "american_modern",
+      "price_level": 3,
+      "search_keywords": ["american", "modern", "upscale casual"],
+      "local_context": {
+        "description": "Modern American restaurant with mountain flair",
+        "landmarks_nearby": ["Vail Village", "Gore Creek"],
+        "good_for": ["upscale casual", "après ski", "American cuisine"],
+        "atmosphere": "modern, lively",
+        "reservations": "recommended",
+        "parking": "Vail Village parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Mountain Standard",
+        "confirmation_phrase": "taking you to Mountain Standard",
+        "destination_context": "In Vail Village"
+      }
+    },
+    {
+      "id": "vendettas-vail",
+      "canonical_name": "Vendetta's Italian Restaurant",
+      "phonetic_variants": [
+        "vendettas",
+        "vendetta's",
+        "vendetas"
+      ],
+      "common_misspellings": [
+        "vendetas",
+        "vendettas"
+      ],
+      "address": "291 Bridge St, Vail, CO 81657",
+      "coordinates": {"lat": 39.6405, "lng": -106.3721},
+      "category": "restaurant",
+      "subcategory": "italian",
+      "price_level": 3,
+      "search_keywords": ["italian", "pasta", "upscale"],
+      "local_context": {
+        "description": "Upscale Italian restaurant in Vail Village",
+        "landmarks_nearby": ["Bridge Street", "Vail Village"],
+        "good_for": ["Italian cuisine", "pasta", "wine"],
+        "atmosphere": "elegant Italian",
+        "reservations": "required",
+        "parking": "Vail Village parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Vendetta's",
+        "confirmation_phrase": "taking you to Vendetta's",
+        "destination_context": "On Bridge Street"
+      }
+    },
+    {
+      "id": "four-seasons-vail",
+      "canonical_name": "Four Seasons Resort Vail",
+      "phonetic_variants": [
+        "four seasons",
+        "four seasons vail",
+        "4 seasons"
+      ],
+      "common_misspellings": [
+        "4 seasons"
+      ],
+      "address": "1 Vail Rd, Vail, CO 81657",
+      "coordinates": {"lat": 39.6429, "lng": -106.3735},
+      "category": "hotel",
+      "subcategory": "luxury_hotel",
+      "price_level": 4,
+      "search_keywords": ["hotel", "luxury", "five star", "resort"],
+      "local_context": {
+        "description": "Five-star luxury resort in Vail Village",
+        "landmarks_nearby": ["Vail Village", "Gondola One"],
+        "good_for": ["luxury accommodations", "spa", "fine dining"],
+        "atmosphere": "ultimate luxury",
+        "famous_for": "Forbes Five-Star rated",
+        "parking": "valet parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Four Seasons - beautiful property",
+        "confirmation_phrase": "taking you to the Four Seasons",
+        "destination_context": "In Vail Village"
+      }
+    },
+    {
+      "id": "arrabelle-vail",
+      "canonical_name": "The Arrabelle at Vail Square",
+      "phonetic_variants": [
+        "arrabelle",
+        "arabelle",
+        "arrabelle vail"
+      ],
+      "common_misspellings": [
+        "arabelle",
+        "arabella"
+      ],
+      "address": "675 Lionshead Pl, Vail, CO 81657",
+      "coordinates": {"lat": 39.6390, "lng": -106.3682},
+      "category": "hotel",
+      "subcategory": "luxury_hotel",
+      "price_level": 4,
+      "search_keywords": ["hotel", "luxury", "lionshead", "resort"],
+      "local_context": {
+        "description": "Luxury hotel in Lionshead Village",
+        "landmarks_nearby": ["Lionshead", "Gondola"],
+        "good_for": ["luxury accommodations", "ski-in/ski-out", "spa"],
+        "atmosphere": "European alpine luxury",
+        "parking": "valet parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "The Arrabelle",
+        "confirmation_phrase": "taking you to the Arrabelle",
+        "destination_context": "In Lionshead"
+      }
+    },
+    {
+      "id": "sonnenalp-vail",
+      "canonical_name": "Sonnenalp Hotel",
+      "phonetic_variants": [
+        "sonnenalp",
+        "sonenalp",
+        "sonnenalp vail"
+      ],
+      "common_misspellings": [
+        "sonenalp",
+        "sonnenalph"
+      ],
+      "address": "20 Vail Rd, Vail, CO 81657",
+      "coordinates": {"lat": 39.6427, "lng": -106.3733},
+      "category": "hotel",
+      "subcategory": "luxury_hotel",
+      "price_level": 4,
+      "search_keywords": ["hotel", "luxury", "european", "bavarian"],
+      "local_context": {
+        "description": "Bavarian-style luxury hotel in Vail Village",
+        "landmarks_nearby": ["Vail Village", "Gore Creek"],
+        "good_for": ["luxury accommodations", "European atmosphere", "spa"],
+        "atmosphere": "Bavarian elegance",
+        "famous_for": "European-style hospitality",
+        "parking": "valet parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Sonnenalp",
+        "confirmation_phrase": "taking you to the Sonnenalp",
+        "destination_context": "The Bavarian hotel in Vail Village"
+      }
+    },
+    {
+      "id": "sebastian-vail",
+      "canonical_name": "The Sebastian Vail",
+      "phonetic_variants": [
+        "sebastian",
+        "the sebastian",
+        "sebastian vail"
+      ],
+      "common_misspellings": [
+        "sebastion"
+      ],
+      "address": "16 Vail Rd, Vail, CO 81657",
+      "coordinates": {"lat": 39.6428, "lng": -106.3734},
+      "category": "hotel",
+      "subcategory": "luxury_hotel",
+      "price_level": 4,
+      "search_keywords": ["hotel", "luxury", "boutique", "contemporary"],
+      "local_context": {
+        "description": "Contemporary luxury hotel in Vail Village",
+        "landmarks_nearby": ["Vail Village", "Gore Creek"],
+        "good_for": ["luxury accommodations", "modern style", "central location"],
+        "atmosphere": "modern mountain luxury",
+        "parking": "valet parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "The Sebastian",
+        "confirmation_phrase": "taking you to the Sebastian",
+        "destination_context": "In Vail Village"
+      }
+    },
+    {
+      "id": "vail-mountain",
+      "canonical_name": "Vail Mountain",
+      "phonetic_variants": [
+        "vail mountain",
+        "vail ski",
+        "vail resort"
+      ],
+      "common_misspellings": [
+        "vale mountain"
+      ],
+      "address": "Vail, CO 81657",
+      "coordinates": {"lat": 39.6403, "lng": -106.3742},
+      "category": "ski_area",
+      "subcategory": "ski_resort",
+      "search_keywords": ["skiing", "ski", "mountain", "resort"],
+      "local_context": {
+        "description": "One of the largest ski resorts in North America",
+        "landmarks_nearby": ["Vail Village", "Lionshead"],
+        "good_for": ["skiing", "snowboarding", "back bowls"],
+        "atmosphere": "world-class skiing",
+        "famous_for": "Over 5,000 acres, legendary back bowls",
+        "season": "Winter ski season"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Vail Mountain - have a great ski day",
+        "confirmation_phrase": "taking you to Vail",
+        "destination_context": "World-class skiing"
+      }
+    },
+    {
+      "id": "vail-village",
+      "canonical_name": "Vail Village",
+      "phonetic_variants": [
+        "vail village",
+        "village",
+        "vail center"
+      ],
+      "common_misspellings": [
+        "vale village"
+      ],
+      "address": "Vail Village, Vail, CO 81657",
+      "coordinates": {"lat": 39.6425, "lng": -106.3745},
+      "category": "transportation",
+      "subcategory": "village_center",
+      "search_keywords": ["village", "downtown", "center", "shopping"],
+      "local_context": {
+        "description": "Main village area with shops, restaurants, and gondola",
+        "landmarks_nearby": ["Gondola One", "Gore Creek"],
+        "good_for": ["shopping", "dining", "skiing", "walking"],
+        "atmosphere": "pedestrian village, European alpine",
+        "parking": "parking structures"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Vail Village",
+        "confirmation_phrase": "taking you to Vail Village",
+        "destination_context": "The heart of Vail"
+      }
+    },
+    {
+      "id": "lionshead-village",
+      "canonical_name": "Lionshead Village",
+      "phonetic_variants": [
+        "lionshead",
+        "lions head",
+        "lionshead village"
+      ],
+      "common_misspellings": [
+        "lions head",
+        "lionhead"
+      ],
+      "address": "Lionshead, Vail, CO 81657",
+      "coordinates": {"lat": 39.6390, "lng": -106.3682},
+      "category": "transportation",
+      "subcategory": "village_center",
+      "search_keywords": ["lionshead", "village", "gondola", "shopping"],
+      "local_context": {
+        "description": "West end village area with gondola access",
+        "landmarks_nearby": ["Eagle Bahn Gondola", "Arrabelle"],
+        "good_for": ["skiing", "shopping", "dining", "lodging"],
+        "atmosphere": "modern village area",
+        "parking": "parking structures"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Lionshead",
+        "confirmation_phrase": "taking you to Lionshead",
+        "destination_context": "West end of Vail"
+      }
+    },
+    {
+      "id": "game-creek-restaurant",
+      "canonical_name": "Game Creek Restaurant",
+      "phonetic_variants": [
+        "game creek",
+        "game creek restaurant",
+        "gamecreek"
+      ],
+      "common_misspellings": [
+        "gamecreek"
+      ],
+      "address": "Accessible via gondola, Vail, CO 81657",
+      "coordinates": {"lat": 39.6458, "lng": -106.3589},
+      "category": "restaurant",
+      "subcategory": "mountain_dining",
+      "price_level": 4,
+      "search_keywords": ["fine dining", "mountain", "romantic", "gondola"],
+      "local_context": {
+        "description": "Fine dining restaurant accessible by snowcat or gondola",
+        "landmarks_nearby": ["Game Creek Bowl", "Vail Mountain"],
+        "good_for": ["special occasions", "romantic dinners", "adventure dining"],
+        "atmosphere": "mountain elegance, exclusive",
+        "famous_for": "Snowcat rides to dinner, mountain-top dining",
+        "reservations": "required",
+        "season": "Winter season"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Game Creek - what an experience",
+        "confirmation_phrase": "taking you to Game Creek",
+        "destination_context": "They'll take you up the mountain"
+      }
+    },
+    {
+      "id": "elways-vail",
+      "canonical_name": "Elway's",
+      "full_name": "Elway's Vail",
+      "phonetic_variants": [
+        "elways",
+        "elway's",
+        "elway's vail"
+      ],
+      "common_misspellings": [
+        "elways"
+      ],
+      "address": "100 E Meadow Dr, Vail, CO 81657",
+      "coordinates": {"lat": 39.6434, "lng": -106.3728},
+      "category": "restaurant",
+      "subcategory": "steakhouse",
+      "price_level": 4,
+      "search_keywords": ["steakhouse", "steak", "fine dining"],
+      "local_context": {
+        "description": "John Elway's upscale steakhouse",
+        "landmarks_nearby": ["Solaris", "Vail Village"],
+        "good_for": ["steaks", "special occasions", "business dinners"],
+        "atmosphere": "upscale steakhouse",
+        "famous_for": "John Elway's restaurant, prime beef",
+        "reservations": "required",
+        "parking": "Solaris parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Elway's",
+        "confirmation_phrase": "taking you to Elway's",
+        "destination_context": "In Solaris"
+      }
+    },
+    {
+      "id": "the-little-diner",
+      "canonical_name": "The Little Diner",
+      "phonetic_variants": [
+        "little diner",
+        "the little diner"
+      ],
+      "common_misspellings": [
+        "littlediner"
+      ],
+      "address": "616 W Lionshead Cir, Vail, CO 81657",
+      "coordinates": {"lat": 39.6385, "lng": -106.3698},
+      "category": "restaurant",
+      "subcategory": "breakfast_diner",
+      "price_level": 1,
+      "search_keywords": ["breakfast", "diner", "casual", "pancakes"],
+      "local_context": {
+        "description": "Classic breakfast diner, Vail institution",
+        "landmarks_nearby": ["Lionshead", "west Vail"],
+        "good_for": ["breakfast", "pancakes", "casual", "affordable"],
+        "atmosphere": "classic diner, local favorite",
+        "famous_for": "Best breakfast in Vail, huge pancakes",
+        "reservations": "not needed",
+        "parking": "street parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "The Little Diner - great breakfast",
+        "confirmation_phrase": "taking you to the Little Diner",
+        "destination_context": "Best pancakes in Vail"
+      }
+    },
+    {
+      "id": "blue-moose-pizza",
+      "canonical_name": "Blue Moose Pizza",
+      "phonetic_variants": [
+        "blue moose",
+        "blue moose pizza",
+        "bluemoose"
+      ],
+      "common_misspellings": [
+        "bluemoose"
+      ],
+      "address": "294 Bridge St, Vail, CO 81657",
+      "coordinates": {"lat": 39.6404, "lng": -106.3720},
+      "category": "restaurant",
+      "subcategory": "pizza",
+      "price_level": 2,
+      "search_keywords": ["pizza", "casual", "family"],
+      "local_context": {
+        "description": "Casual pizza spot in Vail Village",
+        "landmarks_nearby": ["Bridge Street", "Vail Village"],
+        "good_for": ["pizza", "casual dining", "families"],
+        "atmosphere": "casual, family-friendly",
+        "reservations": "not needed",
+        "parking": "Vail Village parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Blue Moose Pizza",
+        "confirmation_phrase": "taking you to Blue Moose",
+        "destination_context": "In Vail Village"
+      }
+    },
+    {
+      "id": "root-and-flower",
+      "canonical_name": "Root & Flower",
+      "phonetic_variants": [
+        "root and flower",
+        "root & flower",
+        "root n flower"
+      ],
+      "common_misspellings": [
+        "root and flower"
+      ],
+      "address": "141 E Meadow Dr, Vail, CO 81657",
+      "coordinates": {"lat": 39.6432, "lng": -106.3726},
+      "category": "restaurant",
+      "subcategory": "healthy_casual",
+      "price_level": 2,
+      "search_keywords": ["healthy", "organic", "bowls", "juice"],
+      "local_context": {
+        "description": "Healthy organic café with bowls and juices",
+        "landmarks_nearby": ["Solaris", "Vail Village"],
+        "good_for": ["healthy food", "bowls", "smoothies", "lunch"],
+        "atmosphere": "casual, health-focused",
+        "reservations": "not needed",
+        "parking": "Solaris parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Root & Flower",
+        "confirmation_phrase": "taking you to Root & Flower",
+        "destination_context": "In Solaris, healthy options"
+      }
+    },
+    {
+      "id": "la-tour-vail",
+      "canonical_name": "La Tour",
+      "phonetic_variants": [
+        "la tour",
+        "latour"
+      ],
+      "common_misspellings": [
+        "latour"
+      ],
+      "address": "122 E Meadow Dr, Vail, CO 81657",
+      "coordinates": {"lat": 39.6433, "lng": -106.3729},
+      "category": "restaurant",
+      "subcategory": "french",
+      "price_level": 4,
+      "search_keywords": ["french", "fine dining", "romantic"],
+      "local_context": {
+        "description": "Classic French fine dining",
+        "landmarks_nearby": ["Solaris", "Vail Village"],
+        "good_for": ["French cuisine", "special occasions", "romantic"],
+        "atmosphere": "elegant French",
+        "reservations": "required",
+        "parking": "Solaris parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "La Tour",
+        "confirmation_phrase": "taking you to La Tour",
+        "destination_context": "Classic French dining"
+      }
+    },
+    {
+      "id": "tavern-on-the-gore",
+      "canonical_name": "Tavern on the Gore",
+      "phonetic_variants": [
+        "tavern on the gore",
+        "gore tavern"
+      ],
+      "common_misspellings": [
+        "taven on the gore"
+      ],
+      "address": "352 E Meadow Dr, Vail, CO 81657",
+      "coordinates": {"lat": 39.6428, "lng": -106.3708},
+      "category": "restaurant",
+      "subcategory": "tavern",
+      "price_level": 2,
+      "search_keywords": ["tavern", "pub", "casual", "american"],
+      "local_context": {
+        "description": "Casual tavern with American fare",
+        "landmarks_nearby": ["Vail Village", "East Meadow"],
+        "good_for": ["pub food", "casual dining", "après ski"],
+        "atmosphere": "casual tavern",
+        "reservations": "not needed",
+        "parking": "nearby parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Tavern on the Gore",
+        "confirmation_phrase": "taking you to the Tavern",
+        "destination_context": "Casual spot in Vail"
+      }
+    },
+    {
+      "id": "city-market-vail",
+      "canonical_name": "City Market",
+      "phonetic_variants": [
+        "city market",
+        "citymarket"
+      ],
+      "common_misspellings": [
+        "citymarket"
+      ],
+      "address": "2109 N Frontage Rd W, Vail, CO 81657",
+      "coordinates": {"lat": 39.6452, "lng": -106.3590},
+      "category": "shopping",
+      "subcategory": "grocery",
+      "price_level": 2,
+      "search_keywords": ["grocery", "market", "shopping"],
+      "local_context": {
+        "description": "Major grocery store chain",
+        "landmarks_nearby": ["North Frontage Road", "west Vail"],
+        "good_for": ["groceries", "shopping", "pharmacy"],
+        "atmosphere": "standard supermarket",
+        "parking": "large parking lot"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "City Market",
+        "confirmation_phrase": "taking you to City Market",
+        "destination_context": "Out in west Vail"
+      }
+    }
+  ]
+}

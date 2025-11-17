@@ -1,7 +1,7 @@
 name = "callcab-api"
 main = "src/index.js"
 compatibility_date = "2024-01-15"
-node_compat = true
+compatibility_flags = ["nodejs_compat"]
 
 # Production environment
 [env.production]

@@ -1,0 +1,2118 @@
+{
+  "town": "aspen",
+  "town_display": "Aspen",
+  "coordinates": {"lat": 39.1911, "lng": -106.8175},
+  "radius_miles": 10,
+  "locations": [
+    {
+      "id": "matsuhisa-aspen",
+      "canonical_name": "Matsuhisa",
+      "full_name": "Matsuhisa Aspen",
+      "phonetic_variants": [
+        "matsu hisa",
+        "matsuhisha",
+        "matsuhisha aspen",
+        "nobu aspen",
+        "nobu matsuhisa"
+      ],
+      "common_misspellings": [
+        "matsuhisha",
+        "matshuhisa",
+        "matsushisa",
+        "matushisa"
+      ],
+      "address": "303 E Main St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1912, "lng": -106.8195},
+      "category": "restaurant",
+      "subcategory": "japanese_fine_dining",
+      "price_level": 4,
+      "search_keywords": ["sushi", "japanese", "fine dining", "nobu", "upscale"],
+      "local_context": {
+        "description": "World-renowned Japanese restaurant from celebrity chef Nobu Matsuhisa, consistently rated one of Aspen's finest",
+        "landmarks_nearby": ["St. Regis Aspen", "Wheeler Opera House"],
+        "good_for": ["special occasions", "celebrity spotting", "world-class sushi"],
+        "atmosphere": "elegant, sophisticated, upscale",
+        "famous_for": "Black cod miso, yellowtail jalapeño",
+        "reservations": "required",
+        "parking": "street parking or paid lots nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Matsuhisa - excellent choice",
+        "confirmation_phrase": "taking you to Matsuhisa on Main Street",
+        "destination_context": "One of Nobu's signature restaurants, perfect for a special night"
+      }
+    },
+    {
+      "id": "element-47",
+      "canonical_name": "Element 47",
+      "phonetic_variants": [
+        "element forty seven",
+        "element 47",
+        "element fourty seven"
+      ],
+      "common_misspellings": [
+        "element47",
+        "element fourty seven"
+      ],
+      "address": "675 E Durant Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1893, "lng": -106.8186},
+      "parent_property": "little-nell",
+      "category": "restaurant",
+      "subcategory": "fine_dining_american",
+      "price_level": 4,
+      "search_keywords": ["fine dining", "little nell", "upscale", "american"],
+      "local_context": {
+        "description": "The Little Nell's flagship restaurant, offering refined American cuisine at the base of Aspen Mountain",
+        "landmarks_nearby": ["Little Nell", "Silver Queen Gondola", "Aspen Mountain"],
+        "good_for": ["special occasions", "romantic dinners", "mountain views"],
+        "atmosphere": "elegant mountain luxury",
+        "famous_for": "Named for silver on the periodic table, exceptional wine program",
+        "reservations": "required",
+        "parking": "valet at Little Nell"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "account": {
+        "account_id": "1021",
+        "account_name": "Little Nell",
+        "account_type": "HOTEL_ACCOUNT",
+        "usage_policy": "front_desk_only"
+      },
+      "claire_knows": {
+        "greeting_phrase": "Element 47 at the Little Nell",
+        "confirmation_phrase": "taking you to Element 47",
+        "destination_context": "Beautiful restaurant right at the base of Ajax"
+      }
+    },
+    {
+      "id": "ajax-tavern",
+      "canonical_name": "Ajax Tavern",
+      "phonetic_variants": [
+        "ajax taven",
+        "ajax tavren",
+        "ajax",
+        "the ajax"
+      ],
+      "common_misspellings": [
+        "ajax taven",
+        "ajax tavren"
+      ],
+      "address": "685 E Durant Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1894, "lng": -106.8185},
+      "parent_property": "little-nell",
+      "category": "restaurant",
+      "subcategory": "bistro_american",
+      "price_level": 3,
+      "search_keywords": ["truffle fries", "burgers", "patio", "little nell", "casual"],
+      "local_context": {
+        "description": "Iconic slopeside bistro at the Little Nell, famous for truffle fries and people-watching",
+        "landmarks_nearby": ["Little Nell", "Silver Queen Gondola"],
+        "good_for": ["après ski", "truffle fries", "outdoor patio", "people watching"],
+        "atmosphere": "lively, casual luxury, see and be seen",
+        "famous_for": "Truffle fries, best patio in Aspen",
+        "reservations": "recommended",
+        "parking": "valet at Little Nell"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "account": {
+        "account_id": "1021",
+        "account_name": "Little Nell",
+        "account_type": "HOTEL_ACCOUNT",
+        "usage_policy": "front_desk_only"
+      },
+      "claire_knows": {
+        "greeting_phrase": "Ajax Tavern - great choice for those truffle fries",
+        "confirmation_phrase": "taking you to Ajax Tavern at the base of the mountain",
+        "destination_context": "Perfect spot for après ski"
+      }
+    },
+    {
+      "id": "cache-cache",
+      "canonical_name": "Cache Cache",
+      "phonetic_variants": [
+        "cash cash",
+        "cash-cash",
+        "caché caché",
+        "cache"
+      ],
+      "common_misspellings": [
+        "cash cache",
+        "catch catch",
+        "cashcash"
+      ],
+      "address": "205 S Mill St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1905, "lng": -106.8203},
+      "category": "restaurant",
+      "subcategory": "french_bistro",
+      "price_level": 4,
+      "search_keywords": ["french", "fine dining", "bistro", "upscale"],
+      "local_context": {
+        "description": "Beloved French bistro in the heart of Aspen, an institution for over 30 years",
+        "landmarks_nearby": ["Mill Street", "Wagner Park"],
+        "good_for": ["romantic dinners", "French cuisine", "special occasions"],
+        "atmosphere": "intimate, classic French bistro",
+        "famous_for": "Authentic French cuisine, wine cellar",
+        "reservations": "required",
+        "parking": "street parking or Mill Street parking structure"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Cache Cache - wonderful French bistro",
+        "confirmation_phrase": "taking you to Cache Cache on Mill Street",
+        "destination_context": "One of Aspen's most romantic spots"
+      }
+    },
+    {
+      "id": "prospect-aspen",
+      "canonical_name": "Prospect",
+      "full_name": "Prospect Restaurant",
+      "phonetic_variants": [
+        "prospect",
+        "prospect restaurant",
+        "jerome prospect"
+      ],
+      "common_misspellings": [
+        "prospekt"
+      ],
+      "address": "330 E Main St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1911, "lng": -106.8192},
+      "parent_property": "hotel-jerome",
+      "category": "restaurant",
+      "subcategory": "fine_dining_american",
+      "price_level": 4,
+      "search_keywords": ["fine dining", "hotel jerome", "upscale", "modern american"],
+      "local_context": {
+        "description": "Hotel Jerome's sophisticated fine dining restaurant with modern American cuisine",
+        "landmarks_nearby": ["Hotel Jerome", "Wheeler Opera House"],
+        "good_for": ["special occasions", "business dinners", "refined dining"],
+        "atmosphere": "elegant, modern mountain luxury",
+        "reservations": "required",
+        "parking": "valet at Hotel Jerome"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "account": {
+        "account_id": "1020",
+        "account_name": "Hotel Jerome",
+        "account_type": "HOTEL_ACCOUNT",
+        "usage_policy": "front_desk_only"
+      },
+      "claire_knows": {
+        "greeting_phrase": "Prospect at the Jerome",
+        "confirmation_phrase": "taking you to Prospect",
+        "destination_context": "Beautiful dining at the historic Hotel Jerome"
+      }
+    },
+    {
+      "id": "bosq",
+      "canonical_name": "Bosq",
+      "phonetic_variants": [
+        "bosk",
+        "bosque"
+      ],
+      "common_misspellings": [
+        "bosk",
+        "bosque"
+      ],
+      "address": "235 S Galena St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1903, "lng": -106.8198},
+      "category": "restaurant",
+      "subcategory": "mediterranean_fine_dining",
+      "price_level": 4,
+      "search_keywords": ["mediterranean", "fine dining", "spanish", "upscale"],
+      "local_context": {
+        "description": "Upscale Spanish-Mediterranean restaurant with seasonal ingredients and wood-fired cooking",
+        "landmarks_nearby": ["Galena Street", "Wagner Park"],
+        "good_for": ["tapas", "wood-fired dishes", "wine pairings"],
+        "atmosphere": "modern, intimate, sophisticated",
+        "reservations": "required",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Bosq - excellent choice",
+        "confirmation_phrase": "taking you to Bosq on Galena",
+        "destination_context": "Great Mediterranean food"
+      }
+    },
+    {
+      "id": "kenichi-aspen",
+      "canonical_name": "Kenichi",
+      "phonetic_variants": [
+        "kenichi",
+        "kenichi aspen",
+        "kenechi"
+      ],
+      "common_misspellings": [
+        "kenechi",
+        "kennitchi"
+      ],
+      "address": "533 E Hopkins Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1901, "lng": -106.8178},
+      "category": "restaurant",
+      "subcategory": "asian_fusion",
+      "price_level": 3,
+      "search_keywords": ["sushi", "asian fusion", "japanese", "chinese"],
+      "local_context": {
+        "description": "Popular Asian fusion restaurant offering creative sushi and Pacific Rim dishes",
+        "landmarks_nearby": ["Hopkins Avenue", "downtown Aspen"],
+        "good_for": ["sushi", "creative cocktails", "lively atmosphere"],
+        "atmosphere": "energetic, modern, popular",
+        "reservations": "recommended",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Kenichi on Hopkins",
+        "confirmation_phrase": "taking you to Kenichi",
+        "destination_context": "Great spot for sushi and Asian fusion"
+      }
+    },
+    {
+      "id": "sweet-basil",
+      "canonical_name": "Sweet Basil",
+      "phonetic_variants": [
+        "sweet basil",
+        "sweetbasil"
+      ],
+      "common_misspellings": [
+        "sweetbasil"
+      ],
+      "address": "193 E Main St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1910, "lng": -106.8200},
+      "category": "restaurant",
+      "subcategory": "contemporary_american",
+      "price_level": 3,
+      "search_keywords": ["contemporary", "american", "upscale casual"],
+      "local_context": {
+        "description": "Aspen institution serving contemporary American cuisine since 1977",
+        "landmarks_nearby": ["Main Street", "downtown Aspen"],
+        "good_for": ["reliable upscale dining", "seasonal menus", "wine selection"],
+        "atmosphere": "sophisticated casual, local favorite",
+        "famous_for": "Aspen staple for over 40 years",
+        "reservations": "recommended",
+        "parking": "street parking or paid lots"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Sweet Basil - always a good choice",
+        "confirmation_phrase": "taking you to Sweet Basil on Main Street",
+        "destination_context": "Been an Aspen favorite for decades"
+      }
+    },
+    {
+      "id": "white-house-tavern",
+      "canonical_name": "White House Tavern",
+      "phonetic_variants": [
+        "white house",
+        "whitehouse tavern",
+        "the white house"
+      ],
+      "common_misspellings": [
+        "whitehouse"
+      ],
+      "address": "302 E Hopkins Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1898, "lng": -106.8194},
+      "category": "restaurant",
+      "subcategory": "gastropub",
+      "price_level": 2,
+      "search_keywords": ["pub", "burgers", "casual", "comfort food"],
+      "local_context": {
+        "description": "Beloved local gastropub known for creative burgers and comfort food",
+        "landmarks_nearby": ["Hopkins Avenue", "downtown Aspen"],
+        "good_for": ["burgers", "casual dining", "craft beer", "locals"],
+        "atmosphere": "relaxed, friendly, neighborhood vibe",
+        "reservations": "not needed",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "White House Tavern - great burgers there",
+        "confirmation_phrase": "taking you to White House Tavern",
+        "destination_context": "Perfect for a casual meal"
+      }
+    },
+    {
+      "id": "meat-and-cheese",
+      "canonical_name": "Meat & Cheese",
+      "phonetic_variants": [
+        "meat and cheese",
+        "meat n cheese",
+        "meat & cheese"
+      ],
+      "common_misspellings": [
+        "meet and cheese"
+      ],
+      "address": "319 E Hopkins Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1899, "lng": -106.8193},
+      "category": "restaurant",
+      "subcategory": "italian_casual",
+      "price_level": 2,
+      "search_keywords": ["italian", "casual", "farm to table", "pasta"],
+      "local_context": {
+        "description": "Rustic Italian restaurant focusing on house-made charcuterie and pasta",
+        "landmarks_nearby": ["Hopkins Avenue", "downtown Aspen"],
+        "good_for": ["pasta", "charcuterie", "Italian wines", "casual dining"],
+        "atmosphere": "rustic, warm, neighborhood Italian",
+        "reservations": "recommended",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Meat & Cheese on Hopkins",
+        "confirmation_phrase": "taking you to Meat & Cheese",
+        "destination_context": "Great spot for Italian"
+      }
+    },
+    {
+      "id": "zocalito",
+      "canonical_name": "Zocalito",
+      "phonetic_variants": [
+        "zocalito",
+        "zockalito",
+        "zocalito latin bistro"
+      ],
+      "common_misspellings": [
+        "zockalito",
+        "zokalito"
+      ],
+      "address": "300 S Spring St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1896, "lng": -106.8207},
+      "category": "restaurant",
+      "subcategory": "latin_bistro",
+      "price_level": 2,
+      "search_keywords": ["latin", "mexican", "cocktails", "casual"],
+      "local_context": {
+        "description": "Vibrant Latin bistro with creative cocktails and regional specialties",
+        "landmarks_nearby": ["Spring Street", "downtown Aspen"],
+        "good_for": ["margaritas", "Latin cuisine", "lively atmosphere"],
+        "atmosphere": "colorful, energetic, fun",
+        "reservations": "recommended",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Zocalito on Spring Street",
+        "confirmation_phrase": "taking you to Zocalito",
+        "destination_context": "Great for Latin food and margaritas"
+      }
+    },
+    {
+      "id": "wild-fig",
+      "canonical_name": "Wild Fig",
+      "phonetic_variants": [
+        "wild fig",
+        "wildfig"
+      ],
+      "common_misspellings": [
+        "wildfig"
+      ],
+      "address": "315 E Hyman Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1915, "lng": -106.8193},
+      "category": "restaurant",
+      "subcategory": "mediterranean",
+      "price_level": 2,
+      "search_keywords": ["mediterranean", "casual", "healthy", "lunch"],
+      "local_context": {
+        "description": "Mediterranean café with fresh, healthy options and great lunch spot",
+        "landmarks_nearby": ["Hyman Avenue Mall", "downtown Aspen"],
+        "good_for": ["lunch", "healthy options", "Mediterranean cuisine"],
+        "atmosphere": "casual, fresh, bright",
+        "reservations": "not needed",
+        "parking": "street parking or Rio Grande parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Wild Fig on the mall",
+        "confirmation_phrase": "taking you to Wild Fig",
+        "destination_context": "Great spot for a healthy lunch"
+      }
+    },
+    {
+      "id": "campo-de-fiori",
+      "canonical_name": "Campo de Fiori",
+      "phonetic_variants": [
+        "campo de fiori",
+        "campo",
+        "campo di fiori"
+      ],
+      "common_misspellings": [
+        "campo di fiori",
+        "campo defiori"
+      ],
+      "address": "205 S Mill St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1904, "lng": -106.8204},
+      "category": "restaurant",
+      "subcategory": "italian",
+      "price_level": 2,
+      "search_keywords": ["italian", "bakery", "casual", "lunch"],
+      "local_context": {
+        "description": "Italian café and bakery with fresh breads, pastries, and casual Italian fare",
+        "landmarks_nearby": ["Mill Street", "Wagner Park"],
+        "good_for": ["breakfast", "lunch", "pastries", "coffee"],
+        "atmosphere": "casual, European café",
+        "reservations": "not needed",
+        "parking": "Mill Street parking structure"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Campo de Fiori on Mill",
+        "confirmation_phrase": "taking you to Campo de Fiori",
+        "destination_context": "Great for breakfast or lunch"
+      }
+    },
+    {
+      "id": "j-bar",
+      "canonical_name": "J-Bar",
+      "full_name": "J-Bar at Hotel Jerome",
+      "phonetic_variants": [
+        "j bar",
+        "jbar",
+        "jay bar",
+        "jerome bar"
+      ],
+      "common_misspellings": [
+        "jbar"
+      ],
+      "address": "330 E Main St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1911, "lng": -106.8191},
+      "parent_property": "hotel-jerome",
+      "category": "bar",
+      "subcategory": "historic_bar",
+      "price_level": 3,
+      "search_keywords": ["bar", "hotel jerome", "historic", "cocktails", "après ski"],
+      "local_context": {
+        "description": "Historic bar at Hotel Jerome, an Aspen institution since 1889",
+        "landmarks_nearby": ["Hotel Jerome", "Wheeler Opera House"],
+        "good_for": ["après ski", "cocktails", "people watching", "history"],
+        "atmosphere": "historic, lively, iconic",
+        "famous_for": "Over 130 years old, legendary après ski spot",
+        "reservations": "not needed",
+        "parking": "valet at Hotel Jerome"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "account": {
+        "account_id": "1020",
+        "account_name": "Hotel Jerome",
+        "account_type": "HOTEL_ACCOUNT",
+        "usage_policy": "front_desk_only"
+      },
+      "claire_knows": {
+        "greeting_phrase": "J-Bar at the Jerome - classic choice",
+        "confirmation_phrase": "taking you to J-Bar",
+        "destination_context": "The most famous bar in Aspen"
+      }
+    },
+    {
+      "id": "bad-harriet",
+      "canonical_name": "Bad Harriet",
+      "phonetic_variants": [
+        "bad harriet",
+        "bad harriett"
+      ],
+      "common_misspellings": [
+        "bad harriett"
+      ],
+      "address": "205 S Galena St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1904, "lng": -106.8198},
+      "category": "bar",
+      "subcategory": "cocktail_bar",
+      "price_level": 3,
+      "search_keywords": ["cocktails", "speakeasy", "craft cocktails", "bar"],
+      "local_context": {
+        "description": "Upscale cocktail bar with creative drinks in a sophisticated setting",
+        "landmarks_nearby": ["Galena Street", "downtown Aspen"],
+        "good_for": ["craft cocktails", "date night", "nightcap"],
+        "atmosphere": "intimate, sophisticated, modern",
+        "reservations": "not needed",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Bad Harriet - great cocktail spot",
+        "confirmation_phrase": "taking you to Bad Harriet",
+        "destination_context": "Perfect for craft cocktails"
+      }
+    },
+    {
+      "id": "hooch",
+      "canonical_name": "Hooch",
+      "phonetic_variants": [
+        "hooch",
+        "hooch aspen"
+      ],
+      "common_misspellings": [
+        "hooch"
+      ],
+      "address": "533 E Cooper Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1902, "lng": -106.8177},
+      "category": "bar",
+      "subcategory": "craft_cocktail_bar",
+      "price_level": 2,
+      "search_keywords": ["cocktails", "bar", "casual", "nightlife"],
+      "local_context": {
+        "description": "Lively cocktail bar with creative drinks and energetic atmosphere",
+        "landmarks_nearby": ["Cooper Avenue", "downtown Aspen"],
+        "good_for": ["cocktails", "nightlife", "socializing"],
+        "atmosphere": "fun, energetic, social",
+        "reservations": "not needed",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Hooch on Cooper",
+        "confirmation_phrase": "taking you to Hooch",
+        "destination_context": "Fun spot for cocktails"
+      }
+    },
+    {
+      "id": "belly-up-aspen",
+      "canonical_name": "Belly Up Aspen",
+      "phonetic_variants": [
+        "belly up",
+        "bellyup",
+        "belly up aspen"
+      ],
+      "common_misspellings": [
+        "bellyup"
+      ],
+      "address": "450 S Galena St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1888, "lng": -106.8197},
+      "category": "venue",
+      "subcategory": "music_venue",
+      "price_level": 2,
+      "search_keywords": ["music", "venue", "concerts", "live music", "nightlife"],
+      "local_context": {
+        "description": "Iconic live music venue hosting national and local acts",
+        "landmarks_nearby": ["Galena Street", "Wagner Park"],
+        "good_for": ["concerts", "live music", "nightlife", "dancing"],
+        "atmosphere": "energetic, legendary music venue",
+        "famous_for": "Top music venue in Aspen, big-name acts",
+        "reservations": "tickets required for shows",
+        "parking": "Rio Grande parking structure nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Belly Up - hope you enjoy the show",
+        "confirmation_phrase": "taking you to Belly Up",
+        "destination_context": "Best music venue in town"
+      }
+    },
+    {
+      "id": "little-nell",
+      "canonical_name": "Little Nell",
+      "full_name": "The Little Nell",
+      "phonetic_variants": [
+        "little nell",
+        "the little nell",
+        "littlenell"
+      ],
+      "common_misspellings": [
+        "littlenell",
+        "little nel"
+      ],
+      "address": "675 E Durant Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1893, "lng": -106.8186},
+      "category": "hotel",
+      "subcategory": "luxury_hotel",
+      "price_level": 4,
+      "search_keywords": ["hotel", "luxury", "five star", "ski in ski out"],
+      "local_context": {
+        "description": "Aspen's only five-star, ski-in/ski-out hotel at the base of Aspen Mountain",
+        "landmarks_nearby": ["Silver Queen Gondola", "Aspen Mountain"],
+        "good_for": ["luxury accommodations", "ski access", "fine dining"],
+        "atmosphere": "elegant mountain luxury, Aspen's finest",
+        "famous_for": "Only five-star hotel in Aspen, legendary service",
+        "parking": "valet parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "account": {
+        "account_id": "1021",
+        "account_name": "Little Nell",
+        "account_type": "HOTEL_ACCOUNT",
+        "usage_policy": "front_desk_only"
+      },
+      "claire_knows": {
+        "greeting_phrase": "The Little Nell - Aspen's finest",
+        "confirmation_phrase": "taking you to the Little Nell",
+        "destination_context": "Right at the base of Ajax"
+      }
+    },
+    {
+      "id": "hotel-jerome",
+      "canonical_name": "Hotel Jerome",
+      "full_name": "Hotel Jerome, Auberge Resorts Collection",
+      "phonetic_variants": [
+        "hotel jerome",
+        "the jerome",
+        "jerome",
+        "hotel jerom"
+      ],
+      "common_misspellings": [
+        "hotel jerom"
+      ],
+      "address": "330 E Main St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1911, "lng": -106.8191},
+      "category": "hotel",
+      "subcategory": "luxury_historic_hotel",
+      "price_level": 4,
+      "search_keywords": ["hotel", "luxury", "historic", "downtown"],
+      "local_context": {
+        "description": "Historic luxury hotel since 1889, an Aspen icon in the heart of downtown",
+        "landmarks_nearby": ["Wheeler Opera House", "downtown Aspen"],
+        "good_for": ["luxury accommodations", "history", "downtown location"],
+        "atmosphere": "historic elegance, Victorian charm",
+        "famous_for": "Over 130 years old, Aspen's most historic hotel",
+        "parking": "valet parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "account": {
+        "account_id": "1020",
+        "account_name": "Hotel Jerome",
+        "account_type": "HOTEL_ACCOUNT",
+        "usage_policy": "front_desk_only"
+      },
+      "claire_knows": {
+        "greeting_phrase": "Hotel Jerome - a true Aspen landmark",
+        "confirmation_phrase": "taking you to the Jerome",
+        "destination_context": "The most historic hotel in Aspen"
+      }
+    },
+    {
+      "id": "st-regis-aspen",
+      "canonical_name": "St. Regis Aspen Resort",
+      "phonetic_variants": [
+        "saint regis",
+        "st regis",
+        "saint regis aspen",
+        "st. regis"
+      ],
+      "common_misspellings": [
+        "saint regis"
+      ],
+      "address": "315 E Dean St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1907, "lng": -106.8193},
+      "category": "hotel",
+      "subcategory": "luxury_hotel",
+      "price_level": 4,
+      "search_keywords": ["hotel", "luxury", "five star", "downtown"],
+      "local_context": {
+        "description": "Luxury St. Regis hotel in downtown Aspen with signature butler service",
+        "landmarks_nearby": ["Main Street", "downtown Aspen"],
+        "good_for": ["luxury accommodations", "butler service", "downtown location"],
+        "atmosphere": "refined luxury, impeccable service",
+        "famous_for": "St. Regis butler service, Remède Spa",
+        "parking": "valet parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "St. Regis Aspen",
+        "confirmation_phrase": "taking you to the St. Regis",
+        "destination_context": "Beautiful downtown luxury hotel"
+      }
+    },
+    {
+      "id": "limelight-aspen",
+      "canonical_name": "Limelight Hotel Aspen",
+      "phonetic_variants": [
+        "limelight",
+        "limelight aspen",
+        "lime light"
+      ],
+      "common_misspellings": [
+        "lime light"
+      ],
+      "address": "355 S Monarch St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1894, "lng": -106.8208},
+      "category": "hotel",
+      "subcategory": "boutique_hotel",
+      "price_level": 3,
+      "search_keywords": ["hotel", "boutique", "downtown", "affordable luxury"],
+      "local_context": {
+        "description": "Modern boutique hotel in downtown Aspen with mountain-contemporary style",
+        "landmarks_nearby": ["downtown Aspen", "Wagner Park"],
+        "good_for": ["contemporary accommodations", "downtown location", "value"],
+        "atmosphere": "modern, welcoming, relaxed luxury",
+        "parking": "on-site parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Limelight Hotel",
+        "confirmation_phrase": "taking you to the Limelight",
+        "destination_context": "Right downtown, easy walking to everything"
+      }
+    },
+    {
+      "id": "hotel-aspen",
+      "canonical_name": "Hotel Aspen",
+      "phonetic_variants": [
+        "hotel aspen",
+        "hotelaspen"
+      ],
+      "common_misspellings": [
+        "hotelaspen"
+      ],
+      "address": "110 W Main St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1913, "lng": -106.8224},
+      "category": "hotel",
+      "subcategory": "mid_range_hotel",
+      "price_level": 2,
+      "search_keywords": ["hotel", "downtown", "affordable", "budget"],
+      "local_context": {
+        "description": "Comfortable hotel on Main Street with good value and downtown location",
+        "landmarks_nearby": ["Main Street", "downtown Aspen"],
+        "good_for": ["budget friendly", "downtown location", "convenience"],
+        "atmosphere": "casual, friendly, unpretentious",
+        "parking": "free parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Hotel Aspen on Main",
+        "confirmation_phrase": "taking you to Hotel Aspen",
+        "destination_context": "Right on Main Street"
+      }
+    },
+    {
+      "id": "mollie-aspen",
+      "canonical_name": "The Mollie Aspen",
+      "phonetic_variants": [
+        "mollie",
+        "the mollie",
+        "molly aspen"
+      ],
+      "common_misspellings": [
+        "molly",
+        "the molly"
+      ],
+      "address": "101 W Main St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1913, "lng": -106.8227},
+      "category": "hotel",
+      "subcategory": "boutique_hotel",
+      "price_level": 3,
+      "search_keywords": ["hotel", "boutique", "downtown", "contemporary"],
+      "local_context": {
+        "description": "Contemporary boutique hotel on Main Street with modern mountain style",
+        "landmarks_nearby": ["Main Street", "downtown Aspen"],
+        "good_for": ["modern accommodations", "downtown location"],
+        "atmosphere": "contemporary, stylish, comfortable",
+        "parking": "on-site parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "The Mollie",
+        "confirmation_phrase": "taking you to The Mollie",
+        "destination_context": "Nice boutique hotel on Main"
+      }
+    },
+    {
+      "id": "aspen-meadows-resort",
+      "canonical_name": "Aspen Meadows Resort",
+      "phonetic_variants": [
+        "aspen meadows",
+        "meadows resort",
+        "aspen meadows resort"
+      ],
+      "common_misspellings": [
+        "aspen meadow"
+      ],
+      "address": "845 Meadows Rd, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1822, "lng": -106.8176},
+      "category": "hotel",
+      "subcategory": "conference_resort",
+      "price_level": 3,
+      "search_keywords": ["hotel", "resort", "conference", "meadows"],
+      "local_context": {
+        "description": "Resort hotel set on 40 acres with conference facilities and hiking trails",
+        "landmarks_nearby": ["Rio Grande Trail", "Aspen Institute"],
+        "good_for": ["conferences", "meetings", "outdoor space", "peace and quiet"],
+        "atmosphere": "serene, spacious, retreat-like",
+        "famous_for": "Aspen Institute campus, conference facilities",
+        "parking": "free parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Aspen Meadows",
+        "confirmation_phrase": "taking you to Aspen Meadows Resort",
+        "destination_context": "Beautiful property out by the Aspen Institute"
+      }
+    },
+    {
+      "id": "the-gant",
+      "canonical_name": "The Gant",
+      "phonetic_variants": [
+        "the gant",
+        "gant",
+        "gant condos"
+      ],
+      "common_misspellings": [
+        "the gaunt"
+      ],
+      "address": "610 S West End St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1881, "lng": -106.8263},
+      "category": "hotel",
+      "subcategory": "condo_hotel",
+      "price_level": 3,
+      "search_keywords": ["condos", "hotel", "west end", "family"],
+      "local_context": {
+        "description": "Condo-hotel on the West End with spacious units and resort amenities",
+        "landmarks_nearby": ["West End", "Aspen Recreation Center"],
+        "good_for": ["families", "longer stays", "full kitchens", "space"],
+        "atmosphere": "comfortable, residential, family-friendly",
+        "parking": "on-site parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "The Gant",
+        "confirmation_phrase": "taking you to The Gant",
+        "destination_context": "Nice property on the West End"
+      }
+    },
+    {
+      "id": "clarks-market-aspen",
+      "canonical_name": "Clark's Market",
+      "phonetic_variants": [
+        "clarks",
+        "clarks market",
+        "clark's"
+      ],
+      "common_misspellings": [
+        "clarkes",
+        "clarks"
+      ],
+      "address": "600 E Cooper Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1901, "lng": -106.8173},
+      "category": "shopping",
+      "subcategory": "grocery",
+      "price_level": 3,
+      "search_keywords": ["grocery", "market", "food", "shopping"],
+      "confusion_matrix": [
+        {
+          "confused_with": "city-market-aspen",
+          "reason": "Both are grocery stores in Aspen",
+          "disambiguation": "Clark's is on Cooper Avenue downtown, City Market is further out on Highway 82"
+        }
+      ],
+      "local_context": {
+        "description": "Upscale grocery store in downtown Aspen with quality products",
+        "landmarks_nearby": ["Cooper Avenue", "downtown Aspen"],
+        "good_for": ["groceries", "prepared foods", "specialty items"],
+        "atmosphere": "upscale market, local favorite",
+        "parking": "parking lot"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Clark's Market on Cooper",
+        "confirmation_phrase": "taking you to Clark's",
+        "destination_context": "The downtown market"
+      }
+    },
+    {
+      "id": "city-market-aspen",
+      "canonical_name": "City Market",
+      "phonetic_variants": [
+        "city market",
+        "citymarket"
+      ],
+      "common_misspellings": [
+        "citymarket"
+      ],
+      "address": "711 E Cooper Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1902, "lng": -106.8165},
+      "category": "shopping",
+      "subcategory": "grocery",
+      "price_level": 2,
+      "search_keywords": ["grocery", "market", "food", "shopping"],
+      "confusion_matrix": [
+        {
+          "confused_with": "clarks-market-aspen",
+          "reason": "Both are grocery stores in Aspen",
+          "disambiguation": "City Market is the big one out on Highway 82, Clark's is downtown on Cooper"
+        },
+        {
+          "confused_with": "city-market-glenwood",
+          "reason": "Same chain, different town",
+          "disambiguation": "The Aspen City Market is on Cooper Avenue, Glenwood's is on Grand Avenue"
+        }
+      ],
+      "local_context": {
+        "description": "Large grocery chain with full selection and pharmacy",
+        "landmarks_nearby": ["Cooper Avenue", "Highway 82"],
+        "good_for": ["groceries", "pharmacy", "full selection"],
+        "atmosphere": "standard supermarket",
+        "parking": "large parking lot"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "City Market out on Cooper",
+        "confirmation_phrase": "taking you to City Market",
+        "destination_context": "The big grocery store"
+      }
+    },
+    {
+      "id": "whole-foods-aspen",
+      "canonical_name": "Whole Foods Market",
+      "phonetic_variants": [
+        "whole foods",
+        "wholefoods",
+        "whole foods aspen"
+      ],
+      "common_misspellings": [
+        "wholefoods"
+      ],
+      "address": "520 E Durant Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1897, "lng": -106.8182},
+      "category": "shopping",
+      "subcategory": "grocery",
+      "price_level": 3,
+      "search_keywords": ["grocery", "organic", "health food", "shopping"],
+      "local_context": {
+        "description": "Natural and organic grocery with prepared foods and café",
+        "landmarks_nearby": ["Durant Avenue", "downtown Aspen"],
+        "good_for": ["organic groceries", "prepared foods", "café"],
+        "atmosphere": "upscale natural foods market",
+        "parking": "underground parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Whole Foods on Durant",
+        "confirmation_phrase": "taking you to Whole Foods",
+        "destination_context": "Right downtown"
+      }
+    },
+    {
+      "id": "aspen-valley-hospital",
+      "canonical_name": "Aspen Valley Hospital",
+      "phonetic_variants": [
+        "aspen valley hospital",
+        "avh",
+        "valley hospital",
+        "aspen hospital"
+      ],
+      "common_misspellings": [
+        "aspen valley"
+      ],
+      "address": "401 Castle Creek Rd, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1967, "lng": -106.8389},
+      "category": "medical",
+      "subcategory": "hospital",
+      "search_keywords": ["hospital", "medical", "emergency", "healthcare"],
+      "local_context": {
+        "description": "Full-service hospital serving the Roaring Fork Valley",
+        "landmarks_nearby": ["Castle Creek Road", "Aspen Country Day School"],
+        "good_for": ["emergency care", "medical services", "healthcare"],
+        "atmosphere": "professional medical facility",
+        "parking": "large parking lot"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Aspen Valley Hospital",
+        "confirmation_phrase": "taking you to the hospital",
+        "destination_context": "Out on Castle Creek Road"
+      }
+    },
+    {
+      "id": "aspen-mountain",
+      "canonical_name": "Aspen Mountain",
+      "full_name": "Aspen Mountain (Ajax)",
+      "phonetic_variants": [
+        "aspen mountain",
+        "ajax",
+        "ajax mountain",
+        "aspen mtn"
+      ],
+      "common_misspellings": [
+        "aspen mtn"
+      ],
+      "address": "601 E Durant Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1895, "lng": -106.8184},
+      "category": "ski_area",
+      "subcategory": "ski_resort",
+      "search_keywords": ["skiing", "ski", "mountain", "ajax", "gondola"],
+      "local_context": {
+        "description": "Aspen's original ski mountain towering over downtown, expert terrain",
+        "landmarks_nearby": ["Little Nell", "Silver Queen Gondola", "downtown Aspen"],
+        "good_for": ["skiing", "expert runs", "gondola rides", "summer hiking"],
+        "atmosphere": "classic Aspen skiing, challenging terrain",
+        "famous_for": "No beginner runs, Silver Queen Gondola",
+        "season": "Winter ski season, summer gondola rides"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Aspen Mountain - have a great ski day",
+        "confirmation_phrase": "taking you to Ajax",
+        "destination_context": "Right downtown at the base"
+      }
+    },
+    {
+      "id": "aspen-highlands",
+      "canonical_name": "Aspen Highlands",
+      "phonetic_variants": [
+        "aspen highlands",
+        "highlands",
+        "the highlands"
+      ],
+      "common_misspellings": [
+        "aspen highland"
+      ],
+      "address": "76 Boomerang Rd, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1822, "lng": -106.8550},
+      "category": "ski_area",
+      "subcategory": "ski_resort",
+      "search_keywords": ["skiing", "ski", "mountain", "highlands bowl"],
+      "local_context": {
+        "description": "Challenging ski mountain known for expert terrain and the Highland Bowl",
+        "landmarks_nearby": ["Maroon Creek Road", "Highland Bowl"],
+        "good_for": ["expert skiing", "Highland Bowl hike", "challenging terrain"],
+        "atmosphere": "serious skiers' mountain",
+        "famous_for": "Highland Bowl, Steeplechase run, local favorite",
+        "season": "Winter ski season"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Highlands - enjoy the skiing",
+        "confirmation_phrase": "taking you to Aspen Highlands",
+        "destination_context": "Out Maroon Creek Road"
+      }
+    },
+    {
+      "id": "buttermilk-mountain",
+      "canonical_name": "Buttermilk",
+      "full_name": "Buttermilk Mountain",
+      "phonetic_variants": [
+        "buttermilk",
+        "buttermilk mountain",
+        "butter milk"
+      ],
+      "common_misspellings": [
+        "butter milk"
+      ],
+      "address": "38700 CO-82, Aspen, CO 81611",
+      "coordinates": {"lat": 39.2078, "lng": -106.8608},
+      "category": "ski_area",
+      "subcategory": "ski_resort",
+      "search_keywords": ["skiing", "ski", "mountain", "beginner", "terrain park"],
+      "local_context": {
+        "description": "Family-friendly ski area famous for terrain parks and X Games",
+        "landmarks_nearby": ["Highway 82", "Tiehack"],
+        "good_for": ["beginner skiing", "terrain parks", "families", "X Games"],
+        "atmosphere": "relaxed, family-friendly",
+        "famous_for": "X Games venue, best beginner mountain, world-class terrain parks",
+        "season": "Winter ski season"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Buttermilk - perfect for learning",
+        "confirmation_phrase": "taking you to Buttermilk",
+        "destination_context": "The family-friendly mountain"
+      }
+    },
+    {
+      "id": "aspen-airport",
+      "canonical_name": "Aspen-Pitkin County Airport",
+      "full_name": "Aspen-Pitkin County Airport (ASE)",
+      "phonetic_variants": [
+        "aspen airport",
+        "ase",
+        "a s e",
+        "aspen pitkin county airport",
+        "pitkin county airport"
+      ],
+      "common_misspellings": [
+        "aspen-pitkin"
+      ],
+      "address": "233 E Airport Rd, Aspen, CO 81611",
+      "coordinates": {"lat": 39.2232, "lng": -106.8687},
+      "category": "airport",
+      "subcategory": "regional_airport",
+      "search_keywords": ["airport", "ase", "flights", "terminal"],
+      "local_context": {
+        "description": "High-altitude commercial airport serving Aspen, one of the most challenging in the US",
+        "landmarks_nearby": ["Highway 82", "Buttermilk Mountain"],
+        "good_for": ["flights", "arrivals", "departures"],
+        "atmosphere": "busy mountain airport",
+        "famous_for": "Challenging approach, one of highest commercial airports in US",
+        "parking": "short and long-term parking"
+      },
+      "restrictions": {
+        "allows_pickup": false,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false,
+        "notes": "CRITICAL: Cannot book pickups from airport. Passengers must go to ground transportation area."
+      },
+      "airport_specific": {
+        "arrival_policy": "DO_NOT_BOOK",
+        "arrival_script": "I can't book pickups directly from the terminal, but our taxis are right outside at ground transportation. Just head out there and you'll see us!",
+        "departure_allowed": true,
+        "airport_fee": 5.00
+      },
+      "claire_knows": {
+        "greeting_phrase": "Taking you to the airport",
+        "confirmation_phrase": "taking you to ASE",
+        "destination_context": "We'll add the $5 airport fee to your fare",
+        "booking_from_warning": "I can't book pickups from the terminal, but taxis are waiting at ground transportation",
+        "arrival_warning": "Our taxis are right outside at ground transportation - just head out and you'll see us!"
+      }
+    },
+    {
+      "id": "atlantic-aviation-aspen",
+      "canonical_name": "Atlantic Aviation",
+      "full_name": "Atlantic Aviation FBO Aspen",
+      "phonetic_variants": [
+        "atlantic aviation",
+        "atlantic",
+        "fbo",
+        "private aviation"
+      ],
+      "common_misspellings": [
+        "atlantic"
+      ],
+      "address": "233 E Airport Rd, Aspen, CO 81611",
+      "coordinates": {"lat": 39.2239, "lng": -106.8695},
+      "parent_property": "aspen-airport",
+      "category": "airport",
+      "subcategory": "fbo",
+      "search_keywords": ["fbo", "private aviation", "private jet", "airport"],
+      "local_context": {
+        "description": "Private aviation FBO serving Aspen Airport",
+        "landmarks_nearby": ["Aspen Airport", "Highway 82"],
+        "good_for": ["private aviation", "charter flights"],
+        "atmosphere": "executive aviation facility"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "airport_specific": {
+        "arrival_policy": "ALLOWED",
+        "departure_allowed": true,
+        "airport_fee": 5.00
+      },
+      "claire_knows": {
+        "greeting_phrase": "Atlantic Aviation",
+        "confirmation_phrase": "taking you to Atlantic Aviation at the airport",
+        "destination_context": "The private terminal"
+      }
+    },
+    {
+      "id": "aspen-base-operations",
+      "canonical_name": "Aspen Base Operations",
+      "phonetic_variants": [
+        "base operations",
+        "base ops",
+        "aspen base ops"
+      ],
+      "common_misspellings": [
+        "base ops"
+      ],
+      "address": "233 E Airport Rd, Aspen, CO 81611",
+      "coordinates": {"lat": 39.2235, "lng": -106.8690},
+      "parent_property": "aspen-airport",
+      "category": "airport",
+      "subcategory": "fbo",
+      "search_keywords": ["fbo", "private aviation", "base operations", "airport"],
+      "local_context": {
+        "description": "FBO and base operations facility at Aspen Airport",
+        "landmarks_nearby": ["Aspen Airport", "Highway 82"],
+        "good_for": ["private aviation", "general aviation"],
+        "atmosphere": "aviation operations facility"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "airport_specific": {
+        "arrival_policy": "ALLOWED",
+        "departure_allowed": true,
+        "airport_fee": 5.00
+      },
+      "claire_knows": {
+        "greeting_phrase": "Base Operations",
+        "confirmation_phrase": "taking you to Base Ops at the airport",
+        "destination_context": "At the airport"
+      }
+    },
+    {
+      "id": "maroon-bells",
+      "canonical_name": "Maroon Bells",
+      "phonetic_variants": [
+        "maroon bells",
+        "maroon bell",
+        "the maroon bells"
+      ],
+      "common_misspellings": [
+        "maroon bell",
+        "marroon bells"
+      ],
+      "address": "Maroon Creek Rd, Aspen, CO 81611",
+      "coordinates": {"lat": 39.0711, "lng": -106.9391},
+      "category": "recreation",
+      "subcategory": "scenic_area",
+      "search_keywords": ["maroon bells", "hiking", "scenic", "photography", "peaks"],
+      "local_context": {
+        "description": "Colorado's most photographed peaks, iconic fourteeners",
+        "landmarks_nearby": ["Maroon Lake", "Crater Lake"],
+        "good_for": ["photography", "hiking", "scenic views", "wilderness"],
+        "atmosphere": "spectacular mountain scenery",
+        "famous_for": "Most photographed peaks in Colorado, stunning reflections in Maroon Lake",
+        "season": "Summer access by shuttle or early morning car, winter by snowshoe/ski"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": true,
+        "prebooking_restricted": true,
+        "requires_radio_dispatch": false,
+        "notes": "CRITICAL: No cell service. Summer daytime requires shuttle (no private cars 8am-5pm). Prebooking for return pickup is difficult due to no cell signal."
+      },
+      "claire_knows": {
+        "greeting_phrase": "Maroon Bells - beautiful choice",
+        "confirmation_phrase": "taking you to the Maroon Bells",
+        "destination_context": "Just so you know, there's no cell service up there during summer, and private cars aren't allowed during the day - you'll need to take the shuttle back",
+        "booking_from_warning": "There's no cell service at Maroon Bells, so I can't guarantee we'll get your call for pickup",
+        "arrival_warning": "Beautiful spot, but remember there's no cell service and you'll need the shuttle back during daytime hours in summer"
+      }
+    },
+    {
+      "id": "t-lazy-7-ranch",
+      "canonical_name": "T-Lazy-7 Ranch",
+      "phonetic_variants": [
+        "t lazy seven",
+        "t lazy 7",
+        "tlazy7",
+        "t lazy seven ranch"
+      ],
+      "common_misspellings": [
+        "t-lazy-seven",
+        "tlazy7"
+      ],
+      "address": "3129 Maroon Creek Rd, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1556, "lng": -106.8850},
+      "category": "recreation",
+      "subcategory": "ranch_tours",
+      "search_keywords": ["ranch", "horseback", "snowmobile", "tours", "adventure"],
+      "local_context": {
+        "description": "Popular ranch offering horseback riding and snowmobile tours",
+        "landmarks_nearby": ["Maroon Creek Road", "Aspen Highlands"],
+        "good_for": ["horseback riding", "snowmobile tours", "group activities"],
+        "atmosphere": "western ranch, outdoor adventure",
+        "famous_for": "Horseback and snowmobile tours into the backcountry"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": true,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": true,
+        "notes": "CRITICAL: No cell service. Tour groups returning need radio dispatch coordination."
+      },
+      "tour_specific": {
+        "return_booking_script": "For T-Lazy-7 returns, we coordinate with the ranch via radio since there's no cell service. What time does your tour end?",
+        "tour_types": ["snowmobile", "horseback"],
+        "housing_units_exempt": true
+      },
+      "claire_knows": {
+        "greeting_phrase": "T-Lazy-7 Ranch",
+        "confirmation_phrase": "taking you to T-Lazy-7",
+        "destination_context": "Out on Maroon Creek Road",
+        "booking_from_warning": "There's no cell service at the ranch, so for your return we'll coordinate via radio with them",
+        "arrival_warning": "Have a great time! We'll coordinate with the ranch for your pickup"
+      }
+    },
+    {
+      "id": "maroon-creek-highlands",
+      "canonical_name": "Maroon Creek Road - Highlands District",
+      "phonetic_variants": [
+        "maroon creek",
+        "maroon creek road",
+        "highlands district"
+      ],
+      "common_misspellings": [
+        "maron creek"
+      ],
+      "address": "Maroon Creek Rd, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1800, "lng": -106.8500},
+      "category": "transportation",
+      "subcategory": "hoa_neighborhood",
+      "search_keywords": ["highlands", "hoa", "neighborhood", "maroon creek"],
+      "local_context": {
+        "description": "Upscale residential area along Maroon Creek Road",
+        "landmarks_nearby": ["Aspen Highlands", "Maroon Creek"],
+        "good_for": ["residential", "quiet neighborhood"],
+        "atmosphere": "private, wooded, upscale"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "hoa_eligible": {
+        "highlands_district": true,
+        "five_trees": false,
+        "time_restrictions": {
+          "start": "05:20",
+          "end": "00:00"
+        }
+      },
+      "account": {
+        "account_id": "5095",
+        "account_name": "Highlands District HOA",
+        "account_type": "FREE_RIDE",
+        "usage_policy": "use_if_entitled"
+      },
+      "claire_knows": {
+        "greeting_phrase": "Maroon Creek Road in the Highlands",
+        "confirmation_phrase": "taking you to Maroon Creek in the Highlands District",
+        "destination_context": "Beautiful area out toward the ski mountain"
+      }
+    },
+    {
+      "id": "moore-drive-five-trees",
+      "canonical_name": "Moore Drive - Five Trees",
+      "phonetic_variants": [
+        "moore drive",
+        "more drive",
+        "five trees"
+      ],
+      "common_misspellings": [
+        "more drive"
+      ],
+      "address": "Moore Dr, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1750, "lng": -106.8250},
+      "category": "transportation",
+      "subcategory": "hoa_neighborhood",
+      "search_keywords": ["five trees", "hoa", "neighborhood", "moore drive"],
+      "local_context": {
+        "description": "Residential neighborhood with HOA taxi privileges",
+        "landmarks_nearby": ["Aspen Business Center"],
+        "good_for": ["residential", "quiet neighborhood"],
+        "atmosphere": "residential, peaceful"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "hoa_eligible": {
+        "highlands_district": false,
+        "five_trees": true,
+        "time_restrictions": {
+          "start": "05:20",
+          "end": "00:00"
+        }
+      },
+      "account": {
+        "account_id": "5140",
+        "account_name": "Five Trees HOA",
+        "account_type": "FREE_RIDE",
+        "usage_policy": "use_if_entitled"
+      },
+      "claire_knows": {
+        "greeting_phrase": "Moore Drive in Five Trees",
+        "confirmation_phrase": "taking you to Moore Drive",
+        "destination_context": "Five Trees neighborhood"
+      }
+    },
+    {
+      "id": "aspen-country-inn",
+      "canonical_name": "Aspen Country Inn",
+      "phonetic_variants": [
+        "aspen country inn",
+        "country inn"
+      ],
+      "common_misspellings": [
+        "aspen country"
+      ],
+      "address": "35478 CO-82, Aspen, CO 81611",
+      "coordinates": {"lat": 39.2045, "lng": -106.8421},
+      "category": "hotel",
+      "subcategory": "inn",
+      "price_level": 2,
+      "search_keywords": ["inn", "hotel", "budget", "highway 82"],
+      "local_context": {
+        "description": "Budget-friendly inn on Highway 82",
+        "landmarks_nearby": ["Highway 82", "Airport Road"],
+        "good_for": ["budget accommodations", "convenient location"],
+        "atmosphere": "simple, affordable",
+        "parking": "free parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "hoa_eligible": {
+        "highlands_district": true,
+        "five_trees": true,
+        "time_restrictions": {
+          "start": "05:20",
+          "end": "00:00"
+        }
+      },
+      "claire_knows": {
+        "greeting_phrase": "Aspen Country Inn",
+        "confirmation_phrase": "taking you to the Country Inn",
+        "destination_context": "Out on Highway 82"
+      }
+    },
+    {
+      "id": "pine-creek-cookhouse",
+      "canonical_name": "Pine Creek Cookhouse",
+      "phonetic_variants": [
+        "pine creek cookhouse",
+        "pine creek",
+        "cookhouse"
+      ],
+      "common_misspellings": [
+        "pinecreek"
+      ],
+      "address": "11399 Castle Creek Rd, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1489, "lng": -106.9261},
+      "category": "restaurant",
+      "subcategory": "mountain_dining",
+      "price_level": 3,
+      "search_keywords": ["restaurant", "backcountry", "skiing", "romantic"],
+      "local_context": {
+        "description": "Backcountry restaurant accessible by cross-country ski, snowshoe, or sleigh ride in winter",
+        "landmarks_nearby": ["Castle Creek Road", "Ashcroft Ghost Town"],
+        "good_for": ["romantic dining", "adventure dining", "cross-country skiing"],
+        "atmosphere": "rustic mountain lodge, unique experience",
+        "famous_for": "Ski-in dining, sleigh rides, backcountry location",
+        "reservations": "required",
+        "season": "Year-round, winter access by ski/snowshoe/sleigh"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Pine Creek Cookhouse - what an adventure",
+        "confirmation_phrase": "taking you to Pine Creek Cookhouse",
+        "destination_context": "Beautiful backcountry spot - hope you enjoy the experience"
+      }
+    },
+    {
+      "id": "justice-snows",
+      "canonical_name": "Justice Snow's",
+      "phonetic_variants": [
+        "justice snows",
+        "justice snow's",
+        "justice snow"
+      ],
+      "common_misspellings": [
+        "justice snow"
+      ],
+      "address": "328 E Hyman Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1915, "lng": -106.8192},
+      "category": "restaurant",
+      "subcategory": "american_roadhouse",
+      "price_level": 2,
+      "search_keywords": ["american", "burgers", "casual", "comfort food"],
+      "local_context": {
+        "description": "Lively American roadhouse with comfort food and live music",
+        "landmarks_nearby": ["Hyman Avenue Mall", "downtown Aspen"],
+        "good_for": ["burgers", "comfort food", "live music", "casual dining"],
+        "atmosphere": "fun, energetic, roadhouse vibe",
+        "reservations": "not needed",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Justice Snow's",
+        "confirmation_phrase": "taking you to Justice Snow's",
+        "destination_context": "Fun spot on the mall"
+      }
+    },
+    {
+      "id": "pyramid-bistro",
+      "canonical_name": "Pyramid Bistro",
+      "phonetic_variants": [
+        "pyramid bistro",
+        "pyramid",
+        "the pyramid"
+      ],
+      "common_misspellings": [
+        "pyrimid"
+      ],
+      "address": "221 E Main St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1911, "lng": -106.8199},
+      "category": "restaurant",
+      "subcategory": "contemporary_american",
+      "price_level": 3,
+      "search_keywords": ["contemporary", "american", "downtown", "upscale casual"],
+      "local_context": {
+        "description": "Contemporary American bistro in downtown Aspen",
+        "landmarks_nearby": ["Main Street", "downtown Aspen"],
+        "good_for": ["upscale casual dining", "seasonal menu"],
+        "atmosphere": "modern, welcoming",
+        "reservations": "recommended",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Pyramid Bistro",
+        "confirmation_phrase": "taking you to Pyramid",
+        "destination_context": "On Main Street downtown"
+      }
+    },
+    {
+      "id": "steakhouse-no-316",
+      "canonical_name": "Steakhouse No. 316",
+      "phonetic_variants": [
+        "steakhouse number 316",
+        "steakhouse 316",
+        "steakhouse no 316"
+      ],
+      "common_misspellings": [
+        "steakhouse no 316"
+      ],
+      "address": "316 E Hopkins Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1899, "lng": -106.8193},
+      "category": "restaurant",
+      "subcategory": "steakhouse",
+      "price_level": 4,
+      "search_keywords": ["steakhouse", "steak", "fine dining", "beef"],
+      "local_context": {
+        "description": "Upscale steakhouse with prime beef and classic sides",
+        "landmarks_nearby": ["Hopkins Avenue", "downtown Aspen"],
+        "good_for": ["steaks", "special occasions", "business dinners"],
+        "atmosphere": "classic steakhouse, upscale",
+        "reservations": "required",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Steakhouse 316",
+        "confirmation_phrase": "taking you to Steakhouse 316",
+        "destination_context": "Great spot for steak"
+      }
+    },
+    {
+      "id": "new-york-pizza",
+      "canonical_name": "New York Pizza",
+      "phonetic_variants": [
+        "new york pizza",
+        "ny pizza",
+        "newyork pizza"
+      ],
+      "common_misspellings": [
+        "newyork"
+      ],
+      "address": "215 S Galena St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1904, "lng": -106.8198},
+      "category": "restaurant",
+      "subcategory": "pizza",
+      "price_level": 1,
+      "search_keywords": ["pizza", "casual", "late night", "slices"],
+      "local_context": {
+        "description": "Classic New York-style pizza by the slice or pie",
+        "landmarks_nearby": ["Galena Street", "downtown Aspen"],
+        "good_for": ["pizza", "late night", "quick meal", "slices"],
+        "atmosphere": "casual, quick service",
+        "reservations": "not needed",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "New York Pizza",
+        "confirmation_phrase": "taking you to New York Pizza",
+        "destination_context": "On Galena"
+      }
+    },
+    {
+      "id": "bonnie-s-aspen",
+      "canonical_name": "Bonnie's",
+      "phonetic_variants": [
+        "bonnies",
+        "bonnie's",
+        "bonnie's restaurant"
+      ],
+      "common_misspellings": [
+        "bonnys"
+      ],
+      "address": "536 E Cooper Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1901, "lng": -106.8176},
+      "category": "restaurant",
+      "subcategory": "fine_dining_modern",
+      "price_level": 4,
+      "search_keywords": ["fine dining", "modern", "upscale", "tasting menu"],
+      "local_context": {
+        "description": "Modern fine dining with creative tasting menus",
+        "landmarks_nearby": ["Cooper Avenue", "downtown Aspen"],
+        "good_for": ["special occasions", "tasting menus", "creative cuisine"],
+        "atmosphere": "modern, intimate, sophisticated",
+        "reservations": "required",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Bonnie's - wonderful choice",
+        "confirmation_phrase": "taking you to Bonnie's",
+        "destination_context": "Great restaurant on Cooper"
+      }
+    },
+    {
+      "id": "hops-culture",
+      "canonical_name": "Hops Culture",
+      "phonetic_variants": [
+        "hops culture",
+        "hops",
+        "hops kultur"
+      ],
+      "common_misspellings": [
+        "hop culture"
+      ],
+      "address": "328 E Hyman Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1915, "lng": -106.8192},
+      "category": "restaurant",
+      "subcategory": "gastropub",
+      "price_level": 2,
+      "search_keywords": ["gastropub", "beer", "burgers", "casual"],
+      "local_context": {
+        "description": "Gastropub with craft beer and elevated pub food",
+        "landmarks_nearby": ["Hyman Avenue Mall", "downtown Aspen"],
+        "good_for": ["craft beer", "burgers", "casual dining"],
+        "atmosphere": "lively, beer-focused",
+        "reservations": "not needed",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Hops Culture",
+        "confirmation_phrase": "taking you to Hops",
+        "destination_context": "On the mall"
+      }
+    },
+    {
+      "id": "co-restaurant",
+      "canonical_name": "CO Restaurant",
+      "phonetic_variants": [
+        "c o restaurant",
+        "co restaurant",
+        "c.o. restaurant"
+      ],
+      "common_misspellings": [
+        "co"
+      ],
+      "address": "102 S Galena St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1908, "lng": -106.8199},
+      "category": "restaurant",
+      "subcategory": "contemporary_american",
+      "price_level": 3,
+      "search_keywords": ["contemporary", "farm to table", "local", "seasonal"],
+      "local_context": {
+        "description": "Contemporary restaurant focusing on Colorado ingredients",
+        "landmarks_nearby": ["Galena Street", "downtown Aspen"],
+        "good_for": ["farm to table", "local ingredients", "seasonal menus"],
+        "atmosphere": "modern, Colorado-focused",
+        "reservations": "recommended",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "CO Restaurant",
+        "confirmation_phrase": "taking you to CO",
+        "destination_context": "On Galena"
+      }
+    },
+    {
+      "id": "casa-tua",
+      "canonical_name": "Casa Tua",
+      "phonetic_variants": [
+        "casa tua",
+        "casa tu-a"
+      ],
+      "common_misspellings": [
+        "casa tuna"
+      ],
+      "address": "409 E Hopkins Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1900, "lng": -106.8188},
+      "category": "restaurant",
+      "subcategory": "italian_fine_dining",
+      "price_level": 4,
+      "search_keywords": ["italian", "fine dining", "upscale", "luxury"],
+      "local_context": {
+        "description": "Upscale Italian restaurant with Mediterranean flair",
+        "landmarks_nearby": ["Hopkins Avenue", "downtown Aspen"],
+        "good_for": ["Italian fine dining", "special occasions", "romantic dinners"],
+        "atmosphere": "elegant, sophisticated, Miami-inspired",
+        "reservations": "required",
+        "parking": "street parking nearby"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Casa Tua",
+        "confirmation_phrase": "taking you to Casa Tua",
+        "destination_context": "Beautiful Italian restaurant"
+      }
+    },
+    {
+      "id": "big-wrap",
+      "canonical_name": "Big Wrap",
+      "phonetic_variants": [
+        "big wrap",
+        "the big wrap",
+        "bigwrap"
+      ],
+      "common_misspellings": [
+        "bigwrap"
+      ],
+      "address": "520 E Durant Ave, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1897, "lng": -106.8182},
+      "category": "restaurant",
+      "subcategory": "casual_healthy",
+      "price_level": 1,
+      "search_keywords": ["wraps", "healthy", "quick", "casual", "lunch"],
+      "local_context": {
+        "description": "Quick casual spot for healthy wraps and bowls",
+        "landmarks_nearby": ["Whole Foods", "Durant Avenue"],
+        "good_for": ["quick lunch", "healthy food", "wraps", "bowls"],
+        "atmosphere": "casual, quick service",
+        "reservations": "not needed",
+        "parking": "nearby parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Big Wrap",
+        "confirmation_phrase": "taking you to Big Wrap",
+        "destination_context": "In Whole Foods on Durant"
+      }
+    },
+    {
+      "id": "brexi",
+      "canonical_name": "Brexi",
+      "phonetic_variants": [
+        "brexi",
+        "brexie"
+      ],
+      "common_misspellings": [
+        "brexie",
+        "brexit"
+      ],
+      "address": "202 N Mill St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1918, "lng": -106.8204},
+      "category": "restaurant",
+      "subcategory": "italian",
+      "price_level": 2,
+      "search_keywords": ["italian", "pizza", "pasta", "casual"],
+      "local_context": {
+        "description": "Casual Italian with pizza and pasta",
+        "landmarks_nearby": ["Mill Street", "downtown Aspen"],
+        "good_for": ["Italian", "pizza", "casual dining"],
+        "atmosphere": "relaxed, neighborhood Italian",
+        "reservations": "recommended",
+        "parking": "Mill Street parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Brexi",
+        "confirmation_phrase": "taking you to Brexi",
+        "destination_context": "On Mill Street"
+      }
+    },
+    {
+      "id": "whitehouse-pizza",
+      "canonical_name": "White House Pizza",
+      "phonetic_variants": [
+        "white house pizza",
+        "whitehouse pizza"
+      ],
+      "common_misspellings": [
+        "whitehouse"
+      ],
+      "address": "402 S Hunter St, Aspen, CO 81611",
+      "coordinates": {"lat": 39.1890, "lng": -106.8217},
+      "category": "restaurant",
+      "subcategory": "pizza",
+      "price_level": 2,
+      "search_keywords": ["pizza", "casual", "family"],
+      "local_context": {
+        "description": "Local favorite for pizza and Italian",
+        "landmarks_nearby": ["Hunter Street", "West End"],
+        "good_for": ["pizza", "family dining", "casual"],
+        "atmosphere": "family-friendly, casual",
+        "reservations": "not needed",
+        "parking": "street parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "White House Pizza",
+        "confirmation_phrase": "taking you to White House Pizza",
+        "destination_context": "On Hunter Street"
+      }
+    }
+  ]
+}

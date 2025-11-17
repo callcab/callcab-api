@@ -1,0 +1,9 @@
+{
+  "town": "eagle",
+  "town_display": "Eagle",
+  "coordinates": {"lat": 39.6553, "lng": -106.8289},
+  "radius_miles": 5,
+  "locations": [
+    {"id": "eagle-county-airport", "canonical_name": "Eagle County Regional Airport", "full_name": "Eagle County Regional Airport (EGE)", "phonetic_variants": ["eagle airport", "ege", "e g e", "eagle county airport"], "common_misspellings": ["eagle county"], "address": "219 Eldon Wilson Pkwy, Gypsum, CO 81637", "coordinates": {"lat": 39.6427, "lng": -106.9177}, "category": "airport", "subcategory": "regional_airport", "search_keywords": ["airport", "ege", "flights"], "local_context": {"description": "Regional airport serving Vail Valley", "landmarks_nearby": ["I-70", "Gypsum"], "good_for": ["flights", "arrivals", "departures"], "atmosphere": "mountain airport", "parking": "short and long-term parking"}, "restrictions": {"allows_pickup": false, "allows_dropoff": true, "no_cell_signal": false, "prebooking_restricted": false, "requires_radio_dispatch": false, "notes": "CRITICAL: Cannot book pickups from airport. Passengers must go to ground transportation."}, "airport_specific": {"arrival_policy": "DO_NOT_BOOK", "arrival_script": "I can't book pickups from the terminal, but our taxis are at ground transportation outside", "departure_allowed": true, "airport_fee": 5.00}, "claire_knows": {"greeting_phrase": "Taking you to Eagle Airport", "confirmation_phrase": "taking you to EGE", "destination_context": "We'll add the $5 airport fee", "booking_from_warning": "I can't book pickups from the terminal, but taxis are at ground transportation", "arrival_warning": "Our taxis are outside at ground transportation"}}
+  ]
+}

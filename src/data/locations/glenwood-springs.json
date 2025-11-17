@@ -1,0 +1,895 @@
+{
+  "town": "glenwood-springs",
+  "town_display": "Glenwood Springs",
+  "coordinates": {"lat": 39.5505, "lng": -107.3248},
+  "radius_miles": 8,
+  "locations": [
+    {
+      "id": "glenwood-hot-springs-pool",
+      "canonical_name": "Glenwood Hot Springs Pool",
+      "phonetic_variants": [
+        "glenwood hot springs",
+        "hot springs pool",
+        "glenwood springs pool",
+        "the hot springs"
+      ],
+      "common_misspellings": [
+        "glenwood hotsprings"
+      ],
+      "address": "401 N River St, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5533, "lng": -107.3283},
+      "category": "recreation",
+      "subcategory": "hot_springs",
+      "price_level": 2,
+      "search_keywords": ["hot springs", "swimming", "pool", "spa", "family"],
+      "local_context": {
+        "description": "World's largest mineral hot springs pool, a Glenwood landmark since 1888",
+        "landmarks_nearby": ["Grand Avenue", "Glenwood Canyon"],
+        "good_for": ["families", "soaking", "swimming", "relaxation"],
+        "atmosphere": "historic, family-friendly, iconic",
+        "famous_for": "Largest hot springs pool in the world, historic destination",
+        "reservations": "not needed",
+        "parking": "large parking lot",
+        "hours": "Open daily year-round"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Glenwood Hot Springs - the big pool",
+        "confirmation_phrase": "taking you to the Hot Springs Pool",
+        "destination_context": "The famous hot springs pool"
+      }
+    },
+    {
+      "id": "iron-mountain-hot-springs",
+      "canonical_name": "Iron Mountain Hot Springs",
+      "phonetic_variants": [
+        "iron mountain",
+        "iron mountain hot springs",
+        "ironmountain"
+      ],
+      "common_misspellings": [
+        "ironmountain"
+      ],
+      "address": "281 Centennial St, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5522, "lng": -107.3305},
+      "category": "recreation",
+      "subcategory": "hot_springs",
+      "price_level": 3,
+      "search_keywords": ["hot springs", "spa", "soaking", "pools", "relaxation"],
+      "local_context": {
+        "description": "Newer hot springs with 16 soaking pools along the Colorado River",
+        "landmarks_nearby": ["Colorado River", "downtown Glenwood"],
+        "good_for": ["adults", "relaxation", "romantic", "river views"],
+        "atmosphere": "serene, modern, adults-focused",
+        "famous_for": "Multiple temperature pools, riverside setting",
+        "reservations": "recommended",
+        "parking": "parking lot"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Iron Mountain Hot Springs",
+        "confirmation_phrase": "taking you to Iron Mountain",
+        "destination_context": "The newer hot springs with all the pools"
+      }
+    },
+    {
+      "id": "glenwood-caverns",
+      "canonical_name": "Glenwood Caverns Adventure Park",
+      "phonetic_variants": [
+        "glenwood caverns",
+        "glenwood caverns adventure park",
+        "caverns",
+        "adventure park"
+      ],
+      "common_misspellings": [
+        "glenwood cavern"
+      ],
+      "address": "51000 Two Rivers Plaza Rd, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5639, "lng": -107.3136},
+      "category": "recreation",
+      "subcategory": "theme_park",
+      "price_level": 3,
+      "search_keywords": ["caverns", "theme park", "rides", "caves", "family"],
+      "local_context": {
+        "description": "Mountain-top adventure park with caves, rides, and spectacular views",
+        "landmarks_nearby": ["Iron Mountain", "Glenwood Canyon"],
+        "good_for": ["families", "adventure", "cave tours", "thrill rides"],
+        "atmosphere": "fun, adventurous, family entertainment",
+        "famous_for": "Highest elevation theme park in North America, cave tours",
+        "reservations": "recommended online",
+        "parking": "gondola access from town",
+        "season": "Seasonal, check website"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Glenwood Caverns - have a great time",
+        "confirmation_phrase": "taking you to Glenwood Caverns",
+        "destination_context": "The adventure park up the mountain"
+      }
+    },
+    {
+      "id": "slope-and-hatch",
+      "canonical_name": "Slope & Hatch",
+      "phonetic_variants": [
+        "slope and hatch",
+        "slope n hatch",
+        "slope & hatch"
+      ],
+      "common_misspellings": [
+        "slope and hatch"
+      ],
+      "address": "721 Grand Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5505, "lng": -107.3262},
+      "category": "restaurant",
+      "subcategory": "bistro",
+      "price_level": 2,
+      "search_keywords": ["restaurant", "bistro", "breakfast", "lunch", "brunch"],
+      "local_context": {
+        "description": "Popular bistro with creative breakfast and lunch",
+        "landmarks_nearby": ["Grand Avenue", "downtown Glenwood"],
+        "good_for": ["breakfast", "brunch", "lunch", "coffee"],
+        "atmosphere": "casual, friendly, local favorite",
+        "reservations": "not needed",
+        "parking": "street parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Slope & Hatch on Grand",
+        "confirmation_phrase": "taking you to Slope & Hatch",
+        "destination_context": "Great spot for breakfast"
+      }
+    },
+    {
+      "id": "smoke-modern-bbq",
+      "canonical_name": "Smoke Modern BBQ",
+      "phonetic_variants": [
+        "smoke",
+        "smoke bbq",
+        "smoke modern bbq"
+      ],
+      "common_misspellings": [
+        "smoke barbeque"
+      ],
+      "address": "915 Grand Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5498, "lng": -107.3235},
+      "category": "restaurant",
+      "subcategory": "bbq",
+      "price_level": 2,
+      "search_keywords": ["bbq", "barbecue", "ribs", "brisket", "casual"],
+      "local_context": {
+        "description": "Modern barbecue restaurant with smoked meats and craft cocktails",
+        "landmarks_nearby": ["Grand Avenue", "downtown Glenwood"],
+        "good_for": ["bbq", "brisket", "ribs", "casual dining"],
+        "atmosphere": "modern, lively, casual",
+        "reservations": "recommended",
+        "parking": "street parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Smoke BBQ",
+        "confirmation_phrase": "taking you to Smoke",
+        "destination_context": "Great barbecue on Grand"
+      }
+    },
+    {
+      "id": "riviera-glenwood",
+      "canonical_name": "Riviera",
+      "full_name": "Riviera Supper Club & Turntable",
+      "phonetic_variants": [
+        "riviera",
+        "the riviera",
+        "riviera supper club"
+      ],
+      "common_misspellings": [
+        "riveria"
+      ],
+      "address": "702 Grand Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5507, "lng": -107.3266},
+      "category": "restaurant",
+      "subcategory": "supper_club",
+      "price_level": 3,
+      "search_keywords": ["supper club", "steakhouse", "fine dining", "live music"],
+      "local_context": {
+        "description": "Classic supper club with steaks and live music",
+        "landmarks_nearby": ["Grand Avenue", "downtown Glenwood"],
+        "good_for": ["steaks", "special occasions", "live music", "date night"],
+        "atmosphere": "classic supper club, sophisticated",
+        "famous_for": "Historic supper club, turntable stage",
+        "reservations": "recommended",
+        "parking": "street parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "The Riviera - classic choice",
+        "confirmation_phrase": "taking you to Riviera",
+        "destination_context": "Historic supper club"
+      }
+    },
+    {
+      "id": "juicy-lucy-glenwood",
+      "canonical_name": "Juicy Lucy",
+      "phonetic_variants": [
+        "juicy lucy",
+        "juicy lucys",
+        "juicylucy"
+      ],
+      "common_misspellings": [
+        "juicy lucys",
+        "juicylucy"
+      ],
+      "address": "308 7th St, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5493, "lng": -107.3278},
+      "category": "restaurant",
+      "subcategory": "steakhouse_casual",
+      "price_level": 2,
+      "search_keywords": ["steakhouse", "burgers", "casual", "family"],
+      "local_context": {
+        "description": "Casual steakhouse with burgers and family-friendly atmosphere",
+        "landmarks_nearby": ["7th Street", "downtown Glenwood"],
+        "good_for": ["steaks", "burgers", "family dining", "casual"],
+        "atmosphere": "casual, family-friendly",
+        "reservations": "not needed",
+        "parking": "street parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Juicy Lucy",
+        "confirmation_phrase": "taking you to Juicy Lucy",
+        "destination_context": "Good casual steakhouse"
+      }
+    },
+    {
+      "id": "pullman-glenwood",
+      "canonical_name": "The Pullman",
+      "phonetic_variants": [
+        "pullman",
+        "the pullman",
+        "pull man"
+      ],
+      "common_misspellings": [
+        "pull man"
+      ],
+      "address": "502 Colorado Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5502, "lng": -107.3270},
+      "category": "restaurant",
+      "subcategory": "american_casual",
+      "price_level": 2,
+      "search_keywords": ["american", "casual", "comfort food", "bar"],
+      "local_context": {
+        "description": "Casual American restaurant with comfort food and craft beer",
+        "landmarks_nearby": ["Colorado Avenue", "downtown Glenwood"],
+        "good_for": ["burgers", "comfort food", "craft beer", "casual dining"],
+        "atmosphere": "relaxed, neighborhood spot",
+        "reservations": "not needed",
+        "parking": "street parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "The Pullman",
+        "confirmation_phrase": "taking you to The Pullman",
+        "destination_context": "On Colorado Avenue"
+      }
+    },
+    {
+      "id": "zheng-asian-bistro",
+      "canonical_name": "Zheng Asian Bistro",
+      "phonetic_variants": [
+        "zheng",
+        "zeng",
+        "zheng asian",
+        "zeng asian bistro"
+      ],
+      "common_misspellings": [
+        "zeng",
+        "zhang"
+      ],
+      "address": "920 Grand Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5497, "lng": -107.3234},
+      "category": "restaurant",
+      "subcategory": "asian_fusion",
+      "price_level": 2,
+      "search_keywords": ["asian", "sushi", "chinese", "fusion"],
+      "local_context": {
+        "description": "Asian fusion restaurant with sushi and Chinese cuisine",
+        "landmarks_nearby": ["Grand Avenue", "downtown Glenwood"],
+        "good_for": ["sushi", "asian food", "variety"],
+        "atmosphere": "modern, casual",
+        "reservations": "recommended",
+        "parking": "street parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Zheng Asian Bistro",
+        "confirmation_phrase": "taking you to Zheng",
+        "destination_context": "On Grand Avenue"
+      }
+    },
+    {
+      "id": "hotel-colorado",
+      "canonical_name": "Hotel Colorado",
+      "phonetic_variants": [
+        "hotel colorado",
+        "the hotel colorado",
+        "colorado hotel"
+      ],
+      "common_misspellings": [
+        "hotel colorado"
+      ],
+      "address": "526 Pine St, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5521, "lng": -107.3272},
+      "category": "hotel",
+      "subcategory": "historic_hotel",
+      "price_level": 3,
+      "search_keywords": ["hotel", "historic", "landmark", "accommodation"],
+      "local_context": {
+        "description": "Historic hotel built in 1893, a Glenwood landmark",
+        "landmarks_nearby": ["Hot Springs Pool", "downtown Glenwood"],
+        "good_for": ["historic accommodations", "central location"],
+        "atmosphere": "historic elegance, Victorian",
+        "famous_for": "Over 130 years old, Teddy Roosevelt stayed here",
+        "parking": "on-site parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Hotel Colorado - historic landmark",
+        "confirmation_phrase": "taking you to Hotel Colorado",
+        "destination_context": "The beautiful historic hotel"
+      }
+    },
+    {
+      "id": "hotel-glenwood-springs",
+      "canonical_name": "Hotel Glenwood Springs",
+      "phonetic_variants": [
+        "hotel glenwood springs",
+        "hotel glenwood",
+        "glenwood hotel"
+      ],
+      "common_misspellings": [
+        "hotel glenwood"
+      ],
+      "address": "52000 US-6, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5533, "lng": -107.3050},
+      "category": "hotel",
+      "subcategory": "resort_hotel",
+      "price_level": 3,
+      "search_keywords": ["hotel", "resort", "hot springs", "spa"],
+      "local_context": {
+        "description": "Resort hotel with athletic club and hot springs access",
+        "landmarks_nearby": ["I-70", "Glenwood Canyon"],
+        "good_for": ["resort amenities", "hot springs access", "athletic club"],
+        "atmosphere": "resort, full-service",
+        "parking": "free parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Hotel Glenwood Springs",
+        "confirmation_phrase": "taking you to Hotel Glenwood Springs",
+        "destination_context": "The resort hotel"
+      }
+    },
+    {
+      "id": "hampton-inn-glenwood",
+      "canonical_name": "Hampton Inn Glenwood Springs",
+      "phonetic_variants": [
+        "hampton inn",
+        "hampton",
+        "hampton glenwood"
+      ],
+      "common_misspellings": [
+        "hampton"
+      ],
+      "address": "401 W 6th St, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5488, "lng": -107.3303},
+      "category": "hotel",
+      "subcategory": "chain_hotel",
+      "price_level": 2,
+      "search_keywords": ["hotel", "chain", "accommodation", "budget"],
+      "local_context": {
+        "description": "National chain hotel with comfortable accommodations",
+        "landmarks_nearby": ["downtown Glenwood", "6th Street"],
+        "good_for": ["reliable accommodations", "business travel"],
+        "atmosphere": "standard chain hotel",
+        "parking": "free parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Hampton Inn",
+        "confirmation_phrase": "taking you to the Hampton",
+        "destination_context": "On 6th Street"
+      }
+    },
+    {
+      "id": "city-market-glenwood",
+      "canonical_name": "City Market",
+      "phonetic_variants": [
+        "city market",
+        "citymarket"
+      ],
+      "common_misspellings": [
+        "citymarket"
+      ],
+      "address": "1325 Grand Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5477, "lng": -107.3168},
+      "category": "shopping",
+      "subcategory": "grocery",
+      "price_level": 2,
+      "search_keywords": ["grocery", "supermarket", "shopping", "food"],
+      "confusion_matrix": [
+        {
+          "confused_with": "city-market-aspen",
+          "reason": "Same chain, different town",
+          "disambiguation": "The Glenwood City Market is on Grand Avenue, Aspen's is on Cooper"
+        }
+      ],
+      "local_context": {
+        "description": "Major grocery store chain with full selection",
+        "landmarks_nearby": ["Grand Avenue", "east Glenwood"],
+        "good_for": ["groceries", "pharmacy", "shopping"],
+        "atmosphere": "standard supermarket",
+        "parking": "large parking lot"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "City Market",
+        "confirmation_phrase": "taking you to City Market",
+        "destination_context": "On Grand Avenue"
+      }
+    },
+    {
+      "id": "walmart-glenwood",
+      "canonical_name": "Walmart",
+      "phonetic_variants": [
+        "walmart",
+        "wal mart",
+        "wal-mart"
+      ],
+      "common_misspellings": [
+        "wal mart"
+      ],
+      "address": "3010 S Glen Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5310, "lng": -107.3417},
+      "category": "shopping",
+      "subcategory": "big_box",
+      "price_level": 1,
+      "search_keywords": ["walmart", "shopping", "retail", "groceries"],
+      "local_context": {
+        "description": "Major retail chain with groceries and general merchandise",
+        "landmarks_nearby": ["South Glen Avenue", "Highway 82"],
+        "good_for": ["shopping", "groceries", "retail"],
+        "atmosphere": "big box store",
+        "parking": "large parking lot"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Walmart",
+        "confirmation_phrase": "taking you to Walmart",
+        "destination_context": "Out on South Glen"
+      }
+    },
+    {
+      "id": "valley-view-hospital",
+      "canonical_name": "Valley View Hospital",
+      "phonetic_variants": [
+        "valley view",
+        "valley view hospital",
+        "valleyview"
+      ],
+      "common_misspellings": [
+        "valleyview"
+      ],
+      "address": "1906 Blake Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5367, "lng": -107.3200},
+      "category": "medical",
+      "subcategory": "hospital",
+      "search_keywords": ["hospital", "medical", "emergency", "healthcare"],
+      "local_context": {
+        "description": "Regional hospital serving the Roaring Fork and Colorado River valleys",
+        "landmarks_nearby": ["Blake Avenue", "south Glenwood"],
+        "good_for": ["medical care", "emergency", "healthcare"],
+        "atmosphere": "professional medical facility",
+        "parking": "hospital parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Valley View Hospital",
+        "confirmation_phrase": "taking you to the hospital",
+        "destination_context": "On Blake Avenue"
+      }
+    },
+    {
+      "id": "amtrak-glenwood",
+      "canonical_name": "Glenwood Springs Amtrak Station",
+      "phonetic_variants": [
+        "amtrak",
+        "amtrak station",
+        "train station",
+        "glenwood station"
+      ],
+      "common_misspellings": [
+        "amtrack"
+      ],
+      "address": "413 7th St, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5495, "lng": -107.3274},
+      "category": "transportation",
+      "subcategory": "train_station",
+      "search_keywords": ["amtrak", "train", "station", "transportation"],
+      "local_context": {
+        "description": "Amtrak train station on the California Zephyr route",
+        "landmarks_nearby": ["7th Street", "downtown Glenwood"],
+        "good_for": ["train travel", "scenic routes"],
+        "atmosphere": "historic train station",
+        "famous_for": "California Zephyr route through Glenwood Canyon",
+        "parking": "street parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Amtrak station",
+        "confirmation_phrase": "taking you to the train station",
+        "destination_context": "Downtown on 7th"
+      }
+    },
+    {
+      "id": "sunlight-mountain",
+      "canonical_name": "Sunlight Mountain Resort",
+      "phonetic_variants": [
+        "sunlight",
+        "sunlight mountain",
+        "sunlight ski"
+      ],
+      "common_misspellings": [
+        "sun light"
+      ],
+      "address": "10901 County Rd 117, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.4200, "lng": -107.3694},
+      "category": "ski_area",
+      "subcategory": "ski_resort",
+      "search_keywords": ["skiing", "ski", "mountain", "family"],
+      "local_context": {
+        "description": "Family-friendly ski area with affordable skiing",
+        "landmarks_nearby": ["Four Mile Road", "south of Glenwood"],
+        "good_for": ["family skiing", "affordable", "uncrowded"],
+        "atmosphere": "local, family-friendly, laid-back",
+        "famous_for": "Affordable skiing, no crowds, local favorite",
+        "season": "Winter ski season"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Sunlight Mountain",
+        "confirmation_phrase": "taking you to Sunlight",
+        "destination_context": "Great local ski area"
+      }
+    },
+    {
+      "id": "hanging-lake-trailhead",
+      "canonical_name": "Hanging Lake Trailhead",
+      "phonetic_variants": [
+        "hanging lake",
+        "hanging lake trail",
+        "hanginglake"
+      ],
+      "common_misspellings": [
+        "hanginglake"
+      ],
+      "address": "Glenwood Canyon, I-70 Exit 125, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.6008, "lng": -107.2039},
+      "category": "recreation",
+      "subcategory": "hiking",
+      "search_keywords": ["hiking", "trail", "lake", "scenic"],
+      "local_context": {
+        "description": "Iconic Colorado hike to a stunning hanging lake, permit required",
+        "landmarks_nearby": ["Glenwood Canyon", "I-70"],
+        "good_for": ["hiking", "photography", "scenic beauty"],
+        "atmosphere": "spectacular natural beauty",
+        "famous_for": "One of Colorado's most beautiful hikes, turquoise waters",
+        "reservations": "required - permit system",
+        "season": "Seasonal access, check conditions"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false,
+        "notes": "Permit required for hiking, reservation system in place"
+      },
+      "claire_knows": {
+        "greeting_phrase": "Hanging Lake - beautiful spot",
+        "confirmation_phrase": "taking you to Hanging Lake trailhead",
+        "destination_context": "Make sure you have your permit",
+        "arrival_warning": "Hope you have your hiking permit!"
+      }
+    },
+    {
+      "id": "doc-holliday-grave",
+      "canonical_name": "Doc Holliday's Grave",
+      "phonetic_variants": [
+        "doc holliday",
+        "doc holiday grave",
+        "holliday grave",
+        "linwood cemetery"
+      ],
+      "common_misspellings": [
+        "doc holiday",
+        "doc hollidays"
+      ],
+      "address": "Bennett Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5617, "lng": -107.3144},
+      "category": "recreation",
+      "subcategory": "historic_site",
+      "search_keywords": ["historic", "cemetery", "doc holliday", "landmark"],
+      "local_context": {
+        "description": "Historic grave site of Wild West gunfighter Doc Holliday",
+        "landmarks_nearby": ["Linwood Cemetery", "Bennett Avenue"],
+        "good_for": ["history", "Old West", "photography"],
+        "atmosphere": "historic, scenic cemetery",
+        "famous_for": "Final resting place of Doc Holliday",
+        "parking": "limited parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Doc Holliday's grave",
+        "confirmation_phrase": "taking you to see Doc Holliday's grave",
+        "destination_context": "Up on the hill at Linwood Cemetery"
+      }
+    },
+    {
+      "id": "two-rivers-park",
+      "canonical_name": "Two Rivers Park",
+      "phonetic_variants": [
+        "two rivers park",
+        "two rivers",
+        "2 rivers park"
+      ],
+      "common_misspellings": [
+        "2 rivers"
+      ],
+      "address": "2 Rivers Rd, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5623, "lng": -107.3158},
+      "category": "recreation",
+      "subcategory": "park",
+      "search_keywords": ["park", "recreation", "trails", "river"],
+      "local_context": {
+        "description": "Riverside park with trails and recreation facilities",
+        "landmarks_nearby": ["Colorado River", "Roaring Fork River confluence"],
+        "good_for": ["walking", "biking", "picnics", "river access"],
+        "atmosphere": "family-friendly, outdoor recreation",
+        "parking": "parking lot"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Two Rivers Park",
+        "confirmation_phrase": "taking you to Two Rivers Park",
+        "destination_context": "Nice park by the rivers"
+      }
+    },
+    {
+      "id": "fiesta-guadalajara",
+      "canonical_name": "Fiesta Guadalajara",
+      "phonetic_variants": [
+        "fiesta",
+        "fiesta guadalajara",
+        "guadalajara"
+      ],
+      "common_misspellings": [
+        "feista"
+      ],
+      "address": "1512 Grand Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5469, "lng": -107.3140},
+      "category": "restaurant",
+      "subcategory": "mexican",
+      "price_level": 1,
+      "search_keywords": ["mexican", "casual", "family", "authentic"],
+      "local_context": {
+        "description": "Authentic Mexican restaurant with family recipes",
+        "landmarks_nearby": ["Grand Avenue", "east Glenwood"],
+        "good_for": ["Mexican food", "family dining", "affordable"],
+        "atmosphere": "casual, family-friendly",
+        "reservations": "not needed",
+        "parking": "parking lot"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Fiesta Guadalajara",
+        "confirmation_phrase": "taking you to Fiesta",
+        "destination_context": "Good Mexican food"
+      }
+    },
+    {
+      "id": "mogos-pizza",
+      "canonical_name": "Mogo's",
+      "full_name": "Mogo's Korean BBQ & Pizza",
+      "phonetic_variants": [
+        "mogos",
+        "mogo's",
+        "mogos pizza"
+      ],
+      "common_misspellings": [
+        "mogos"
+      ],
+      "address": "817 Colorado Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5498, "lng": -107.3248},
+      "category": "restaurant",
+      "subcategory": "fusion",
+      "price_level": 2,
+      "search_keywords": ["korean", "pizza", "fusion", "casual"],
+      "local_context": {
+        "description": "Unique fusion of Korean BBQ and pizza",
+        "landmarks_nearby": ["Colorado Avenue", "downtown Glenwood"],
+        "good_for": ["Korean food", "pizza", "creative cuisine"],
+        "atmosphere": "casual, unique",
+        "reservations": "not needed",
+        "parking": "street parking"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "Mogo's",
+        "confirmation_phrase": "taking you to Mogo's",
+        "destination_context": "Korean BBQ and pizza"
+      }
+    },
+    {
+      "id": "river-city-grill",
+      "canonical_name": "River City Grill",
+      "phonetic_variants": [
+        "river city",
+        "river city grill",
+        "rivercity"
+      ],
+      "common_misspellings": [
+        "rivercity"
+      ],
+      "address": "2525 S Grand Ave, Glenwood Springs, CO 81601",
+      "coordinates": {"lat": 39.5320, "lng": -107.3387},
+      "category": "restaurant",
+      "subcategory": "american_casual",
+      "price_level": 2,
+      "search_keywords": ["american", "casual", "steaks", "seafood"],
+      "local_context": {
+        "description": "Casual American grill with steaks and seafood",
+        "landmarks_nearby": ["South Grand", "south Glenwood"],
+        "good_for": ["steaks", "seafood", "casual dining"],
+        "atmosphere": "casual, family-friendly",
+        "reservations": "recommended",
+        "parking": "parking lot"
+      },
+      "restrictions": {
+        "allows_pickup": true,
+        "allows_dropoff": true,
+        "no_cell_signal": false,
+        "prebooking_restricted": false,
+        "requires_radio_dispatch": false
+      },
+      "claire_knows": {
+        "greeting_phrase": "River City Grill",
+        "confirmation_phrase": "taking you to River City",
+        "destination_context": "Out on South Grand"
+      }
+    }
+  ]
+}

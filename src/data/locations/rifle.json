@@ -1,0 +1,9 @@
+{
+  "town": "rifle",
+  "town_display": "Rifle",
+  "coordinates": {"lat": 39.5347, "lng": -107.7831},
+  "radius_miles": 5,
+  "locations": [
+    {"id": "walmart-rifle", "canonical_name": "Walmart", "phonetic_variants": ["walmart", "wal mart", "wal-mart"], "common_misspellings": ["wal mart"], "address": "2500 Railroad Ave, Rifle, CO 81650", "coordinates": {"lat": 39.5350, "lng": -107.7835}, "category": "shopping", "subcategory": "big_box", "price_level": 1, "search_keywords": ["walmart", "shopping", "retail"], "local_context": {"description": "Major retail chain", "landmarks_nearby": ["Railroad Avenue", "I-70"], "good_for": ["shopping", "groceries"], "atmosphere": "big box store", "parking": "large parking lot"}, "restrictions": {"allows_pickup": true, "allows_dropoff": true, "no_cell_signal": false, "prebooking_restricted": false, "requires_radio_dispatch": false}, "claire_knows": {"greeting_phrase": "Walmart in Rifle", "confirmation_phrase": "taking you to Walmart", "destination_context": "In Rifle"}}
+  ]
+}
