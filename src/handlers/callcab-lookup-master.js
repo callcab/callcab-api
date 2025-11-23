@@ -291,10 +291,308 @@ export async function handleCallcabLookupMaster(request, env) {
   }
 }
 
-// ------------------ HELPER FUNCTIONS ------------------
+async function fetchIcabbiData(phone, env) {
+  try {
+    const BASE = (env.ICABBI_BASE_URL || 'https://api.icabbi.us/us2').replace(/\/+$/, '');
+    const appKey = env.ICABBI_APP_KEY;
+    const secret = env.ICABBI_SECRET;
+    
+    if (!appKey || !secret) {
+      console.error('[iCabbi] Missing credentials');
+      return { found: false, hasActiveTrips: false, error: 'MISSING_CREDENTIALS' };
+    }
+    
+    const basicAuth = btoa(`${appKey}:${secret}`);
+    const BASE_HEADERS = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${basicAuth}`
+    };
+    
+    // Normalize phone to multiple formats
+    const digits = String(phone).replace(/\D/g, '');
+    const norm = digits.replace(/^1?(\d{10})$/, '$1');
+    const e164 = `+1${norm}`;
+    const idd = `001${norm}`;
+    const raw = String(phone).trim();
+    const formats = Array.from(new Set([idd, e164, norm, raw])).filter(v => v && v.length >= 7);
+    
+    console.log('[iCabbi] Fetching customer data for formats:', formats);
+    
+    // ========================================================================
+    // STEP 1: FIND USER
+    // ========================================================================
+    
+    let user = null;
+    
+    // Try header-based lookup
+    for (const p of formats) {
+      try {
+        const response = await fetch(`${BASE}/users/index`, {
+          method: 'POST',
+          headers: { ...BASE_HEADERS, 'Phone': p }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          user = data?.body?.user || null;
+          if (user) {
+            console.log('[iCabbi] Found user via header:', { format: p, id: user.id });
+            break;
+          }
+        }
+      } catch (err) {
+        console.error('[iCabbi] Header attempt error:', err.message);
+      }
+    }
+    
+    // Try query parameter lookup if header failed
+    if (!user) {
+      for (const p of formats) {
+        try {
+          const response = await fetch(`${BASE}/users/index?phone=${encodeURIComponent(p)}`, {
+            method: 'POST',
+            headers: BASE_HEADERS
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            user = data?.body?.user || null;
+            if (user) {
+              console.log('[iCabbi] Found user via query:', { format: p, id: user.id });
+              break;
+            }
+          }
+        } catch (err) {
+          console.error('[iCabbi] Query attempt error:', err.message);
+        }
+      }
+    }
+    
+    if (!user) {
+      console.log('[iCabbi] No user found');
+      return { found: false, hasActiveTrips: false, phoneTried: formats };
+    }
+    
+    if (user.banned) {
+      console.log('[iCabbi] User is banned:', user.id);
+      return {
+        found: true,
+        user: { id: user.id, phone: user.phone, name: user.name, banned: true },
+        hasActiveTrips: false,
+        activeTrips: []
+      };
+    }
+    
+    // ========================================================================
+    // STEP 2: GET ADDRESS HISTORY
+    // ========================================================================
+    
+    const phoneForHistory = user.phone || idd;
+    let addresses = [];
+    
+    console.log('[iCabbi] Fetching address history for:', phoneForHistory);
+    
+    try {
+      // Try with query parameter first
+      let addressResponse = await fetch(
+        `${BASE}/users/addresses?phone=${encodeURIComponent(phoneForHistory)}&period=365&type=PICKUP&limit=20`,
+        { method: 'GET', headers: BASE_HEADERS }
+      );
+      
+      if (addressResponse.ok) {
+        const addressData = await addressResponse.json();
+        addresses = Array.isArray(addressData?.body?.addresses) ? addressData.body.addresses : [];
+        console.log('[iCabbi] Found addresses via query:', addresses.length);
+      }
+      
+      // Try with header if query failed
+      if (addresses.length === 0) {
+        addressResponse = await fetch(
+          `${BASE}/users/addresses?period=365&type=PICKUP&limit=20`,
+          { 
+            method: 'GET', 
+            headers: { ...BASE_HEADERS, 'Phone': phoneForHistory }
+          }
+        );
+        
+        if (addressResponse.ok) {
+          const addressData = await addressResponse.json();
+          addresses = Array.isArray(addressData?.body?.addresses) ? addressData.body.addresses : [];
+          console.log('[iCabbi] Found addresses via header:', addresses.length);
+        }
+      }
+    } catch (err) {
+      console.error('[iCabbi] Address fetch error:', err.message);
+    }
+    
+    // Filter to addresses used 2+ times (pickup addresses customer uses frequently)
+    const frequentAddresses = addresses.filter(a => (a.used ?? 0) >= 2);
+    console.log('[iCabbi] Frequent addresses (2+ uses):', frequentAddresses.length);
+    
+    // Pick primary address (most used pickup location)
+    let primaryAddress = null;
+    if (frequentAddresses.length > 0) {
+      const sorted = [...frequentAddresses].sort((a, b) => (b.used || 0) - (a.used || 0));
+      primaryAddress = sorted[0].formatted || null;
+      console.log('[iCabbi] Primary address:', primaryAddress, '(used', sorted[0].used, 'times)');
+    }
+    
+    // ========================================================================
+    // STEP 3: GET ACTIVE/UPCOMING TRIPS
+    // ========================================================================
+    
+    let activeTrips = [];
+    let hasActiveTrips = false;
+    let nextTrip = null;
+    
+    console.log('[iCabbi] Checking for active/upcoming trips...');
+    
+    try {
+      // Format phone for bookings endpoint (needs 00 prefix)
+      const phoneForUpcoming = phoneForHistory.startsWith('+') 
+        ? '00' + phoneForHistory.slice(1)
+        : phoneForHistory.startsWith('001') 
+          ? phoneForHistory 
+          : '001' + norm;
+      
+      console.log('[iCabbi] Booking lookup phone format:', phoneForUpcoming);
+      
+      const bookingResponse = await fetch(
+        `${BASE}/bookings/upcoming?phone=${encodeURIComponent(phoneForUpcoming)}`,
+        { method: 'GET', headers: BASE_HEADERS }
+      );
+      
+      if (bookingResponse.ok) {
+        const bookingData = await bookingResponse.json();
+        console.log('[iCabbi] Booking response received');
+        
+        if (bookingData?.body?.bookings && Array.isArray(bookingData.body.bookings)) {
+          console.log('[iCabbi] Total bookings found:', bookingData.body.bookings.length);
+          
+          const now = new Date();
+          const activeStatuses = ['NEW', 'ASSIGNED', 'ACCEPTED', 'PICKED_UP', 'DISPATCHED', 'PENDING', 'PREBOOKED'];
+          
+          activeTrips = bookingData.body.bookings
+            .filter(booking => {
+              const isActiveStatus = activeStatuses.includes(String(booking.status || '').toUpperCase());
+              const pickupDate = booking.pickup_date ? new Date(booking.pickup_date) : null;
+              // Include trips within last 30 minutes or future trips
+              const isRecentOrFuture = pickupDate && (pickupDate.getTime() > now.getTime() - 30 * 60 * 1000);
+              return isActiveStatus && isRecentOrFuture;
+            })
+            .map(booking => ({
+              trip_id: booking.trip_id,
+              perma_id: booking.perma_id,
+              status: booking.status,
+              status_text: booking.status_text || booking.status,
+              pickup_date: booking.pickup_date,
+              pickup_local_text: formatLocalText(booking.pickup_date),
+              pickup_address: booking.address?.formatted || null,
+              pickup_lat: booking.address?.lat || null,
+              pickup_lng: booking.address?.lng || null,
+              destination_address: booking.destination?.formatted || null,
+              destination_lat: booking.destination?.lat || null,
+              destination_lng: booking.destination?.lng || null,
+              driver: booking.driver ? {
+                id: booking.driver.id,
+                name: booking.driver.name,
+                vehicle: booking.driver.vehicle?.ref || null,
+                phone: booking.driver.phone || null
+              } : null,
+              instructions: booking.instructions || null
+            }))
+            .sort((a, b) => {
+              const aTime = a.pickup_date ? new Date(a.pickup_date).getTime() : 0;
+              const bTime = b.pickup_date ? new Date(b.pickup_date).getTime() : 0;
+              return aTime - bTime;
+            });
+          
+          if (activeTrips.length > 0) {
+            hasActiveTrips = true;
+            nextTrip = activeTrips[0];
+            console.log('[iCabbi] Active trips found:', activeTrips.length);
+            console.log('[iCabbi] Next trip:', nextTrip.trip_id);
+          } else {
+            console.log('[iCabbi] No active trips after filtering');
+          }
+        }
+      } else {
+        console.log('[iCabbi] Booking response not ok:', bookingResponse.status);
+      }
+    } catch (err) {
+      console.error('[iCabbi] Booking fetch error:', err.message);
+    }
+    
+    // ========================================================================
+    // STEP 4: BUILD ACCOUNT INFO
+    // ========================================================================
+    
+    const account = user.account ? {
+      id: user.account.id,
+      name: user.account.name,
+      type: user.account.type,
+      active: user.account.active === 1 || user.account.active === '1',
+      notes: user.account.notes || null,
+      driver_notes: user.account.driver_notes || null
+    } : null;
+    
+    // ========================================================================
+    // FINAL RESPONSE
+    // ========================================================================
+    
+    console.log('[iCabbi] Success:', {
+      found: true,
+      hasActiveTrips,
+      customer_id: user.id,
+      primaryAddress: primaryAddress || 'none',
+      frequentAddressCount: frequentAddresses.length
+    });
+    
+    return {
+      found: true,
+      user: {
+        id: user.id,
+        customer_id: user.id,
+        ix: user.ix,
+        phone: user.phone,
+        name: user.name || null,
+        first_name: user.first_name || null,
+        last_name: user.last_name || null,
+        email: user.email || null,
+        vip: !!user.vip,
+        banned: false,
+        score: user.score ?? null,
+        trusted: !!user.trusted,
+        payment_type: user.payment_type || null,
+        account_id: user.account_id || null,
+        account_type: user.account_type || null,
+        account
+      },
+      primaryAddress,
+      addresses: frequentAddresses.map(a => ({
+        id: a.id,
+        formatted: a.formatted || null,
+        used: a.used ?? 0,
+        lat: a.lat ?? null,
+        lng: a.lng ?? null
+      })),
+      hasActiveTrips,
+      activeTrips,
+      nextTrip
+    };
+    
+  } catch (error) {
+    console.error('[iCabbi] Fatal error:', error);
+    return { 
+      found: false, 
+      hasActiveTrips: false,
+      error: error.message
+    };
+  }
+}
 
-
-// Helper function for formatting local time (add this near the top with other helpers)
+// Helper function for formatting local time
 function formatLocalText(iso, tz = 'America/Denver') {
   if (!iso) return null;
   
@@ -302,7 +600,6 @@ function formatLocalText(iso, tz = 'America/Denver') {
     const src = new Date(iso);
     const now = new Date();
     
-    // Get date parts in local timezone
     const fmtDate = new Intl.DateTimeFormat('en-US', {
       timeZone: tz,
       year: 'numeric',
@@ -325,11 +622,12 @@ function formatLocalText(iso, tz = 'America/Denver') {
     
     const timeLabel = fmtTime.format(src);
     
-    // Check if today or tomorrow
+    // Check if today
     if (targetMonth === nowMonth && targetDay === nowDay) {
       return `today at ${timeLabel}`;
     }
     
+    // Check if tomorrow
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowParts = fmtDate.formatToParts(tomorrow);
@@ -340,7 +638,7 @@ function formatLocalText(iso, tz = 'America/Denver') {
       return `tomorrow at ${timeLabel}`;
     }
     
-    // Otherwise full format
+    // Full format
     const dateLabel = new Intl.DateTimeFormat('en-US', {
       timeZone: tz,
       weekday: 'short',
@@ -352,218 +650,6 @@ function formatLocalText(iso, tz = 'America/Denver') {
   } catch (err) {
     console.error('[formatLocalText] Error:', err);
     return iso;
-  }
-}
-
-
-async function fetchIcabbiData(phone, env) {
-  console.log('[iCabbi] ========== START FETCH ==========');
-  console.log('[iCabbi] Input phone:', phone);
-  console.log('[iCabbi] Environment check:', {
-    hasBaseUrl: !!env.ICABBI_BASE_URL,
-    hasAppKey: !!env.ICABBI_APP_KEY,
-    hasSecret: !!env.ICABBI_SECRET,
-    baseUrl: env.ICABBI_BASE_URL
-  });
-  
-  try {
-    const BASE = (env.ICABBI_BASE_URL || 'https://api.icabbi.us/us2').replace(/\/+$/, '');
-    const appKey = env.ICABBI_APP_KEY;
-    const secret = env.ICABBI_SECRET;
-    
-    if (!appKey || !secret) {
-      console.error('[iCabbi] ❌ Missing credentials');
-      return { found: false, hasActiveTrips: false, error: 'MISSING_CREDENTIALS' };
-    }
-    
-    console.log('[iCabbi] ✅ Credentials present');
-    console.log('[iCabbi] Base URL:', BASE);
-    
-    // Create Basic auth header
-    const basicAuth = btoa(`${appKey}:${secret}`);
-    console.log('[iCabbi] Auth header created (first 20 chars):', basicAuth.substring(0, 20) + '...');
-    
-    const BASE_HEADERS = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${basicAuth}`
-    };
-    
-    // Normalize phone to multiple formats
-    const digits = String(phone).replace(/\D/g, '');
-    console.log('[iCabbi] Digits only:', digits);
-    
-    const norm = digits.replace(/^1?(\d{10})$/, '$1');
-    console.log('[iCabbi] Normalized (10 digits):', norm);
-    
-    const e164 = `+1${norm}`;
-    const idd = `001${norm}`;
-    const raw = String(phone).trim();
-    
-    const formats = Array.from(new Set([idd, e164, norm, raw])).filter(v => v && v.length >= 7);
-    console.log('[iCabbi] Will try formats:', formats);
-    
-    let user = null;
-    let lastError = null;
-    
-    // Try header-based lookup
-    for (const p of formats) {
-      console.log(`[iCabbi] Trying header method with format: ${p}`);
-      
-      try {
-        const url = `${BASE}/users/index`;
-        console.log('[iCabbi] Fetching:', url);
-        console.log('[iCabbi] Headers:', { ...BASE_HEADERS, Phone: p });
-        
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            ...BASE_HEADERS,
-            'Phone': p
-          }
-        });
-        
-        console.log('[iCabbi] Response status:', response.status);
-        console.log('[iCabbi] Response ok:', response.ok);
-        
-        const responseText = await response.text();
-        console.log('[iCabbi] Response text (first 200 chars):', responseText.substring(0, 200));
-        
-        let data;
-        try {
-          data = JSON.parse(responseText);
-          console.log('[iCabbi] Parsed JSON successfully');
-          console.log('[iCabbi] Has body.user?', !!data?.body?.user);
-        } catch (parseErr) {
-          console.error('[iCabbi] JSON parse failed:', parseErr.message);
-          lastError = `JSON parse error: ${parseErr.message}`;
-          continue;
-        }
-        
-        user = data?.body?.user || null;
-        
-        if (user) {
-          console.log('[iCabbi] ✅ Found user via header!', {
-            format: p,
-            id: user.id,
-            name: user.name,
-            phone: user.phone
-          });
-          break;
-        } else {
-          console.log('[iCabbi] ❌ No user in response body');
-          console.log('[iCabbi] Full response body:', JSON.stringify(data, null, 2));
-        }
-      } catch (err) {
-        console.error('[iCabbi] ❌ Header attempt error:', err.message);
-        console.error('[iCabbi] Error stack:', err.stack);
-        lastError = err.message;
-      }
-    }
-    
-    // Try query parameter lookup if header failed
-    if (!user) {
-      console.log('[iCabbi] Header methods failed, trying query params...');
-      
-      for (const p of formats) {
-        console.log(`[iCabbi] Trying query method with format: ${p}`);
-        
-        try {
-          const url = `${BASE}/users/index?phone=${encodeURIComponent(p)}`;
-          console.log('[iCabbi] Fetching:', url);
-          
-          const response = await fetch(url, {
-            method: 'POST',
-            headers: BASE_HEADERS
-          });
-          
-          console.log('[iCabbi] Response status:', response.status);
-          
-          const responseText = await response.text();
-          console.log('[iCabbi] Response text (first 200 chars):', responseText.substring(0, 200));
-          
-          let data;
-          try {
-            data = JSON.parse(responseText);
-            console.log('[iCabbi] Parsed JSON successfully');
-          } catch (parseErr) {
-            console.error('[iCabbi] JSON parse failed:', parseErr.message);
-            lastError = `JSON parse error: ${parseErr.message}`;
-            continue;
-          }
-          
-          user = data?.body?.user || null;
-          
-          if (user) {
-            console.log('[iCabbi] ✅ Found user via query!', {
-              format: p,
-              id: user.id,
-              name: user.name
-            });
-            break;
-          } else {
-            console.log('[iCabbi] ❌ No user in response body');
-          }
-        } catch (err) {
-          console.error('[iCabbi] ❌ Query attempt error:', err.message);
-          lastError = err.message;
-        }
-      }
-    }
-    
-    if (!user) {
-      console.error('[iCabbi] ❌ No user found after all attempts');
-      console.error('[iCabbi] Last error:', lastError);
-      return { 
-        found: false, 
-        hasActiveTrips: false,
-        phoneTried: formats,
-        lastError: lastError,
-        debug: {
-          baseUrl: BASE,
-          hasAuth: !!basicAuth,
-          formatsAttempted: formats.length
-        }
-      };
-    }
-    
-    console.log('[iCabbi] ✅ User found, continuing with address/booking lookup...');
-    
-    // Rest of the function continues as before...
-    const phoneForHistory = user.phone || formats[0];
-    
-    // Simplified return for debugging
-    return {
-      found: true,
-      user: {
-        id: user.id,
-        customer_id: user.id,
-        phone: user.phone,
-        name: user.name || null,
-        first_name: user.first_name || null,
-        last_name: user.last_name || null,
-        vip: !!user.vip,
-        banned: !!user.banned
-      },
-      hasActiveTrips: false,
-      activeTrips: [],
-      debug: {
-        message: 'User lookup successful, address/booking lookup not yet implemented in debug version'
-      }
-    };
-    
-  } catch (error) {
-    console.error('[iCabbi] ❌❌❌ FATAL ERROR ❌❌❌');
-    console.error('[iCabbi] Error message:', error.message);
-    console.error('[iCabbi] Error stack:', error.stack);
-    console.error('[iCabbi] Error name:', error.name);
-    
-    return { 
-      found: false, 
-      hasActiveTrips: false,
-      error: error.message,
-      errorStack: error.stack
-    };
   }
 }
 
