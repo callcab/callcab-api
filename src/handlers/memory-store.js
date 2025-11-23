@@ -7,47 +7,56 @@ const CORS_HEADERS = {
 };
 
 /**
- * Store call memory in KV - FILTERS OUT OpenSesame wrapper metadata
- * Only stores the actual memory data sent at end of call
+ * Store call memory - ONLY processes end-of-call webhooks with structured data
+ * Ignores all other Vapi webhook types (status-update, hang, etc)
  */
 export async function handleMemoryStore(request, env) {
   try {
     const body = await request.json();
     
-    // Log full body for debugging
-    console.log('[MemoryStore] Received body keys:', Object.keys(body));
+    // CRITICAL: Filter webhook types - only process end-of-call with structured data
+    const messageType = body.message?.type || body.type;
     
-    // Extract phone from various possible locations (OpenSesame + Vapi compatibility)
-    const phone = body.phone || 
-                  body.confirmed_phone ||  // From structured data
-                  body.customer?.number || 
-                  body.customer?.phone ||
+    // Ignore non-end-of-call webhooks
+    if (messageType && messageType !== 'end-of-call-report') {
+      console.log('[MemoryStore] Ignoring webhook type:', messageType);
+      return new Response(
+        JSON.stringify({ ok: true, ignored: true, reason: 'Not end-of-call webhook' }),
+        { status: 200, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    // Check if structured data exists (only present at end-of-call)
+    const structuredData = body.message?.artifact || body.artifact || body;
+    
+    if (!structuredData || Object.keys(structuredData).length < 3) {
+      console.log('[MemoryStore] No structured data, ignoring');
+      return new Response(
+        JSON.stringify({ ok: true, ignored: true, reason: 'No structured data' }),
+        { status: 200, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    // Extract phone from multiple possible locations
+    const phone = structuredData.phone || 
+                  body.message?.call?.customer?.number ||
                   body.call?.customer?.number ||
-                  body.call?.customer?.phone ||
-                  body.call?.phoneNumber ||
-                  body.phoneNumber ||
-                  body.memory?.phone;
+                  body.customer?.number;
     
     if (!phone) {
-      console.error('[MemoryStore] MISSING_PHONE - Available fields:', JSON.stringify(body, null, 2));
+      console.error('[MemoryStore] MISSING_PHONE in structured data');
+      console.error('[MemoryStore] Available keys:', Object.keys(structuredData));
       return new Response(
         JSON.stringify({
           ok: false,
           error: 'MISSING_PHONE',
-          message: 'Phone number is required',
-          debug: {
-            received_fields: Object.keys(body),
-            hint: 'Add phone field to structured data or check Vapi call metadata'
-          }
+          message: 'Phone not found in structured data',
+          hint: 'Ensure phone field is in Vapi structured data schema'
         }),
-        {
-          status: 400,
-          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-        }
+        { status: 400, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Check KV configuration
     if (!env.CALL_MEMORIES) {
       console.error('[MemoryStore] CALL_MEMORIES KV not configured');
       return new Response(
@@ -56,14 +65,10 @@ export async function handleMemoryStore(request, env) {
           error: 'KV_NOT_CONFIGURED',
           message: 'Memory storage is not configured'
         }),
-        {
-          status: 500,
-          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-        }
+        { status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Normalize phone number
     const normalizedPhone = normalizePhone(phone);
     if (!normalizedPhone) {
       console.error('[MemoryStore] INVALID_PHONE:', phone);
@@ -73,99 +78,96 @@ export async function handleMemoryStore(request, env) {
           error: 'INVALID_PHONE',
           message: 'Invalid phone number format'
         }),
-        {
-          status: 400,
-          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-        }
+        { status: 400, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
       );
     }
 
-    // FILTER: Only extract memory-specific fields, ignore OpenSesame metadata
+    // Build memory object from structured data
     const memoryData = {
       phone: normalizedPhone,
-      timestamp: body.timestamp || new Date().toISOString(),
+      timestamp: new Date().toISOString(),
       
       // Call outcome
-      outcome: body.outcome || null,
+      outcome: structuredData.outcome || null,
+      language_used: structuredData.language_used || null,
       
-      // Location data
-      last_pickup: body.last_pickup || null,
-      last_dropoff: body.last_dropoff || null,
-      last_dropoff_lat: body.last_dropoff_lat || null,
-      last_dropoff_lng: body.last_dropoff_lng || null,
-      last_trip_id: body.last_trip_id || null,
+      // Location data (only if booking completed)
+      last_pickup: structuredData.last_pickup || null,
+      last_dropoff: structuredData.last_dropoff || null,
+      last_dropoff_lat: structuredData.last_dropoff_lat || null,
+      last_dropoff_lng: structuredData.last_dropoff_lng || null,
+      last_trip_id: structuredData.last_trip_id || null,
       
       // Behavioral data
-      behavior: body.behavior || null,
-      behavior_notes: body.behavior_notes || null,
-      was_dropped: body.was_dropped || false,
+      behavior: structuredData.behavior || null,
+      behavior_notes: structuredData.behavior_notes || null,
+      was_dropped: structuredData.outcome === 'dropped_call',
       
       // Conversation state
-      conversation_state: body.conversation_state || null,
-      collected_info: body.collected_info || null,
-      trip_discussion: body.trip_discussion || null,
-      special_instructions: body.special_instructions || null,
+      conversation_state: structuredData.conversation_state || null,
+      collected_info: structuredData.collected_info || null,
+      trip_discussion: structuredData.trip_discussion || null,
       
       // Personal context
-      conversation_topics: body.conversation_topics || null,
-      jokes_shared: body.jokes_shared || null,
-      personal_details: body.personal_details || null,
-      greeting_response: body.greeting_response || null,
-      relationship_context: body.relationship_context || null,
-      operational_notes: body.operational_notes || null,
-      special_notes: body.special_notes || null,
+      greeting_response: structuredData.greeting_response || null,
+      relationship_context: structuredData.relationship_context || null,
+      conversation_topics: structuredData.conversation_topics || null,
+      jokes_shared: structuredData.jokes_shared || null,
+      personal_details: structuredData.personal_details || null,
       
-      // Callback info
-      callback_confirmed: body.callback_confirmed || null,
+      // Operational notes
+      special_instructions: structuredData.special_instructions || null,
+      operational_notes: structuredData.operational_notes || null,
+      special_notes: structuredData.special_notes || null,
       
-      // Aggregated context (preferences) - CRITICAL for preservation
+      // Callback
+      callback_confirmed: structuredData.callback_confirmed || false,
+      
+      // Aggregated context (preferences - CRITICAL)
       aggregated_context: {
-        preferred_name: body.preferred_name || null,
-        preferred_language: body.preferred_language || null,
-        preferred_pickup_address: body.preferred_pickup_address || null,
-        behavioral_pattern: body.behavioral_pattern || null
+        preferred_name: structuredData.preferred_name || null,
+        preferred_language: structuredData.preferred_language || null,
+        preferred_pickup_address: structuredData.preferred_pickup_address || null
       }
     };
 
-    // Remove null values to keep storage lean
+    // Remove null/empty values
     Object.keys(memoryData).forEach(key => {
-      if (memoryData[key] === null || memoryData[key] === undefined) {
+      if (memoryData[key] === null || memoryData[key] === undefined || 
+          (Array.isArray(memoryData[key]) && memoryData[key].length === 0)) {
         delete memoryData[key];
       }
     });
     
-    // Clean up aggregated_context
+    // Clean aggregated_context
     if (memoryData.aggregated_context) {
       Object.keys(memoryData.aggregated_context).forEach(key => {
         if (memoryData.aggregated_context[key] === null || 
-            memoryData.aggregated_context[key] === undefined) {
+            memoryData.aggregated_context[key] === undefined ||
+            memoryData.aggregated_context[key] === '') {
           delete memoryData.aggregated_context[key];
         }
       });
       
-      // Remove if empty
       if (Object.keys(memoryData.aggregated_context).length === 0) {
         delete memoryData.aggregated_context;
       }
     }
 
-    console.log('[MemoryStore] Storing filtered memory for:', normalizedPhone, {
+    console.log('[MemoryStore] Storing memory for:', normalizedPhone, {
       outcome: memoryData.outcome,
       has_aggregated: !!memoryData.aggregated_context,
-      was_dropped: memoryData.was_dropped,
       fields_stored: Object.keys(memoryData).length
     });
 
-    // Store in KV with 90-day expiration
+    // Store in KV
     await env.CALL_MEMORIES.put(
       `latest:${normalizedPhone}`,
       JSON.stringify(memoryData),
-      {
-        expirationTtl: 60 * 60 * 24 * 90 // 90 days
-      }
+      { expirationTtl: 60 * 60 * 24 * 90 }
     );
 
-    console.log('[MemoryStore] Successfully stored memory');
+    console.log('[MemoryStore] ✓ Memory saved successfully');
 
     return new Response(
       JSON.stringify({
@@ -175,10 +177,7 @@ export async function handleMemoryStore(request, env) {
         fields_stored: Object.keys(memoryData).length,
         expires_in_days: 90
       }),
-      {
-        status: 200,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-      }
+      { status: 200, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
@@ -187,13 +186,9 @@ export async function handleMemoryStore(request, env) {
       JSON.stringify({
         ok: false,
         error: 'STORE_FAILED',
-        message: error.message,
-        stack: env.DEBUG ? error.stack : undefined
+        message: error.message
       }),
-      {
-        status: 500,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-      }
+      { status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
     );
   }
 }
