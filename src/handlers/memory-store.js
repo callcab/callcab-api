@@ -1,4 +1,5 @@
 // src/handlers/memory-store.js
+// Production version - stores call memory from VAPI end-of-call webhooks
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -9,19 +10,42 @@ const CORS_HEADERS = {
 /**
  * Store call memory - ONLY processes end-of-call webhooks with structured data
  * Ignores all other Vapi webhook types (status-update, hang, etc)
+ * 
+ * Stores TWO KV entries per call:
+ * 1. latest:{phone} - Most recent call (overwritten each time)
+ * 2. history:{phone}:{timestamp} - Historical record (preserved for 90 days)
  */
 export async function handleMemoryStore(request, env) {
   try {
     const body = await request.json();
     
+    // SECURITY: Verify this is a legitimate VAPI webhook
+    // Check for VAPI-specific structure
+    if (!body.message && !body.artifact && !body.type) {
+      console.error('[MemoryStore] SECURITY: Invalid webhook structure');
+      return new Response(
+        JSON.stringify({
+          ok: false,
+          error: 'INVALID_WEBHOOK',
+          message: 'Not a valid VAPI webhook'
+        }),
+        { status: 403, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
+      );
+    }
+    
     // CRITICAL: Filter webhook types - only process end-of-call with structured data
     const messageType = body.message?.type || body.type;
     
-    // Ignore non-end-of-call webhooks
+    // Ignore non-end-of-call webhooks (status-update, hang, etc)
     if (messageType && messageType !== 'end-of-call-report') {
       console.log('[MemoryStore] Ignoring webhook type:', messageType);
       return new Response(
-        JSON.stringify({ ok: true, ignored: true, reason: 'Not end-of-call webhook' }),
+        JSON.stringify({ 
+          ok: true, 
+          ignored: true, 
+          reason: 'Not end-of-call webhook',
+          type: messageType 
+        }),
         { status: 200, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
       );
     }
@@ -32,7 +56,12 @@ export async function handleMemoryStore(request, env) {
     if (!structuredData || Object.keys(structuredData).length < 3) {
       console.log('[MemoryStore] No structured data, ignoring');
       return new Response(
-        JSON.stringify({ ok: true, ignored: true, reason: 'No structured data' }),
+        JSON.stringify({ 
+          ok: true, 
+          ignored: true, 
+          reason: 'No structured data',
+          keys_found: Object.keys(structuredData || {}).length 
+        }),
         { status: 200, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
       );
     }
@@ -46,12 +75,14 @@ export async function handleMemoryStore(request, env) {
     if (!phone) {
       console.error('[MemoryStore] MISSING_PHONE in structured data');
       console.error('[MemoryStore] Available keys:', Object.keys(structuredData));
+      console.error('[MemoryStore] Body structure:', JSON.stringify(body, null, 2).substring(0, 500));
       return new Response(
         JSON.stringify({
           ok: false,
           error: 'MISSING_PHONE',
           message: 'Phone not found in structured data',
-          hint: 'Ensure phone field is in Vapi structured data schema'
+          hint: 'Ensure phone field is in VAPI structured data schema',
+          available_keys: Object.keys(structuredData)
         }),
         { status: 400, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
       );
@@ -76,7 +107,8 @@ export async function handleMemoryStore(request, env) {
         JSON.stringify({
           ok: false,
           error: 'INVALID_PHONE',
-          message: 'Invalid phone number format'
+          message: 'Invalid phone number format',
+          provided: phone
         }),
         { status: 400, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
       );
@@ -124,19 +156,20 @@ export async function handleMemoryStore(request, env) {
       callback_confirmed: structuredData.callback_confirmed || false
     };
 
-    // Build aggregated_context separately (THIS IS THE KEY PART FOR PREFERENCES)
+    // Build aggregated_context separately (CRITICAL FOR PREFERENCES)
+    // These fields persist across calls unless explicitly updated
     const aggregatedContext = {};
     
     if (structuredData.preferred_name) {
-      aggregatedContext.preferred_name = structuredData.preferred_name;
+      aggregatedContext.preferred_name = structuredData.preferred_name.trim();
     }
     
-    if (structuredData.preferred_language) {
-      aggregatedContext.preferred_language = structuredData.preferred_language;
+    if (structuredData.preferred_language && structuredData.preferred_language !== 'english') {
+      aggregatedContext.preferred_language = structuredData.preferred_language.trim();
     }
     
     if (structuredData.preferred_pickup_address) {
-      aggregatedContext.preferred_pickup_address = structuredData.preferred_pickup_address;
+      aggregatedContext.preferred_pickup_address = structuredData.preferred_pickup_address.trim();
     }
     
     // Only add aggregated_context if it has data
@@ -146,7 +179,9 @@ export async function handleMemoryStore(request, env) {
 
     // Remove null/empty values from top level
     Object.keys(memoryData).forEach(key => {
-      if (memoryData[key] === null || memoryData[key] === undefined || 
+      if (memoryData[key] === null || 
+          memoryData[key] === undefined || 
+          memoryData[key] === '' ||
           (Array.isArray(memoryData[key]) && memoryData[key].length === 0)) {
         delete memoryData[key];
       }
@@ -167,21 +202,45 @@ export async function handleMemoryStore(request, env) {
       }
     }
 
+    // Clean collected_info
+    if (memoryData.collected_info) {
+      Object.keys(memoryData.collected_info).forEach(key => {
+        if (memoryData.collected_info[key] === null || 
+            memoryData.collected_info[key] === undefined ||
+            memoryData.collected_info[key] === '') {
+          delete memoryData.collected_info[key];
+        }
+      });
+      
+      if (Object.keys(memoryData.collected_info).length === 0) {
+        delete memoryData.collected_info;
+      }
+    }
+
     console.log('[MemoryStore] Storing memory for:', normalizedPhone, {
       outcome: memoryData.outcome,
       has_aggregated: !!memoryData.aggregated_context,
       aggregated_keys: memoryData.aggregated_context ? Object.keys(memoryData.aggregated_context) : [],
-      fields_stored: Object.keys(memoryData).length
+      fields_stored: Object.keys(memoryData).length,
+      data_size: JSON.stringify(memoryData).length
     });
 
-    // Store in KV
+    // STORE 1: Latest call (overwritten each time)
     await env.CALL_MEMORIES.put(
       `latest:${normalizedPhone}`,
       JSON.stringify(memoryData),
-      { expirationTtl: 60 * 60 * 24 * 90 }
+      { expirationTtl: 60 * 60 * 24 * 90 } // 90 days
     );
 
-    console.log('[MemoryStore] ✓ Memory saved successfully');
+    // STORE 2: Historical record (preserved)
+    const historyKey = `history:${normalizedPhone}:${memoryData.timestamp}`;
+    await env.CALL_MEMORIES.put(
+      historyKey,
+      JSON.stringify(memoryData),
+      { expirationTtl: 60 * 60 * 24 * 90 } // 90 days
+    );
+
+    console.log('[MemoryStore] ✓ Memory saved successfully (latest + history)');
 
     return new Response(
       JSON.stringify({
@@ -189,29 +248,52 @@ export async function handleMemoryStore(request, env) {
         phone: normalizedPhone,
         stored_at: memoryData.timestamp,
         fields_stored: Object.keys(memoryData).length,
-        expires_in_days: 90
+        data_size_bytes: JSON.stringify(memoryData).length,
+        expires_in_days: 90,
+        history_stored: true,
+        aggregated_context_stored: !!memoryData.aggregated_context
       }),
       { status: 200, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
     console.error('[MemoryStore] Error:', error);
+    console.error('[MemoryStore] Stack:', error.stack);
     return new Response(
       JSON.stringify({
         ok: false,
         error: 'STORE_FAILED',
-        message: error.message
+        message: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       }),
       { status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
     );
   }
 }
 
+/**
+ * Normalize phone number to E.164 format
+ */
 function normalizePhone(input) {
   if (!input) return null;
+  
   let digits = String(input).replace(/\D/g, '');
-  if (digits.length === 10) return `+1${digits}`;
-  if (digits.length === 11 && digits.startsWith('1')) return `+${digits}`;
-  if (String(input).startsWith('+')) return input;
+  
+  // 10 digits: assume US/Canada
+  if (digits.length === 10) {
+    return `+1${digits}`;
+  }
+  
+  // 11 digits starting with 1: US/Canada with country code
+  if (digits.length === 11 && digits.startsWith('1')) {
+    return `+${digits}`;
+  }
+  
+  // Already has + prefix
+  if (String(input).startsWith('+')) {
+    return input;
+  }
+  
+  // Other international numbers
   return digits.length >= 10 ? `+${digits}` : null;
 }
