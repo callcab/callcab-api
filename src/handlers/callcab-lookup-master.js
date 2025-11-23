@@ -1,9 +1,6 @@
 // src/handlers/callcab-lookup-master.js
-// Unified intelligence endpoint for Claire:
-// - Combines memory (CALL_MEMORIES KV)
-// - iCabbi lookup
-// - Greeting generation
-// - Situational context for follow-up questions
+// Production version - unified intelligence endpoint for Claire
+// Combines memory (CALL_MEMORIES KV), iCabbi lookup, and greeting generation
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -11,14 +8,22 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
-// ------------------ GREETING TEMPLATES ------------------
+// Security: Allowed caller IDs (High Mountain Taxi VAPI numbers)
+// Add your actual VAPI phone numbers here
+const ALLOWED_CALLERS = [
+  '+19702000000', // Replace with your actual VAPI number(s)
+  // Add more as needed
+];
 
+// Greeting templates in multiple languages
 const GREETING_TEMPLATES = {
   active_trip: {
     english: (name, trip) =>
       `High Mountain Taxi, this is Claire. Hi ${name}. I see you have a ride from ${trip.pickup_address} to ${trip.destination_address} ${trip.pickup_time_human}. Want to modify it or book something else?`,
     spanish: (name, trip) =>
       `High Mountain Taxi, habla Claire. Hola ${name}. Veo que tienes un viaje de ${trip.pickup_address} a ${trip.destination_address} ${trip.pickup_time_human}. ¿Quieres modificarlo o reservar algo más?`,
+    portuguese: (name, trip) =>
+      `High Mountain Taxi, aqui é Claire. Olá ${name}. Vejo que você tem uma viagem de ${trip.pickup_address} para ${trip.destination_address} ${trip.pickup_time_human}. Quer modificar ou reservar outra coisa?`,
     german: (name, trip) =>
       `High Mountain Taxi, hier ist Claire. Hallo ${name}. Ich sehe, Sie haben eine Fahrt von ${trip.pickup_address} nach ${trip.destination_address} ${trip.pickup_time_human}. Möchten Sie das ändern oder etwas anderes buchen?`,
     french: (name, trip) =>
@@ -29,6 +34,8 @@ const GREETING_TEMPLATES = {
       `High Mountain Taxi, this is Claire. Hi ${name}. Want a pickup from where I dropped you off at ${address}?`,
     spanish: (name, address) =>
       `High Mountain Taxi, habla Claire. Hola ${name}. ¿Quieres que te recoja donde te dejé en ${address}?`,
+    portuguese: (name, address) =>
+      `High Mountain Taxi, aqui é Claire. Olá ${name}. Quer que eu te pegue onde te deixei em ${address}?`,
     german: (name, address) =>
       `High Mountain Taxi, hier ist Claire. Hallo ${name}. Soll ich Sie dort abholen, wo ich Sie bei ${address} abgesetzt habe?`,
     french: (name, address) =>
@@ -39,6 +46,8 @@ const GREETING_TEMPLATES = {
       `Hi ${name}, it's Claire. We got disconnected earlier. ${context}`,
     spanish: (name, context) =>
       `Hola ${name}, es Claire. Se cortó la llamada. ${context}`,
+    portuguese: (name, context) =>
+      `Oi ${name}, é a Claire. A ligação caiu. ${context}`,
     german: (name, context) =>
       `Hallo ${name}, hier ist Claire. Wir wurden unterbrochen. ${context}`,
     french: (name, context) =>
@@ -49,6 +58,8 @@ const GREETING_TEMPLATES = {
       `High Mountain Taxi, this is Claire. Hi ${name}. Still planning ${discussion}?`,
     spanish: (name, discussion) =>
       `High Mountain Taxi, habla Claire. Hola ${name}. ¿Todavía planeas ${discussion}?`,
+    portuguese: (name, discussion) =>
+      `High Mountain Taxi, aqui é Claire. Olá ${name}. Ainda planejando ${discussion}?`,
     german: (name, discussion) =>
       `High Mountain Taxi, hier ist Claire. Hallo ${name}. Planen Sie noch ${discussion}?`,
     french: (name, discussion) =>
@@ -59,6 +70,8 @@ const GREETING_TEMPLATES = {
       `High Mountain Taxi, this is Claire. Hi ${name}. ${address} again?`,
     spanish: (name, address) =>
       `High Mountain Taxi, habla Claire. Hola ${name}. ¿${address} otra vez?`,
+    portuguese: (name, address) =>
+      `High Mountain Taxi, aqui é Claire. Olá ${name}. ${address} de novo?`,
     german: (name, address) =>
       `High Mountain Taxi, hier ist Claire. Hallo ${name}. ${address} wieder?`,
     french: (name, address) =>
@@ -69,6 +82,8 @@ const GREETING_TEMPLATES = {
       `High Mountain Taxi, this is Claire. Hi ${name}. ${address} again?`,
     spanish: (name, address) =>
       `High Mountain Taxi, habla Claire. Hola ${name}. ¿${address} otra vez?`,
+    portuguese: (name, address) =>
+      `High Mountain Taxi, aqui é Claire. Olá ${name}. ${address} de novo?`,
     german: (name, address) =>
       `High Mountain Taxi, hier ist Claire. Hallo ${name}. ${address} wieder?`,
     french: (name, address) =>
@@ -79,6 +94,8 @@ const GREETING_TEMPLATES = {
       `High Mountain Taxi, this is Claire. Hi ${name}, where can we pick you up?`,
     spanish: (name) =>
       `High Mountain Taxi, habla Claire. Hola ${name}, ¿dónde te recojo?`,
+    portuguese: (name) =>
+      `High Mountain Taxi, aqui é Claire. Olá ${name}, onde posso te pegar?`,
     german: (name) =>
       `High Mountain Taxi, hier ist Claire. Hallo ${name}, wo sollen wir Sie abholen?`,
     french: (name) =>
@@ -89,6 +106,8 @@ const GREETING_TEMPLATES = {
       `High Mountain Taxi, this is Claire. Where can we pick you up?`,
     spanish: () =>
       `High Mountain Taxi, habla Claire. ¿Dónde te recojo?`,
+    portuguese: () =>
+      `High Mountain Taxi, aqui é Claire. Onde posso te pegar?`,
     german: () =>
       `High Mountain Taxi, hier ist Claire. Wo sollen wir Sie abholen?`,
     french: () =>
@@ -96,14 +115,14 @@ const GREETING_TEMPLATES = {
   },
 };
 
-// ------------------ MAIN HANDLER ------------------
-
+// Main handler
 export async function handleCallcabLookupMaster(request, env) {
   const startTime = Date.now();
 
   try {
     const body = await request.json();
 
+    // Extract phone number
     const phone = normalizePhone(
       body.phone ||
         body.customer?.number ||
@@ -125,6 +144,23 @@ export async function handleCallcabLookupMaster(request, env) {
       );
     }
 
+    // SECURITY: Verify caller is from allowed list (optional - comment out if not needed)
+    // Uncomment and configure ALLOWED_CALLERS at top of file
+    /*
+    const callerNumber = body.call?.customer?.number || body.customer?.number;
+    if (callerNumber && !ALLOWED_CALLERS.includes(normalizePhone(callerNumber))) {
+      console.error('[LookupMaster] UNAUTHORIZED_CALLER:', callerNumber);
+      return new Response(
+        JSON.stringify({
+          ok: false,
+          error: 'UNAUTHORIZED',
+          message: 'This service is only available to High Mountain Taxi customers'
+        }),
+        { status: 403, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
+      );
+    }
+    */
+
     console.log('[LookupMaster] Processing for:', phone);
 
     // Parallel fetch: memory + iCabbi
@@ -133,7 +169,7 @@ export async function handleCallcabLookupMaster(request, env) {
       fetchIcabbiData(phone, env),
     ]);
 
-    // Optional: auto-create customer in iCabbi if not found and we have a name
+    // Optional: auto-create customer in iCabbi if not found
     let finalIcabbiData = icabbiData;
 
     if (!icabbiData.found && (body.name || body.customer?.name)) {
@@ -142,8 +178,7 @@ export async function handleCallcabLookupMaster(request, env) {
 
       try {
         const firstName = fullName.split(' ')[0] || fullName;
-        const lastName =
-          fullName.split(' ').slice(1).join(' ') || firstName;
+        const lastName = fullName.split(' ').slice(1).join(' ') || firstName;
 
         const createResponse = await fetch(
           `${env.ICABBI_BASE_URL}/customer.json`,
@@ -166,10 +201,7 @@ export async function handleCallcabLookupMaster(request, env) {
 
         if (createResponse.ok) {
           const newCustomer = await createResponse.json();
-          console.log(
-            '[LookupMaster] Customer created:',
-            newCustomer.user?.customer_id,
-          );
+          console.log('[LookupMaster] Customer created:', newCustomer.user?.customer_id);
 
           finalIcabbiData = {
             found: true,
@@ -179,10 +211,7 @@ export async function handleCallcabLookupMaster(request, env) {
             activeTrips: [],
           };
         } else {
-          console.warn(
-            '[LookupMaster] Customer create failed:',
-            createResponse.status,
-          );
+          console.warn('[LookupMaster] Customer create failed:', createResponse.status);
         }
       } catch (err) {
         console.error('[LookupMaster] Customer creation error:', err);
@@ -221,7 +250,7 @@ export async function handleCallcabLookupMaster(request, env) {
 
       memory: {
         has_memory: memoryData?.has_memory || false,
-        last_3_summaries: [], // reserved for future use
+        last_3_summaries: memoryData?.last_3_summaries || [],
         last_dropoff: memoryData?.last_call?.last_dropoff || null,
         last_dropoff_coords: {
           lat: memoryData?.last_call?.last_dropoff_lat || null,
@@ -230,9 +259,7 @@ export async function handleCallcabLookupMaster(request, env) {
         hours_since_last_call: memoryData?.last_call?.hours_ago || null,
         behavior_flags: memoryData?.last_call?.behavior || null,
         priority_notes: memoryData?.last_call?.special_instructions || null,
-        total_rides:
-          memoryData?.aggregated_context?.behavioral_pattern?.total_recent ||
-          0,
+        total_rides: memoryData?.aggregated_context?.total_recent || 0,
       },
 
       icabbi: {
@@ -242,33 +269,23 @@ export async function handleCallcabLookupMaster(request, env) {
           ? {
               trip_id: finalIcabbiData.nextTrip.trip_id,
               pickup_address: finalIcabbiData.nextTrip.pickup_address,
-              destination_address:
-                finalIcabbiData.nextTrip.destination_address,
-              pickup_time: finalIcabbiData.nextTrip.pickup_date,
-              pickup_time_human:
-                finalIcabbiData.nextTrip.pickup_local_text || 'soon',
+              destination_address: finalIcabbiData.nextTrip.destination_address,
+              pickup_time: finalIcabbiData.nextTrip.pickup_local_text,
               status: finalIcabbiData.nextTrip.status,
             }
           : null,
-        upcoming_trips_count: finalIcabbiData?.activeTrips?.length || 0,
         primary_address: finalIcabbiData?.primaryAddress || null,
+        upcoming_trips_count: finalIcabbiData?.activeTrips?.length || 0,
       },
 
       system: {
-        greeting_language: greeting.language,
-        greeting_text: greeting.text,
         scenario: greeting.scenario,
-        situational_context: situationalContext,
+        greeting_text: greeting.text,
+        greeting_language: greeting.language,
         processing_time_ms: processingTime,
+        situational_context: situationalContext,
       },
     };
-
-    console.log('[LookupMaster] Success:', {
-      phone,
-      scenario: greeting.scenario,
-      language: greeting.language,
-      processing_time_ms: processingTime,
-    });
 
     return new Response(JSON.stringify(response), {
       status: 200,
@@ -276,12 +293,13 @@ export async function handleCallcabLookupMaster(request, env) {
     });
   } catch (error) {
     console.error('[LookupMaster] Error:', error);
-
+    console.error('[LookupMaster] Stack:', error.stack);
     return new Response(
       JSON.stringify({
         ok: false,
         error: 'LOOKUP_FAILED',
         message: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
       }),
       {
         status: 500,
@@ -291,412 +309,133 @@ export async function handleCallcabLookupMaster(request, env) {
   }
 }
 
+// Fetch iCabbi customer data
 async function fetchIcabbiData(phone, env) {
   try {
-    const BASE = (env.ICABBI_BASE_URL || 'https://api.icabbi.us/us2').replace(/\/+$/, '');
-    const appKey = env.ICABBI_APP_KEY;
-    const secret = env.ICABBI_SECRET;
-    
-    if (!appKey || !secret) {
-      console.error('[iCabbi] Missing credentials');
-      return { found: false, hasActiveTrips: false, error: 'MISSING_CREDENTIALS' };
+    if (!env.ICABBI_BASE_URL || !env.ICABBI_APP_KEY) {
+      console.warn('[iCabbi] Not configured, skipping');
+      return { found: false };
     }
-    
-    const basicAuth = btoa(`${appKey}:${secret}`);
-    const BASE_HEADERS = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${basicAuth}`
-    };
-    
-    // Normalize phone to multiple formats
-    const digits = String(phone).replace(/\D/g, '');
-    const norm = digits.replace(/^1?(\d{10})$/, '$1');
-    const e164 = `+1${norm}`;
-    const idd = `001${norm}`;
-    const raw = String(phone).trim();
-    const formats = Array.from(new Set([idd, e164, norm, raw])).filter(v => v && v.length >= 7);
-    
-    console.log('[iCabbi] Fetching customer data for formats:', formats);
-    
-    // ========================================================================
-    // STEP 1: FIND USER
-    // ========================================================================
-    
-    let user = null;
-    
-    // Try header-based lookup
-    for (const p of formats) {
-      try {
-        const response = await fetch(`${BASE}/users/index`, {
-          method: 'POST',
-          headers: { ...BASE_HEADERS, 'Phone': p }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          user = data?.body?.user || null;
-          if (user) {
-            console.log('[iCabbi] Found user via header:', { format: p, id: user.id });
-            break;
-          }
-        }
-      } catch (err) {
-        console.error('[iCabbi] Header attempt error:', err.message);
-      }
+
+    const response = await fetch(
+      `${env.ICABBI_BASE_URL}/customer.json?phone=${encodeURIComponent(phone)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${env.ICABBI_APP_KEY}:${env.ICABBI_SECRET}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      console.error('[iCabbi] Lookup failed:', response.status);
+      return { found: false };
     }
+
+    const data = await response.json();
     
-    // Try query parameter lookup if header failed
-    if (!user) {
-      for (const p of formats) {
-        try {
-          const response = await fetch(`${BASE}/users/index?phone=${encodeURIComponent(p)}`, {
-            method: 'POST',
-            headers: BASE_HEADERS
-          });
-          
-          if (response.ok) {
-            const data = await response.json();
-            user = data?.body?.user || null;
-            if (user) {
-              console.log('[iCabbi] Found user via query:', { format: p, id: user.id });
-              break;
-            }
-          }
-        } catch (err) {
-          console.error('[iCabbi] Query attempt error:', err.message);
-        }
-      }
+    if (!data.user) {
+      return { found: false };
     }
-    
-    if (!user) {
-      console.log('[iCabbi] No user found');
-      return { found: false, hasActiveTrips: false, phoneTried: formats };
-    }
-    
-    if (user.banned) {
-      console.log('[iCabbi] User is banned:', user.id);
-      return {
-        found: true,
-        user: { id: user.id, phone: user.phone, name: user.name, banned: true },
-        hasActiveTrips: false,
-        activeTrips: []
-      };
-    }
-    
-    // ========================================================================
-    // STEP 2: GET ADDRESS HISTORY
-    // ========================================================================
-    
-    const phoneForHistory = user.phone || idd;
-    let addresses = [];
-    
-    console.log('[iCabbi] Fetching address history for:', phoneForHistory);
-    
-    try {
-      // Try with query parameter first
-      let addressResponse = await fetch(
-        `${BASE}/users/addresses?phone=${encodeURIComponent(phoneForHistory)}&period=365&type=PICKUP&limit=20`,
-        { method: 'GET', headers: BASE_HEADERS }
-      );
-      
-      if (addressResponse.ok) {
-        const addressData = await addressResponse.json();
-        addresses = Array.isArray(addressData?.body?.addresses) ? addressData.body.addresses : [];
-        console.log('[iCabbi] Found addresses via query:', addresses.length);
-      }
-      
-      // Try with header if query failed
-      if (addresses.length === 0) {
-        addressResponse = await fetch(
-          `${BASE}/users/addresses?period=365&type=PICKUP&limit=20`,
-          { 
-            method: 'GET', 
-            headers: { ...BASE_HEADERS, 'Phone': phoneForHistory }
-          }
-        );
-        
-        if (addressResponse.ok) {
-          const addressData = await addressResponse.json();
-          addresses = Array.isArray(addressData?.body?.addresses) ? addressData.body.addresses : [];
-          console.log('[iCabbi] Found addresses via header:', addresses.length);
-        }
-      }
-    } catch (err) {
-      console.error('[iCabbi] Address fetch error:', err.message);
-    }
-    
-    // Filter to addresses used 2+ times (pickup addresses customer uses frequently)
-    const frequentAddresses = addresses.filter(a => (a.used ?? 0) >= 2);
-    console.log('[iCabbi] Frequent addresses (2+ uses):', frequentAddresses.length);
-    
-    // Pick primary address (most used pickup location)
+
+    // Get primary address
     let primaryAddress = null;
-    if (frequentAddresses.length > 0) {
-      const sorted = [...frequentAddresses].sort((a, b) => (b.used || 0) - (a.used || 0));
-      primaryAddress = sorted[0].formatted || null;
-      console.log('[iCabbi] Primary address:', primaryAddress, '(used', sorted[0].used, 'times)');
-    }
-    
-    // ========================================================================
-    // STEP 3: GET ACTIVE/UPCOMING TRIPS
-    // ========================================================================
-    
-    let activeTrips = [];
-    let hasActiveTrips = false;
-    let nextTrip = null;
-    
-    console.log('[iCabbi] Checking for active/upcoming trips...');
-    
-    try {
-      // Format phone for bookings endpoint (needs 00 prefix)
-      const phoneForUpcoming = phoneForHistory.startsWith('+') 
-        ? '00' + phoneForHistory.slice(1)
-        : phoneForHistory.startsWith('001') 
-          ? phoneForHistory 
-          : '001' + norm;
-      
-      console.log('[iCabbi] Booking lookup phone format:', phoneForUpcoming);
-      
-      const bookingResponse = await fetch(
-        `${BASE}/bookings/upcoming?phone=${encodeURIComponent(phoneForUpcoming)}`,
-        { method: 'GET', headers: BASE_HEADERS }
-      );
-      
-      if (bookingResponse.ok) {
-        const bookingData = await bookingResponse.json();
-        console.log('[iCabbi] Booking response received');
-        
-        if (bookingData?.body?.bookings && Array.isArray(bookingData.body.bookings)) {
-          console.log('[iCabbi] Total bookings found:', bookingData.body.bookings.length);
-          
-          const now = new Date();
-          const activeStatuses = ['NEW', 'ASSIGNED', 'ACCEPTED', 'PICKED_UP', 'DISPATCHED', 'PENDING', 'PREBOOKED'];
-          
-          activeTrips = bookingData.body.bookings
-            .filter(booking => {
-              const isActiveStatus = activeStatuses.includes(String(booking.status || '').toUpperCase());
-              const pickupDate = booking.pickup_date ? new Date(booking.pickup_date) : null;
-              // Include trips within last 30 minutes or future trips
-              const isRecentOrFuture = pickupDate && (pickupDate.getTime() > now.getTime() - 30 * 60 * 1000);
-              return isActiveStatus && isRecentOrFuture;
-            })
-            .map(booking => ({
-              trip_id: booking.trip_id,
-              perma_id: booking.perma_id,
-              status: booking.status,
-              status_text: booking.status_text || booking.status,
-              pickup_date: booking.pickup_date,
-              pickup_local_text: formatLocalText(booking.pickup_date),
-              pickup_address: booking.address?.formatted || null,
-              pickup_lat: booking.address?.lat || null,
-              pickup_lng: booking.address?.lng || null,
-              destination_address: booking.destination?.formatted || null,
-              destination_lat: booking.destination?.lat || null,
-              destination_lng: booking.destination?.lng || null,
-              driver: booking.driver ? {
-                id: booking.driver.id,
-                name: booking.driver.name,
-                vehicle: booking.driver.vehicle?.ref || null,
-                phone: booking.driver.phone || null
-              } : null,
-              instructions: booking.instructions || null
-            }))
-            .sort((a, b) => {
-              const aTime = a.pickup_date ? new Date(a.pickup_date).getTime() : 0;
-              const bTime = b.pickup_date ? new Date(b.pickup_date).getTime() : 0;
-              return aTime - bTime;
-            });
-          
-          if (activeTrips.length > 0) {
-            hasActiveTrips = true;
-            nextTrip = activeTrips[0];
-            console.log('[iCabbi] Active trips found:', activeTrips.length);
-            console.log('[iCabbi] Next trip:', nextTrip.trip_id);
-          } else {
-            console.log('[iCabbi] No active trips after filtering');
-          }
-        }
-      } else {
-        console.log('[iCabbi] Booking response not ok:', bookingResponse.status);
+    if (data.user.addresses && data.user.addresses.length > 0) {
+      const primary = data.user.addresses.find(a => a.is_primary) || data.user.addresses[0];
+      if (primary) {
+        primaryAddress = primary.formatted_address || 
+                        `${primary.address1 || ''} ${primary.address2 || ''}`.trim();
       }
-    } catch (err) {
-      console.error('[iCabbi] Booking fetch error:', err.message);
     }
-    
-    // ========================================================================
-    // STEP 4: BUILD ACCOUNT INFO
-    // ========================================================================
-    
-    const account = user.account ? {
-      id: user.account.id,
-      name: user.account.name,
-      type: user.account.type,
-      active: user.account.active === 1 || user.account.active === '1',
-      notes: user.account.notes || null,
-      driver_notes: user.account.driver_notes || null
-    } : null;
-    
-    // ========================================================================
-    // FINAL RESPONSE
-    // ========================================================================
-    
-    console.log('[iCabbi] Success:', {
-      found: true,
-      hasActiveTrips,
-      customer_id: user.id,
-      primaryAddress: primaryAddress || 'none',
-      frequentAddressCount: frequentAddresses.length
-    });
-    
+
+    // Get active trips
+    const now = new Date();
+    const activeTrips = (data.user.trips || [])
+      .filter(trip => {
+        const tripTime = new Date(trip.pickup_time);
+        return tripTime > now && trip.status !== 'cancelled';
+      })
+      .sort((a, b) => new Date(a.pickup_time) - new Date(b.pickup_time));
+
+    const nextTrip = activeTrips.length > 0 ? activeTrips[0] : null;
+
+    // Format next trip time
+    if (nextTrip) {
+      const tripTime = new Date(nextTrip.pickup_time);
+      const denver = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Denver',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+      }).format(tripTime);
+      
+      nextTrip.pickup_local_text = denver.toLowerCase();
+    }
+
     return {
       found: true,
-      user: {
-        id: user.id,
-        customer_id: user.id,
-        ix: user.ix,
-        phone: user.phone,
-        name: user.name || null,
-        first_name: user.first_name || null,
-        last_name: user.last_name || null,
-        email: user.email || null,
-        vip: !!user.vip,
-        banned: false,
-        score: user.score ?? null,
-        trusted: !!user.trusted,
-        payment_type: user.payment_type || null,
-        account_id: user.account_id || null,
-        account_type: user.account_type || null,
-        account
-      },
+      user: data.user,
       primaryAddress,
-      addresses: frequentAddresses.map(a => ({
-        id: a.id,
-        formatted: a.formatted || null,
-        used: a.used ?? 0,
-        lat: a.lat ?? null,
-        lng: a.lng ?? null
-      })),
-      hasActiveTrips,
+      hasActiveTrips: activeTrips.length > 0,
       activeTrips,
-      nextTrip
+      nextTrip,
     };
-    
   } catch (error) {
-    console.error('[iCabbi] Fatal error:', error);
-    return { 
-      found: false, 
-      hasActiveTrips: false,
-      error: error.message
-    };
+    console.error('[iCabbi] Error:', error);
+    return { found: false, error: error.message };
   }
 }
 
-// Helper function for formatting local time
-function formatLocalText(iso, tz = 'America/Denver') {
-  if (!iso) return null;
-  
-  try {
-    const src = new Date(iso);
-    const now = new Date();
-    
-    const fmtDate = new Intl.DateTimeFormat('en-US', {
-      timeZone: tz,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
-    const fmtTime = new Intl.DateTimeFormat('en-US', {
-      timeZone: tz,
-      hour: 'numeric',
-      minute: '2-digit'
-    });
-    
-    const dateParts = fmtDate.formatToParts(src);
-    const targetMonth = dateParts.find(p => p.type === 'month')?.value;
-    const targetDay = dateParts.find(p => p.type === 'day')?.value;
-    
-    const nowParts = fmtDate.formatToParts(now);
-    const nowMonth = nowParts.find(p => p.type === 'month')?.value;
-    const nowDay = nowParts.find(p => p.type === 'day')?.value;
-    
-    const timeLabel = fmtTime.format(src);
-    
-    // Check if today
-    if (targetMonth === nowMonth && targetDay === nowDay) {
-      return `today at ${timeLabel}`;
-    }
-    
-    // Check if tomorrow
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowParts = fmtDate.formatToParts(tomorrow);
-    const tomorrowMonth = tomorrowParts.find(p => p.type === 'month')?.value;
-    const tomorrowDay = tomorrowParts.find(p => p.type === 'day')?.value;
-    
-    if (targetMonth === tomorrowMonth && targetDay === tomorrowDay) {
-      return `tomorrow at ${timeLabel}`;
-    }
-    
-    // Full format
-    const dateLabel = new Intl.DateTimeFormat('en-US', {
-      timeZone: tz,
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric'
-    }).format(src);
-    
-    return `${dateLabel} at ${timeLabel}`;
-  } catch (err) {
-    console.error('[formatLocalText] Error:', err);
-    return iso;
-  }
-}
-
+// Get memory for lookup with last 3 summaries
 async function getMemoryForLookup(phone, env) {
-  if (!env.CALL_MEMORIES) {
-    console.warn('[Memory] CALL_MEMORIES KV not configured');
-    return { has_memory: false };
-  }
-
   try {
-    const latestStr = await env.CALL_MEMORIES.get(`latest:${phone}`);
+    const normalizedPhone = normalizePhone(phone);
+    if (!normalizedPhone) {
+      return { has_memory: false, error: 'Invalid phone' };
+    }
 
-    if (!latestStr) {
-      console.log('[Memory] No memory found for:', phone);
+    if (!env.CALL_MEMORIES) {
+      console.warn('[Memory] KV not configured');
       return { has_memory: false };
     }
 
-    const latest = JSON.parse(latestStr);
-    const now = new Date();
-    const timestamp = new Date(latest.timestamp);
-    const hours_ago = (now - timestamp) / 3600000;
-    const minutes_ago = (now - timestamp) / 60000;
+    // Get latest call memory
+    const latestKey = `latest:${normalizedPhone}`;
+    const latestData = await env.CALL_MEMORIES.get(latestKey);
+    
+    if (!latestData) {
+      return { has_memory: false };
+    }
 
-    console.log('[Memory] Found memory:', {
-      phone,
-      hours_ago: Math.round(hours_ago * 10) / 10,
-      has_aggregated: !!latest.aggregated_context,
-    });
+    const latest = JSON.parse(latestData);
+    const timestamp = new Date(latest.timestamp);
+    const hoursAgo = (Date.now() - timestamp.getTime()) / (1000 * 60 * 60);
+
+    // Get last 3 call summaries
+    const last3Summaries = await getLastThreeSummaries(normalizedPhone, env);
 
     return {
       has_memory: true,
       last_call: {
         timestamp: latest.timestamp,
-        hours_ago,
-        minutes_ago,
+        hours_ago: hoursAgo,
         outcome: latest.outcome,
-        last_pickup: latest.last_pickup,
+        behavior: latest.behavior,
+        behavior_notes: latest.behavior_notes,
+        was_dropped: latest.was_dropped,
         last_dropoff: latest.last_dropoff,
         last_dropoff_lat: latest.last_dropoff_lat,
         last_dropoff_lng: latest.last_dropoff_lng,
-        behavior: latest.behavior,
-        was_dropped: latest.was_dropped || false,
         conversation_state: latest.conversation_state,
         collected_info: latest.collected_info,
+        greeting_response: latest.greeting_response,
+        relationship_context: latest.relationship_context,
         trip_discussion: latest.trip_discussion,
         special_instructions: latest.special_instructions,
       },
+      last_3_summaries: last3Summaries,
       aggregated_context: latest.aggregated_context || {},
     };
   } catch (error) {
@@ -705,6 +444,99 @@ async function getMemoryForLookup(phone, env) {
   }
 }
 
+// Get last 3 call summaries from history
+async function getLastThreeSummaries(phone, env) {
+  try {
+    const prefix = `history:${phone}:`;
+    const list = await env.CALL_MEMORIES.list({ prefix, limit: 100 });
+    
+    if (!list.keys || list.keys.length === 0) {
+      return [];
+    }
+
+    // Sort by timestamp (most recent first)
+    const sortedKeys = list.keys
+      .sort((a, b) => {
+        const timeA = a.name.split(':')[2];
+        const timeB = b.name.split(':')[2];
+        return timeB.localeCompare(timeA);
+      })
+      .slice(0, 3);
+
+    // Fetch actual data
+    const summaries = await Promise.all(
+      sortedKeys.map(async (key) => {
+        const data = await env.CALL_MEMORIES.get(key.name);
+        if (!data) return null;
+        
+        const parsed = JSON.parse(data);
+        return buildCallSummary(parsed);
+      })
+    );
+
+    return summaries.filter(s => s !== null);
+  } catch (error) {
+    console.error('[Memory] Failed to get last 3 summaries:', error);
+    return [];
+  }
+}
+
+// Build human-readable call summary
+function buildCallSummary(callData) {
+  const timestamp = new Date(callData.timestamp);
+  const hoursAgo = (Date.now() - timestamp.getTime()) / (1000 * 60 * 60);
+  
+  let summary = '';
+  
+  // Time reference
+  if (hoursAgo < 1) {
+    summary = `${Math.round(hoursAgo * 60)} minutes ago`;
+  } else if (hoursAgo < 24) {
+    summary = `${Math.round(hoursAgo)} hours ago`;
+  } else {
+    summary = `${Math.round(hoursAgo / 24)} days ago`;
+  }
+  
+  // Call outcome
+  switch (callData.outcome) {
+    case 'booking_created':
+      summary += `: Booked ${callData.last_pickup || 'pickup'} to ${callData.last_dropoff || 'destination'}`;
+      break;
+    case 'booking_modified':
+      summary += `: Modified existing booking`;
+      break;
+    case 'booking_cancelled':
+      summary += `: Cancelled booking`;
+      break;
+    case 'dropped_call':
+      summary += `: Call dropped during ${callData.conversation_state || 'conversation'}`;
+      break;
+    case 'info_provided':
+      summary += `: Asked for information`;
+      break;
+    default:
+      summary += `: ${callData.outcome || 'Call completed'}`;
+  }
+  
+  // Behavioral notes
+  if (callData.behavior && callData.behavior !== 'neutral') {
+    summary += ` (${callData.behavior})`;
+  }
+  
+  return {
+    timestamp: callData.timestamp,
+    hours_ago: hoursAgo,
+    summary: summary,
+    outcome: callData.outcome,
+    locations: {
+      pickup: callData.last_pickup,
+      dropoff: callData.last_dropoff
+    },
+    behavior: callData.behavior
+  };
+}
+
+// Generate greeting based on memory and iCabbi data
 function generateGreeting(memoryData, icabbiData) {
   // Determine language (non-English only if explicitly stored)
   let language = 'english';
@@ -714,16 +546,16 @@ function generateGreeting(memoryData, icabbiData) {
   ) {
     language = memoryData.aggregated_context.preferred_language;
   }
-  if (!['english', 'spanish', 'german', 'french'].includes(language)) {
+  
+  // Supported languages
+  if (!['english', 'spanish', 'portuguese', 'german', 'french'].includes(language)) {
     language = 'english';
   }
 
   // Determine name
-  let name = 'there';
+  let name = null;
   if (memoryData?.aggregated_context?.preferred_name) {
     name = memoryData.aggregated_context.preferred_name;
-  } else if (memoryData?.last_call?.preferred_name) {
-    name = memoryData.last_call.preferred_name;
   } else if (icabbiData?.user?.first_name) {
     name = icabbiData.user.first_name;
   }
@@ -732,15 +564,16 @@ function generateGreeting(memoryData, icabbiData) {
   if (icabbiData?.hasActiveTrips && icabbiData?.nextTrip) {
     const trip = {
       pickup_address: icabbiData.nextTrip.pickup_address || 'your location',
-      destination_address:
-        icabbiData.nextTrip.destination_address || 'your destination',
+      destination_address: icabbiData.nextTrip.destination_address || 'your destination',
       pickup_time_human: icabbiData.nextTrip.pickup_local_text || 'soon',
     };
 
     return {
       scenario: 'active_trip',
       language,
-      text: GREETING_TEMPLATES.active_trip[language](name, trip),
+      text: name 
+        ? GREETING_TEMPLATES.active_trip[language](name, trip)
+        : GREETING_TEMPLATES.active_trip[language]('there', trip),
       context: {
         has_active_trip: true,
         trip_id: icabbiData.nextTrip.trip_id,
@@ -757,10 +590,9 @@ function generateGreeting(memoryData, icabbiData) {
     return {
       scenario: 'callback',
       language,
-      text: GREETING_TEMPLATES.callback[language](
-        name,
-        memoryData.last_call.last_dropoff,
-      ),
+      text: name
+        ? GREETING_TEMPLATES.callback[language](name, memoryData.last_call.last_dropoff)
+        : GREETING_TEMPLATES.callback[language]('there', memoryData.last_call.last_dropoff),
       context: {
         last_dropoff: memoryData.last_call.last_dropoff,
         last_dropoff_coords: {
@@ -778,7 +610,9 @@ function generateGreeting(memoryData, icabbiData) {
     return {
       scenario: 'dropped_call',
       language,
-      text: GREETING_TEMPLATES.dropped_call[language](name, contextText),
+      text: name
+        ? GREETING_TEMPLATES.dropped_call[language](name, contextText)
+        : GREETING_TEMPLATES.dropped_call[language]('there', contextText),
       context: {
         was_dropped: true,
         conversation_state: memoryData.last_call.conversation_state,
@@ -791,10 +625,9 @@ function generateGreeting(memoryData, icabbiData) {
     return {
       scenario: 'trip_discussion',
       language,
-      text: GREETING_TEMPLATES.trip_discussion[language](
-        name,
-        memoryData.last_call.trip_discussion,
-      ),
+      text: name
+        ? GREETING_TEMPLATES.trip_discussion[language](name, memoryData.last_call.trip_discussion)
+        : GREETING_TEMPLATES.trip_discussion[language]('there', memoryData.last_call.trip_discussion),
       context: {
         trip_discussion: memoryData.last_call.trip_discussion,
       },
@@ -806,26 +639,27 @@ function generateGreeting(memoryData, icabbiData) {
     return {
       scenario: 'preferred_address',
       language,
-      text: GREETING_TEMPLATES.preferred_address[language](
-        name,
-        memoryData.aggregated_context.preferred_pickup_address,
-      ),
+      text: name
+        ? GREETING_TEMPLATES.preferred_address[language](
+            name,
+            memoryData.aggregated_context.preferred_pickup_address,
+          )
+        : GREETING_TEMPLATES.preferred_address[language](
+            'there',
+            memoryData.aggregated_context.preferred_pickup_address,
+          ),
       context: {
-        preferred_pickup_address:
-          memoryData.aggregated_context.preferred_pickup_address,
+        preferred_pickup_address: memoryData.aggregated_context.preferred_pickup_address,
       },
     };
   }
 
   // 6) iCabbi primary address
-  if (icabbiData?.primaryAddress) {
+  if (icabbiData?.primaryAddress && name) {
     return {
       scenario: 'primary_address',
       language,
-      text: GREETING_TEMPLATES.primary_address[language](
-        name,
-        icabbiData.primaryAddress,
-      ),
+      text: GREETING_TEMPLATES.primary_address[language](name, icabbiData.primaryAddress),
       context: {
         primary_address: icabbiData.primaryAddress,
       },
@@ -833,7 +667,7 @@ function generateGreeting(memoryData, icabbiData) {
   }
 
   // 7) Known customer, no special context
-  if (icabbiData?.found && name) {
+  if (name) {
     return {
       scenario: 'known_customer',
       language,
@@ -855,6 +689,7 @@ function generateGreeting(memoryData, icabbiData) {
   };
 }
 
+// Get context text for dropped call recovery
 function getDroppedCallContext(lastCall) {
   const collected = lastCall.collected_info || {};
 
@@ -873,19 +708,19 @@ function getDroppedCallContext(lastCall) {
   return 'Where were we?';
 }
 
+// Build situational context for follow-up questions
 function buildSituationalContext(memoryData, icabbiData, greeting) {
   const context = {
     suggest_luggage_question: false,
     suggest_skis_question: false,
     suggest_mobility_question: false,
-    weather_mention: null,
   };
 
   const addrFromTrip = icabbiData?.nextTrip?.destination_address || '';
-  const addrFromPref =
-    memoryData?.aggregated_context?.preferred_pickup_address || '';
+  const addrFromPref = memoryData?.aggregated_context?.preferred_pickup_address || '';
   const addresses = `${addrFromTrip} ${addrFromPref}`.toLowerCase();
 
+  // Airport detection
   const hasAirport =
     addresses.includes('airport') ||
     addresses.includes('ase') ||
@@ -898,18 +733,14 @@ function buildSituationalContext(memoryData, icabbiData, greeting) {
     context.suggest_luggage_question = true;
   }
 
-  const skiKeywords = [
-    'aspen mountain',
-    'ajax',
-    'highlands',
-    'snowmass',
-    'buttermilk',
-  ];
+  // Ski area detection
+  const skiKeywords = ['aspen mountain', 'ajax', 'highlands', 'snowmass', 'buttermilk'];
   const isSkiTrip = skiKeywords.some((kw) => addresses.includes(kw));
   if (isSkiTrip) {
     context.suggest_skis_question = true;
   }
 
+  // Hospital detection
   const isHospitalTrip = addresses.includes('hospital');
   if (isHospitalTrip) {
     context.suggest_mobility_question = true;
@@ -918,6 +749,7 @@ function buildSituationalContext(memoryData, icabbiData, greeting) {
   return context;
 }
 
+// Normalize phone number to E.164 format
 function normalizePhone(input) {
   if (!input) return null;
 
