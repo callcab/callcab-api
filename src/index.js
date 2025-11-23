@@ -1,4 +1,12 @@
-// src/handlers/memory-store.js
+// src/index.js
+
+import { handleValidateAddress } from './handlers/validate-address.js';
+import { handleAccountEligibility } from './handlers/account-eligibility.js';
+import { handleDispatchETA } from './handlers/dispatch-eta.js';
+import { handleIcabbiLookup } from './handlers/icabbi-lookup.js';
+import { handleIcabbiBooking } from './handlers/icabbi-booking.js';
+import { handleCallcabLookupMaster } from './handlers/callcab-lookup-master.js';
+import { handleMemoryStore } from './handlers/memory-store.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -6,167 +14,103 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
-/**
- * Store call memory in KV for later retrieval
- * Called at the end of each call to persist conversation context
- */
-export async function handleMemoryStore(request, env) {
-  try {
-    const body = await request.json();
-    
-    const {
-      phone,
-      timestamp,
-      outcome,
-      last_pickup,
-      last_dropoff,
-      last_dropoff_lat,
-      last_dropoff_lng,
-      behavior,
-      was_dropped = false,
-      conversation_state,
-      collected_info,
-      trip_discussion,
-      special_instructions,
-      aggregated_context
-    } = body;
-
-    // Validate required fields
-    if (!phone) {
-      console.error('[MemoryStore] MISSING_PHONE');
-      return new Response(
-        JSON.stringify({
-          ok: false,
-          error: 'MISSING_PHONE',
-          message: 'Phone number is required'
-        }),
-        {
-          status: 400,
-          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-        }
-      );
+export default {
+  async fetch(request, env, ctx) {
+    // Handle CORS preflight
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: CORS_HEADERS,
+      });
     }
 
-    // Check KV configuration
-    if (!env.CALL_MEMORIES) {
-      console.error('[MemoryStore] CALL_MEMORIES KV not configured');
-      return new Response(
-        JSON.stringify({
-          ok: false,
-          error: 'KV_NOT_CONFIGURED',
-          message: 'Memory storage is not configured'
-        }),
+    const url = new URL(request.url);
+    const path = url.pathname;
+
+    try {
+      // Health check endpoint
+      if (path === '/health' || path === '/') {
+        return jsonResponse({
+          ok: true,
+          status: 'healthy',
+          timestamp: new Date().toISOString(),
+          version: '4.1.0',
+          endpoints: [
+            '/health',
+            '/validate-address',
+            '/account-eligibility',
+            '/dispatch-eta',
+            '/icabbi-lookup',
+            '/icabbi-booking',
+            '/callcab-lookup-master',
+            '/store'
+          ],
+        });
+      }
+
+      // Route to appropriate handler
+      switch (path) {
+        case '/validate-address':
+          return await handleValidateAddress(request, env);
+
+        case '/account-eligibility':
+          return await handleAccountEligibility(request, env);
+
+        case '/dispatch-eta':
+          return await handleDispatchETA(request, env);
+
+        case '/icabbi-lookup':
+          return await handleIcabbiLookup(request, env);
+
+        case '/icabbi-booking':
+          return await handleIcabbiBooking(request, env);
+
+        case '/callcab-lookup-master':
+          return await handleCallcabLookupMaster(request, env);
+
+        case '/store':
+          return await handleMemoryStore(request, env);
+
+        default:
+          return jsonResponse(
+            {
+              ok: false,
+              error: 'NOT_FOUND',
+              message: `Endpoint ${path} not found`,
+              available_endpoints: [
+                '/health',
+                '/validate-address',
+                '/account-eligibility',
+                '/dispatch-eta',
+                '/icabbi-lookup',
+                '/icabbi-booking',
+                '/callcab-lookup-master',
+                '/store'
+              ],
+            },
+            404
+          );
+      }
+    } catch (error) {
+      console.error('[index] Unhandled error:', error);
+      return jsonResponse(
         {
-          status: 500,
-          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-        }
+          ok: false,
+          error: 'INTERNAL_ERROR',
+          message: 'An unexpected error occurred',
+        },
+        500
       );
     }
+  },
+};
 
-    // Normalize phone number
-    const normalizedPhone = normalizePhone(phone);
-    if (!normalizedPhone) {
-      console.error('[MemoryStore] INVALID_PHONE:', phone);
-      return new Response(
-        JSON.stringify({
-          ok: false,
-          error: 'INVALID_PHONE',
-          message: 'Invalid phone number format'
-        }),
-        {
-          status: 400,
-          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    // Prepare memory object
-    const memoryData = {
-      phone: normalizedPhone,
-      timestamp: timestamp || new Date().toISOString(),
-      outcome,
-      last_pickup,
-      last_dropoff,
-      last_dropoff_lat,
-      last_dropoff_lng,
-      behavior,
-      was_dropped,
-      conversation_state,
-      collected_info,
-      trip_discussion,
-      special_instructions,
-      aggregated_context
-    };
-
-    console.log('[MemoryStore] Storing memory for:', normalizedPhone, {
-      outcome,
-      has_aggregated: !!aggregated_context,
-      was_dropped
-    });
-
-    // Store in KV with 90-day expiration
-    await env.CALL_MEMORIES.put(
-      `latest:${normalizedPhone}`,
-      JSON.stringify(memoryData),
-      {
-        expirationTtl: 60 * 60 * 24 * 90 // 90 days
-      }
-    );
-
-    console.log('[MemoryStore] Successfully stored memory');
-
-    return new Response(
-      JSON.stringify({
-        ok: true,
-        phone: normalizedPhone,
-        stored_at: memoryData.timestamp,
-        expires_in_days: 90
-      }),
-      {
-        status: 200,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-      }
-    );
-
-  } catch (error) {
-    console.error('[MemoryStore] Error:', error);
-    return new Response(
-      JSON.stringify({
-        ok: false,
-        error: 'STORE_FAILED',
-        message: error.message
-      }),
-      {
-        status: 500,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-      }
-    );
-  }
-}
-
-/**
- * Normalize phone number to E.164 format
- */
-function normalizePhone(input) {
-  if (!input) return null;
-
-  let digits = String(input).replace(/\D/g, '');
-
-  // 10-digit US number
-  if (digits.length === 10) {
-    return `+1${digits}`;
-  }
-  
-  // 11-digit with leading 1
-  if (digits.length === 11 && digits.startsWith('1')) {
-    return `+${digits}`;
-  }
-  
-  // Already has + prefix
-  if (String(input).startsWith('+')) {
-    return input;
-  }
-
-  // Any other format with 10+ digits
-  return digits.length >= 10 ? `+${digits}` : null;
+function jsonResponse(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+      ...CORS_HEADERS,
+    },
+  });
 }
