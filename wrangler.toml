@@ -3,6 +3,16 @@ main = "src/index.js"
 compatibility_date = "2024-01-15"
 compatibility_flags = ["nodejs_compat"]
 
+# Environment variables (non-secret)
+[vars]
+ENVIRONMENT = "production"
+LOCAL_TZ = "America/Denver"
+
+# KV Namespaces
+[[kv_namespaces]]
+binding = "CALL_MEMORIES"
+id = "87fc46f3783d4b1aa48cdb58d4eb4b66"  # Replace with actual ID from step 1
+
 # Production environment
 [env.production]
 name = "callcab-api"
@@ -13,11 +23,6 @@ routes = [
 # Development environment
 [env.dev]
 name = "callcab-api-dev"
-
-# Environment variables (non-secret)
-[vars]
-ENVIRONMENT = "production"
-LOCAL_TZ = "America/Denver"
 
 # Secrets are set via: wrangler secret put SECRET_NAME
 # Required secrets:
