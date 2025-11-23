@@ -6,32 +6,20 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
-// In-memory deduplication cache (simple approach)
-const recentStores = new Map();
-const DEDUPE_WINDOW_MS = 30000; // 30 seconds
-
+/**
+ * Store call memory in KV - FILTERS OUT OpenSesame wrapper metadata
+ * Only stores the actual memory data sent at end of call
+ */
 export async function handleMemoryStore(request, env) {
   try {
     const body = await request.json();
     
-    const {
-      phone,
-      timestamp,
-      outcome,
-      last_pickup,
-      last_dropoff,
-      last_dropoff_lat,
-      last_dropoff_lng,
-      behavior,
-      was_dropped = false,
-      conversation_state,
-      collected_info,
-      trip_discussion,
-      special_instructions,
-      aggregated_context,
-      call_id // Add this to identify unique calls
-    } = body;
-
+    // Extract phone from various possible locations (OpenSesame wrapper compatibility)
+    const phone = body.phone || 
+                  body.customer?.number || 
+                  body.call?.customer?.number ||
+                  body.memory?.phone;
+    
     if (!phone) {
       console.error('[MemoryStore] MISSING_PHONE');
       return new Response(
@@ -47,6 +35,7 @@ export async function handleMemoryStore(request, env) {
       );
     }
 
+    // Check KV configuration
     if (!env.CALL_MEMORIES) {
       console.error('[MemoryStore] CALL_MEMORIES KV not configured');
       return new Response(
@@ -62,6 +51,7 @@ export async function handleMemoryStore(request, env) {
       );
     }
 
+    // Normalize phone number
     const normalizedPhone = normalizePhone(phone);
     if (!normalizedPhone) {
       console.error('[MemoryStore] INVALID_PHONE:', phone);
@@ -78,57 +68,49 @@ export async function handleMemoryStore(request, env) {
       );
     }
 
-    // DEDUPLICATION: Check if we recently stored for this phone
-    const dedupeKey = call_id || normalizedPhone;
-    const lastStore = recentStores.get(dedupeKey);
-    const now = Date.now();
-    
-    if (lastStore && (now - lastStore) < DEDUPE_WINDOW_MS) {
-      const secondsAgo = Math.round((now - lastStore) / 1000);
-      console.log(`[MemoryStore] DEDUPE: Ignoring duplicate store for ${normalizedPhone} (${secondsAgo}s ago)`);
-      
-      return new Response(
-        JSON.stringify({
-          ok: true,
-          deduplicated: true,
-          phone: normalizedPhone,
-          message: `Already stored ${secondsAgo} seconds ago`,
-          last_stored: new Date(lastStore).toISOString()
-        }),
-        {
-          status: 200,
-          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    // Prepare memory object
+    // FILTER: Only extract memory-specific fields, ignore OpenSesame metadata
     const memoryData = {
       phone: normalizedPhone,
-      timestamp: timestamp || new Date().toISOString(),
-      call_id,
-      outcome,
-      last_pickup,
-      last_dropoff,
-      last_dropoff_lat,
-      last_dropoff_lng,
-      behavior,
-      was_dropped,
-      conversation_state,
-      collected_info,
-      trip_discussion,
-      special_instructions,
-      aggregated_context
+      timestamp: body.timestamp || new Date().toISOString(),
+      
+      // Call outcome
+      outcome: body.outcome || null,
+      
+      // Location data
+      last_pickup: body.last_pickup || null,
+      last_dropoff: body.last_dropoff || null,
+      last_dropoff_lat: body.last_dropoff_lat || null,
+      last_dropoff_lng: body.last_dropoff_lng || null,
+      
+      // Behavioral data
+      behavior: body.behavior || null,
+      was_dropped: body.was_dropped || false,
+      
+      // Conversation state
+      conversation_state: body.conversation_state || null,
+      collected_info: body.collected_info || null,
+      trip_discussion: body.trip_discussion || null,
+      special_instructions: body.special_instructions || null,
+      
+      // Aggregated context (preferences)
+      aggregated_context: body.aggregated_context || null
     };
 
-    console.log('[MemoryStore] Storing memory for:', normalizedPhone, {
-      outcome,
-      has_aggregated: !!aggregated_context,
-      was_dropped,
-      call_id
+    // Remove null values to keep storage lean
+    Object.keys(memoryData).forEach(key => {
+      if (memoryData[key] === null || memoryData[key] === undefined) {
+        delete memoryData[key];
+      }
     });
 
-    // Store in KV
+    console.log('[MemoryStore] Storing filtered memory for:', normalizedPhone, {
+      outcome: memoryData.outcome,
+      has_aggregated: !!memoryData.aggregated_context,
+      was_dropped: memoryData.was_dropped,
+      fields_stored: Object.keys(memoryData).length
+    });
+
+    // Store in KV with 90-day expiration
     await env.CALL_MEMORIES.put(
       `latest:${normalizedPhone}`,
       JSON.stringify(memoryData),
@@ -137,19 +119,6 @@ export async function handleMemoryStore(request, env) {
       }
     );
 
-    // Update deduplication cache
-    recentStores.set(dedupeKey, now);
-    
-    // Clean up old entries (simple garbage collection)
-    if (recentStores.size > 100) {
-      const cutoff = now - DEDUPE_WINDOW_MS;
-      for (const [key, time] of recentStores.entries()) {
-        if (time < cutoff) {
-          recentStores.delete(key);
-        }
-      }
-    }
-
     console.log('[MemoryStore] Successfully stored memory');
 
     return new Response(
@@ -157,8 +126,8 @@ export async function handleMemoryStore(request, env) {
         ok: true,
         phone: normalizedPhone,
         stored_at: memoryData.timestamp,
-        expires_in_days: 90,
-        call_id
+        fields_stored: Object.keys(memoryData).length,
+        expires_in_days: 90
       }),
       {
         status: 200,
@@ -182,11 +151,29 @@ export async function handleMemoryStore(request, env) {
   }
 }
 
+/**
+ * Normalize phone number to E.164 format
+ */
 function normalizePhone(input) {
   if (!input) return null;
+
   let digits = String(input).replace(/\D/g, '');
-  if (digits.length === 10) return `+1${digits}`;
-  if (digits.length === 11 && digits.startsWith('1')) return `+${digits}`;
-  if (String(input).startsWith('+')) return input;
+
+  // 10-digit US number
+  if (digits.length === 10) {
+    return `+1${digits}`;
+  }
+  
+  // 11-digit with leading 1
+  if (digits.length === 11 && digits.startsWith('1')) {
+    return `+${digits}`;
+  }
+  
+  // Already has + prefix
+  if (String(input).startsWith('+')) {
+    return input;
+  }
+
+  // Any other format with 10+ digits
   return digits.length >= 10 ? `+${digits}` : null;
 }
