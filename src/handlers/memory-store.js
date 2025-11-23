@@ -121,53 +121,10 @@ export async function handleMemoryStore(request, env) {
       special_notes: structuredData.special_notes || null,
       
       // Callback
-      callback_confirmed: structuredData.callback_confirmed || false,
-      
-      // Aggregated context (preferences - CRITICAL)
-		
-		// Build memory object from structured data
-    const memoryData = {
-      phone: normalizedPhone,
-      timestamp: new Date().toISOString(),
-      
-      // Call outcome
-      outcome: structuredData.outcome || null,
-      language_used: structuredData.language_used || null,
-      
-      // Location data (only if booking completed)
-      last_pickup: structuredData.last_pickup || null,
-      last_dropoff: structuredData.last_dropoff || null,
-      last_dropoff_lat: structuredData.last_dropoff_lat || null,
-      last_dropoff_lng: structuredData.last_dropoff_lng || null,
-      last_trip_id: structuredData.last_trip_id || null,
-      
-      // Behavioral data
-      behavior: structuredData.behavior || null,
-      behavior_notes: structuredData.behavior_notes || null,
-      was_dropped: structuredData.outcome === 'dropped_call',
-      
-      // Conversation state
-      conversation_state: structuredData.conversation_state || null,
-      collected_info: structuredData.collected_info || null,
-      trip_discussion: structuredData.trip_discussion || null,
-      
-      // Personal context
-      greeting_response: structuredData.greeting_response || null,
-      relationship_context: structuredData.relationship_context || null,
-      conversation_topics: structuredData.conversation_topics || null,
-      jokes_shared: structuredData.jokes_shared || null,
-      personal_details: structuredData.personal_details || null,
-      
-      // Operational notes
-      special_instructions: structuredData.special_instructions || null,
-      operational_notes: structuredData.operational_notes || null,
-      special_notes: structuredData.special_notes || null,
-      
-      // Callback
       callback_confirmed: structuredData.callback_confirmed || false
     };
 
-    // Build aggregated_context separately (THIS IS THE KEY PART)
+    // Build aggregated_context separately (THIS IS THE KEY PART FOR PREFERENCES)
     const aggregatedContext = {};
     
     if (structuredData.preferred_name) {
@@ -194,22 +151,6 @@ export async function handleMemoryStore(request, env) {
         delete memoryData[key];
       }
     });
-
-    console.log('[MemoryStore] Storing memory for:', normalizedPhone, {
-      outcome: memoryData.outcome,
-      has_aggregated: !!memoryData.aggregated_context,
-      aggregated_keys: memoryData.aggregated_context ? Object.keys(memoryData.aggregated_context) : [],
-      fields_stored: Object.keys(memoryData).length
-    });
-        };
-
-    // Remove null/empty values
-    Object.keys(memoryData).forEach(key => {
-      if (memoryData[key] === null || memoryData[key] === undefined || 
-          (Array.isArray(memoryData[key]) && memoryData[key].length === 0)) {
-        delete memoryData[key];
-      }
-    });
     
     // Clean aggregated_context
     if (memoryData.aggregated_context) {
@@ -229,6 +170,7 @@ export async function handleMemoryStore(request, env) {
     console.log('[MemoryStore] Storing memory for:', normalizedPhone, {
       outcome: memoryData.outcome,
       has_aggregated: !!memoryData.aggregated_context,
+      aggregated_keys: memoryData.aggregated_context ? Object.keys(memoryData.aggregated_context) : [],
       fields_stored: Object.keys(memoryData).length
     });
 
