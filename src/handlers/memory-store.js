@@ -6,10 +6,6 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
-/**
- * Store call memory in KV for later retrieval
- * Called at the end of each call to persist conversation context
- */
 export async function handleMemoryStore(request, env) {
   try {
     const body = await request.json();
@@ -33,7 +29,6 @@ export async function handleMemoryStore(request, env) {
 
     // Validate required fields
     if (!phone) {
-      console.error('[MemoryStore] MISSING_PHONE');
       return new Response(
         JSON.stringify({
           ok: false,
@@ -47,7 +42,6 @@ export async function handleMemoryStore(request, env) {
       );
     }
 
-    // Check KV configuration
     if (!env.CALL_MEMORIES) {
       console.error('[MemoryStore] CALL_MEMORIES KV not configured');
       return new Response(
@@ -63,10 +57,9 @@ export async function handleMemoryStore(request, env) {
       );
     }
 
-    // Normalize phone number
+    // Normalize phone
     const normalizedPhone = normalizePhone(phone);
     if (!normalizedPhone) {
-      console.error('[MemoryStore] INVALID_PHONE:', phone);
       return new Response(
         JSON.stringify({
           ok: false,
@@ -98,13 +91,9 @@ export async function handleMemoryStore(request, env) {
       aggregated_context
     };
 
-    console.log('[MemoryStore] Storing memory for:', normalizedPhone, {
-      outcome,
-      has_aggregated: !!aggregated_context,
-      was_dropped
-    });
+    console.log('[MemoryStore] Storing memory for:', normalizedPhone);
 
-    // Store in KV with 90-day expiration
+    // Store in KV
     await env.CALL_MEMORIES.put(
       `latest:${normalizedPhone}`,
       JSON.stringify(memoryData),
@@ -119,8 +108,7 @@ export async function handleMemoryStore(request, env) {
       JSON.stringify({
         ok: true,
         phone: normalizedPhone,
-        stored_at: memoryData.timestamp,
-        expires_in_days: 90
+        stored_at: memoryData.timestamp
       }),
       {
         status: 200,
@@ -144,29 +132,20 @@ export async function handleMemoryStore(request, env) {
   }
 }
 
-/**
- * Normalize phone number to E.164 format
- */
 function normalizePhone(input) {
   if (!input) return null;
 
   let digits = String(input).replace(/\D/g, '');
 
-  // 10-digit US number
   if (digits.length === 10) {
     return `+1${digits}`;
   }
-  
-  // 11-digit with leading 1
   if (digits.length === 11 && digits.startsWith('1')) {
     return `+${digits}`;
   }
-  
-  // Already has + prefix
   if (String(input).startsWith('+')) {
     return input;
   }
 
-  // Any other format with 10+ digits
   return digits.length >= 10 ? `+${digits}` : null;
 }
