@@ -11,7 +11,7 @@ LOCAL_TZ = "America/Denver"
 # KV Namespaces
 [[kv_namespaces]]
 binding = "CALL_MEMORIES"
-id = "87fc46f3783d4b1aa48cdb58d4eb4b66"  # Replace with actual ID from step 1
+id = "87fc46f3783d4b1aa48cdb58d4eb4b66"
 
 # Production environment
 [env.production]
@@ -20,11 +20,28 @@ routes = [
   { pattern = "api.callcab.ai/*", zone_name = "callcab.ai" }
 ]
 
+# Production must explicitly inherit vars and kv_namespaces
+[env.production.vars]
+ENVIRONMENT = "production"
+LOCAL_TZ = "America/Denver"
+
+[[env.production.kv_namespaces]]
+binding = "CALL_MEMORIES"
+id = "87fc46f3783d4b1aa48cdb58d4eb4b66"
+
 # Development environment
 [env.dev]
 name = "callcab-api-dev"
 
-# Secrets are set via: wrangler secret put SECRET_NAME
+[env.dev.vars]
+ENVIRONMENT = "development"
+LOCAL_TZ = "America/Denver"
+
+[[env.dev.kv_namespaces]]
+binding = "CALL_MEMORIES"
+id = "87fc46f3783d4b1aa48cdb58d4eb4b66"
+
+# Secrets are set via: wrangler secret put SECRET_NAME --env=production
 # Required secrets:
 # - GOOGLE_MAPS_API_KEY
 # - ICABBI_APP_KEY
