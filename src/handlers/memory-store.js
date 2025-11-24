@@ -158,6 +158,13 @@ function processIncomingData(body) {
   let structuredData = {};
   let phone = null;
 
+  console.log('[MemoryStore] Processing incoming data:', {
+    hasMessage: !!body.message,
+    hasArtifact: !!body.artifact,
+    messageType: body.message?.type,
+    topLevelKeys: Object.keys(body)
+  });
+
   // VAPI Webhook Detection
   if (body.message || body.artifact || body.type) {
     dataSource = 'vapi_webhook';
@@ -165,11 +172,25 @@ function processIncomingData(body) {
     // Extract structured data from VAPI webhook
     structuredData = body.message?.artifact || body.artifact || {};
     
-    // Extract phone from multiple VAPI locations
+    // Extract phone from multiple VAPI locations (comprehensive search)
     phone = structuredData.phone || 
             body.message?.call?.customer?.number ||
             body.call?.customer?.number ||
-            body.customer?.number;
+            body.customer?.number ||
+            body.message?.phoneNumber ||
+            body.phoneNumber ||
+            body.message?.customerNumber ||
+            body.customerNumber;
+
+    console.log('[MemoryStore] VAPI phone extraction attempts:', {
+      structured_phone: structuredData.phone,
+      message_call_customer: body.message?.call?.customer?.number,
+      call_customer: body.call?.customer?.number,
+      customer_number: body.customer?.number,
+      message_phoneNumber: body.message?.phoneNumber,
+      phoneNumber: body.phoneNumber,
+      found_phone: phone
+    });
 
     // Validate webhook type
     const messageType = body.message?.type || body.type;
@@ -196,7 +217,72 @@ function processIncomingData(body) {
     return { dataSource: 'invalid', structuredData: {}, phone: null };
   }
 
+  // Fallback: Deep search for phone number if not found in standard locations
+  if (!phone) {
+    console.warn('[MemoryStore] No phone in standard locations, performing deep search...');
+    phone = extractPhoneFromBody(body);
+    if (phone) {
+      console.log('[MemoryStore] Found phone via deep search:', phone);
+      dataSource += '_deep_search';
+    }
+  }
+
+  // Final phone validation and normalization
+  if (phone) {
+    const normalizedPhone = normalizePhone(phone);
+    if (normalizedPhone) {
+      phone = normalizedPhone;
+      console.log('[MemoryStore] Phone normalized to:', phone);
+    } else {
+      console.error('[MemoryStore] Phone normalization failed for:', phone);
+      phone = null;
+    }
+  } else {
+    console.error('[MemoryStore] No phone number found anywhere in request');
+  }
+
   return { dataSource, structuredData, phone };
+}
+
+/**
+ * Deep search for phone number patterns in request body
+ */
+function extractPhoneFromBody(obj, path = '', visited = new WeakSet()) {
+  if (!obj || typeof obj !== 'object' || visited.has(obj)) return null;
+  visited.add(obj);
+  
+  for (const [key, value] of Object.entries(obj)) {
+    const currentPath = path ? `${path}.${key}` : key;
+    
+    // Check if this key looks like it contains a phone number
+    if (typeof value === 'string' && value.length >= 7) {
+      // Look for phone-like keys
+      if (/phone|number|caller|customer/i.test(key)) {
+        const digits = value.replace(/\D/g, '');
+        if (digits.length >= 10 && digits.length <= 15) {
+          console.log('[MemoryStore] Found phone at key path:', currentPath, value);
+          return value;
+        }
+      }
+      
+      // Look for phone-like values (E164, 001, +1, etc.)
+      if (/^(\+?1?|001)?\d{10,15}$/.test(value.replace(/\D/g, ''))) {
+        const digits = value.replace(/\D/g, '');
+        if (digits.length >= 10 && digits.length <= 15) {
+          console.log('[MemoryStore] Found phone-like value at path:', currentPath, value);
+          return value;
+        }
+      }
+    }
+    
+    // Recursively search nested objects/arrays
+    if (typeof value === 'object' && value !== null && !visited.has(value)) {
+      const found = extractPhoneFromBody(value, currentPath, visited);
+      if (found) return found;
+    }
+  }
+  
+  return null;
 }
 
 /**
