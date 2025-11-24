@@ -1,6 +1,7 @@
 // src/handlers/callcab-lookup-master.js
-// Production version - unified intelligence endpoint for Claire
+// FIXED Production version - unified intelligence endpoint for Claire
 // Combines memory (CALL_MEMORIES KV), iCabbi lookup, and greeting generation
+// NOW USES BASIC AUTH LIKE WORKING VERCEL VERSION
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -144,23 +145,6 @@ export async function handleCallcabLookupMaster(request, env) {
       );
     }
 
-    // SECURITY: Verify caller is from allowed list (optional - comment out if not needed)
-    // Uncomment and configure ALLOWED_CALLERS at top of file
-    /*
-    const callerNumber = body.call?.customer?.number || body.customer?.number;
-    if (callerNumber && !ALLOWED_CALLERS.includes(normalizePhone(callerNumber))) {
-      console.error('[LookupMaster] UNAUTHORIZED_CALLER:', callerNumber);
-      return new Response(
-        JSON.stringify({
-          ok: false,
-          error: 'UNAUTHORIZED',
-          message: 'This service is only available to High Mountain Taxi customers'
-        }),
-        { status: 403, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
-      );
-    }
-    */
-
     console.log('[LookupMaster] Processing for:', phone);
 
     // Parallel fetch: memory + iCabbi
@@ -180,36 +164,35 @@ export async function handleCallcabLookupMaster(request, env) {
         const firstName = fullName.split(' ')[0] || fullName;
         const lastName = fullName.split(' ').slice(1).join(' ') || firstName;
 
-        // NOTE: Endpoint may need adjustment - verify with iCabbi API docs
-        // Using same auth method as search endpoint
+        // FIXED: Use Basic Auth like working Vercel version
+        const BASE = (env.ICABBI_BASE_URL || "https://api.icabbi.us/us2").replace(/\/+$/, "");
+        const basic = btoa(`${env.ICABBI_APP_KEY}:${env.ICABBI_SECRET}`);
+
         const createResponse = await fetch(
-          `${env.ICABBI_BASE_URL}/customer.json`,
+          `${BASE}/users/create`,
           {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'X-App-Key': env.ICABBI_APP_KEY,
-              'X-Secret': env.ICABBI_SECRET,
+              'accept': 'application/json',
+              'Authorization': `Basic ${basic}`,
             },
             body: JSON.stringify({
-              action: 'create',
               phone: phone,
-              userData: {
-                first_name: firstName,
-                last_name: lastName,
-              },
+              first_name: firstName,
+              last_name: lastName,
             }),
           },
         );
 
         if (createResponse.ok) {
           const newCustomer = await createResponse.json();
-          console.log('[LookupMaster] Customer created:', newCustomer.user?.customer_id);
+          console.log('[LookupMaster] Customer created:', newCustomer.body?.user?.id);
 
           finalIcabbiData = {
             found: true,
             is_new_customer: true,
-            user: newCustomer.user,
+            user: newCustomer.body?.user,
             hasActiveTrips: false,
             activeTrips: [],
           };
@@ -236,7 +219,7 @@ export async function handleCallcabLookupMaster(request, env) {
 
       customer: {
         phone: phone,
-        icabbi_customer_id: finalIcabbiData?.user?.customer_id || null,
+        icabbi_customer_id: finalIcabbiData?.user?.id || null,
         is_new_customer: finalIcabbiData?.is_new_customer || false,
         preferred_name:
           memoryData?.aggregated_context?.preferred_name ||
@@ -312,54 +295,77 @@ export async function handleCallcabLookupMaster(request, env) {
   }
 }
 
-// Fetch iCabbi customer data
-// FIXED: Uses correct /users/search endpoint with POST method
+// FIXED: Fetch iCabbi customer data using Basic Auth and correct endpoints like working Vercel version
 async function fetchIcabbiData(phone, env) {
   try {
-    if (!env.ICABBI_BASE_URL || !env.ICABBI_APP_KEY) {
+    if (!env.ICABBI_BASE_URL || !env.ICABBI_APP_KEY || !env.ICABBI_SECRET) {
       console.warn('[iCabbi] Not configured, skipping');
       return { found: false };
     }
 
-    // CORRECTED: Use /users/search endpoint with POST method and correct headers
-    const response = await fetch(
-      `${env.ICABBI_BASE_URL}/users/search`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-App-Key': env.ICABBI_APP_KEY,
-          'X-Secret': env.ICABBI_SECRET,
-        },
-        body: JSON.stringify({
-          phone: phone,
-          checkActiveTrips: true
-        })
-      },
-    );
+    const BASE = (env.ICABBI_BASE_URL || "https://api.icabbi.us/us2").replace(/\/+$/, "");
+    const basic = btoa(`${env.ICABBI_APP_KEY}:${env.ICABBI_SECRET}`);
+    const BASE_HEADERS = {
+      accept: "application/json",
+      "content-type": "application/json",
+      Authorization: `Basic ${basic}`,
+    };
 
-    if (!response.ok) {
-      console.error('[iCabbi] Lookup failed:', response.status);
-      return { found: false };
+    // Use multiple phone formats like working Vercel version
+    const norm = normalizeDigits(phone);
+    const e164 = `+1${norm}`;
+    const idd = `001${norm}`;
+    const raw = String(phone).trim();
+    const formats = Array.from(new Set([idd, e164, norm, raw])).filter(v => v && v.length >= 7);
+
+    console.log('[iCabbi] Trying phone formats:', formats);
+
+    // Try header method first (like working Vercel)
+    let user = null, upstream = null;
+
+    for (const p of formats) {
+      const response = await fetch(`${BASE}/users/index`, { 
+        method: "POST", 
+        headers: { ...BASE_HEADERS, Phone: p } 
+      });
+      const data = await safeJson(response);
+      upstream = { status: response.status, body: data };
+      user = data?.body?.user || null;
+      
+      if (user) {
+        console.log('[iCabbi] Found user with header method:', p);
+        break;
+      }
     }
 
-    const data = await response.json();
-    
-    // Handle response structure from /users/search
-    // May return single user or array of users
-    if (!data.user && !data.users) {
-      return { found: false };
-    }
-
-    const user = data.user || (data.users && data.users[0]);
-    
+    // Fallback to query method if header failed
     if (!user) {
+      for (const p of formats) {
+        const response = await fetch(`${BASE}/users/index?phone=${encodeURIComponent(p)}`, { 
+          method: "POST", 
+          headers: BASE_HEADERS 
+        });
+        const data = await safeJson(response);
+        upstream = { status: response.status, body: data };
+        user = data?.body?.user || null;
+        
+        if (user) {
+          console.log('[iCabbi] Found user with query method:', p);
+          break;
+        }
+      }
+    }
+
+    if (!user) {
+      console.log('[iCabbi] User not found in any format');
       return { found: false };
     }
 
     // Get primary address
     let primaryAddress = null;
-    if (user.addresses && user.addresses.length > 0) {
+    if (user.primary_address) {
+      primaryAddress = user.primary_address;
+    } else if (user.addresses && user.addresses.length > 0) {
       const primary = user.addresses.find(a => a.is_primary) || user.addresses[0];
       if (primary) {
         primaryAddress = primary.formatted_address || 
@@ -367,38 +373,61 @@ async function fetchIcabbiData(phone, env) {
       }
     }
 
-    // Get active trips
-    const now = new Date();
-    const activeTrips = (user.trips || [])
-      .filter(trip => {
-        const tripTime = new Date(trip.pickup_time);
-        return tripTime > now && trip.status !== 'cancelled';
-      })
-      .sort((a, b) => new Date(a.pickup_time) - new Date(b.pickup_time));
+    // Check for active trips using the correct phone format
+    let activeTrips = [];
+    let hasActiveTrips = false;
+    let nextTrip = null;
 
-    const nextTrip = activeTrips.length > 0 ? activeTrips[0] : null;
-
-    // Format next trip time
-    if (nextTrip) {
-      const tripTime = new Date(nextTrip.pickup_time);
-      const denver = new Intl.DateTimeFormat('en-US', {
-        timeZone: 'America/Denver',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-      }).format(tripTime);
+    try {
+      const phoneForTrips = user.phone || idd;
+      const tripResponse = await fetch(`${BASE}/bookings/upcoming?phone=${encodeURIComponent(phoneForTrips)}`, {
+        method: "GET", 
+        headers: BASE_HEADERS
+      });
       
-      nextTrip.pickup_local_text = denver.toLowerCase();
+      if (tripResponse.ok) {
+        const tripData = await safeJson(tripResponse);
+        
+        if (Array.isArray(tripData?.body?.bookings)) {
+          const now = Date.now();
+          const allTrips = tripData.body.bookings;
+          
+          activeTrips = allTrips.filter(trip => {
+            const pickupTime = new Date(trip.pickup_date).getTime();
+            return pickupTime > now && pickupTime < (now + 24 * 60 * 60 * 1000); // next 24 hours
+          });
+          
+          hasActiveTrips = activeTrips.length > 0;
+          nextTrip = activeTrips.length > 0 ? activeTrips[0] : null;
+          
+          // Format next trip time
+          if (nextTrip) {
+            const tripTime = new Date(nextTrip.pickup_date);
+            const denver = new Intl.DateTimeFormat('en-US', {
+              timeZone: 'America/Denver',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true,
+              weekday: 'short',
+              month: 'short',
+              day: 'numeric',
+            }).format(tripTime);
+            
+            nextTrip.pickup_local_text = denver.toLowerCase();
+            nextTrip.pickup_address = nextTrip.pickup_address || 'pickup location';
+            nextTrip.destination_address = nextTrip.destination_address || 'destination';
+          }
+        }
+      }
+    } catch (tripError) {
+      console.warn('[iCabbi] Trip lookup failed:', tripError.message);
     }
 
     return {
       found: true,
       user: user,
       primaryAddress,
-      hasActiveTrips: activeTrips.length > 0,
+      hasActiveTrips,
       activeTrips,
       nextTrip,
     };
@@ -769,7 +798,7 @@ function buildSituationalContext(memoryData, icabbiData, greeting) {
   return context;
 }
 
-// Normalize phone number to E.164 format
+// Helper functions
 function normalizePhone(input) {
   if (!input) return null;
 
@@ -786,4 +815,17 @@ function normalizePhone(input) {
   }
 
   return digits.length >= 10 ? `+${digits}` : null;
+}
+
+function normalizeDigits(p) {
+  return String(p).replace(/[^\d]/g, "").replace(/^1?(\d{10})$/, "$1");
+}
+
+async function safeJson(response) {
+  const text = await response.text();
+  try { 
+    return JSON.parse(text); 
+  } catch { 
+    return { _raw: text }; 
+  }
 }
