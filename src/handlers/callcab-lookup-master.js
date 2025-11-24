@@ -609,12 +609,16 @@ function generateGreeting(memory, icabbi, customer) {
   } else if (customer.preferred_pickup_address) {
     scenario = 'preferred_address';
     contextData = {
-      preferred_address: customer.preferred_pickup_address
+      preferred_address: typeof customer.preferred_pickup_address === 'object' 
+        ? (customer.preferred_pickup_address.formatted || customer.preferred_pickup_address.address || customer.preferred_pickup_address.name || 'your address')
+        : customer.preferred_pickup_address
     };
   } else if (icabbi?.primaryAddress) {
     scenario = 'primary_address'; 
     contextData = {
-      primary_address: icabbi.primaryAddress
+      primary_address: typeof icabbi.primaryAddress === 'object'
+        ? (icabbi.primaryAddress.formatted || icabbi.primaryAddress.address || icabbi.primaryAddress.name || 'your address')
+        : icabbi.primaryAddress
     };
   } else if (memory?.aggregated_context || icabbi?.found) {
     scenario = 'known_customer';

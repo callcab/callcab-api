@@ -215,7 +215,8 @@ function validateAndSanitizeData(data) {
 
   // Required fields
   sanitized.phone = data.phone;
-  sanitized.outcome = sanitizeString(data.outcome) || 'call_completed';
+  const outcomeResult = sanitizeString(data.outcome);
+  sanitized.outcome = (outcomeResult && outcomeResult.value) ? outcomeResult.value : (data.outcome || 'call_completed');
   sanitized.timestamp = new Date().toISOString();
 
   // Optional fields with validation and sanitization
@@ -270,7 +271,10 @@ function validateAndSanitizeData(data) {
   if (data.conversation_topics && Array.isArray(data.conversation_topics)) {
     sanitized.conversation_topics = data.conversation_topics
       .slice(0, DATA_LIMITS.MAX_TOPICS_COUNT)
-      .map(topic => sanitizeString(topic, { maxLength: 100 }).value)
+      .map(topic => {
+        const result = sanitizeString(topic, { maxLength: 100 });
+        return result.valid ? result.value : '';
+      })
       .filter(Boolean);
   }
 
