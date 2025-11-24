@@ -1,831 +1,832 @@
 // src/handlers/callcab-lookup-master.js
-// FIXED Production version - unified intelligence endpoint for Claire
-// Combines memory (CALL_MEMORIES KV), iCabbi lookup, and greeting generation
-// NOW USES BASIC AUTH LIKE WORKING VERCEL VERSION
+// FINAL PRODUCTION VERSION - Claire v4.1 Unified Lookup Master
+// Returns: Memory + iCabbi + Greeting + Context in single call
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',  
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
-// Security: Allowed caller IDs (High Mountain Taxi VAPI numbers)
-// Add your actual VAPI phone numbers here
-const ALLOWED_CALLERS = [
-  '+19702000000', // Replace with your actual VAPI number(s)
-  // Add more as needed
-];
-
-// Greeting templates in multiple languages
-const GREETING_TEMPLATES = {
-  active_trip: {
-    english: (name, trip) =>
-      `High Mountain Taxi, this is Claire. Hi ${name}. I see you have a ride from ${trip.pickup_address} to ${trip.destination_address} ${trip.pickup_time_human}. Want to modify it or book something else?`,
-    spanish: (name, trip) =>
-      `High Mountain Taxi, habla Claire. Hola ${name}. Veo que tienes un viaje de ${trip.pickup_address} a ${trip.destination_address} ${trip.pickup_time_human}. ¿Quieres modificarlo o reservar algo más?`,
-    portuguese: (name, trip) =>
-      `High Mountain Taxi, aqui é Claire. Olá ${name}. Vejo que você tem uma viagem de ${trip.pickup_address} para ${trip.destination_address} ${trip.pickup_time_human}. Quer modificar ou reservar outra coisa?`,
-    german: (name, trip) =>
-      `High Mountain Taxi, hier ist Claire. Hallo ${name}. Ich sehe, Sie haben eine Fahrt von ${trip.pickup_address} nach ${trip.destination_address} ${trip.pickup_time_human}. Möchten Sie das ändern oder etwas anderes buchen?`,
-    french: (name, trip) =>
-      `High Mountain Taxi, c'est Claire. Salut ${name}. Je vois que tu as un trajet de ${trip.pickup_address} à ${trip.destination_address} ${trip.pickup_time_human}. Tu veux le modifier ou réserver autre chose?`,
-  },
-  callback: {
-    english: (name, address) =>
-      `High Mountain Taxi, this is Claire. Hi ${name}. Want a pickup from where I dropped you off at ${address}?`,
-    spanish: (name, address) =>
-      `High Mountain Taxi, habla Claire. Hola ${name}. ¿Quieres que te recoja donde te dejé en ${address}?`,
-    portuguese: (name, address) =>
-      `High Mountain Taxi, aqui é Claire. Olá ${name}. Quer que eu te pegue onde te deixei em ${address}?`,
-    german: (name, address) =>
-      `High Mountain Taxi, hier ist Claire. Hallo ${name}. Soll ich Sie dort abholen, wo ich Sie bei ${address} abgesetzt habe?`,
-    french: (name, address) =>
-      `High Mountain Taxi, c'est Claire. Salut ${name}. Tu veux que je te prenne là où je t'ai déposé à ${address}?`,
-  },
-  dropped_call: {
-    english: (name, context) =>
-      `Hi ${name}, it's Claire. We got disconnected earlier. ${context}`,
-    spanish: (name, context) =>
-      `Hola ${name}, es Claire. Se cortó la llamada. ${context}`,
-    portuguese: (name, context) =>
-      `Oi ${name}, é a Claire. A ligação caiu. ${context}`,
-    german: (name, context) =>
-      `Hallo ${name}, hier ist Claire. Wir wurden unterbrochen. ${context}`,
-    french: (name, context) =>
-      `Salut ${name}, c'est Claire. On a été coupés. ${context}`,
-  },
-  trip_discussion: {
-    english: (name, discussion) =>
-      `High Mountain Taxi, this is Claire. Hi ${name}. Still planning ${discussion}?`,
-    spanish: (name, discussion) =>
-      `High Mountain Taxi, habla Claire. Hola ${name}. ¿Todavía planeas ${discussion}?`,
-    portuguese: (name, discussion) =>
-      `High Mountain Taxi, aqui é Claire. Olá ${name}. Ainda planejando ${discussion}?`,
-    german: (name, discussion) =>
-      `High Mountain Taxi, hier ist Claire. Hallo ${name}. Planen Sie noch ${discussion}?`,
-    french: (name, discussion) =>
-      `High Mountain Taxi, c'est Claire. Salut ${name}. Tu prévois toujours ${discussion}?`,
-  },
-  preferred_address: {
-    english: (name, address) =>
-      `High Mountain Taxi, this is Claire. Hi ${name}. ${address} again?`,
-    spanish: (name, address) =>
-      `High Mountain Taxi, habla Claire. Hola ${name}. ¿${address} otra vez?`,
-    portuguese: (name, address) =>
-      `High Mountain Taxi, aqui é Claire. Olá ${name}. ${address} de novo?`,
-    german: (name, address) =>
-      `High Mountain Taxi, hier ist Claire. Hallo ${name}. ${address} wieder?`,
-    french: (name, address) =>
-      `High Mountain Taxi, c'est Claire. Salut ${name}. ${address} encore?`,
-  },
-  primary_address: {
-    english: (name, address) =>
-      `High Mountain Taxi, this is Claire. Hi ${name}. ${address} again?`,
-    spanish: (name, address) =>
-      `High Mountain Taxi, habla Claire. Hola ${name}. ¿${address} otra vez?`,
-    portuguese: (name, address) =>
-      `High Mountain Taxi, aqui é Claire. Olá ${name}. ${address} de novo?`,
-    german: (name, address) =>
-      `High Mountain Taxi, hier ist Claire. Hallo ${name}. ${address} wieder?`,
-    french: (name, address) =>
-      `High Mountain Taxi, c'est Claire. Salut ${name}. ${address} encore?`,
-  },
-  known_customer: {
-    english: (name) =>
-      `High Mountain Taxi, this is Claire. Hi ${name}, where can we pick you up?`,
-    spanish: (name) =>
-      `High Mountain Taxi, habla Claire. Hola ${name}, ¿dónde te recojo?`,
-    portuguese: (name) =>
-      `High Mountain Taxi, aqui é Claire. Olá ${name}, onde posso te pegar?`,
-    german: (name) =>
-      `High Mountain Taxi, hier ist Claire. Hallo ${name}, wo sollen wir Sie abholen?`,
-    french: (name) =>
-      `High Mountain Taxi, c'est Claire. Salut ${name}, où est-ce qu'on te prend?`,
-  },
-  new_customer: {
-    english: () =>
-      `High Mountain Taxi, this is Claire. Where can we pick you up?`,
-    spanish: () =>
-      `High Mountain Taxi, habla Claire. ¿Dónde te recojo?`,
-    portuguese: () =>
-      `High Mountain Taxi, aqui é Claire. Onde posso te pegar?`,
-    german: () =>
-      `High Mountain Taxi, hier ist Claire. Wo sollen wir Sie abholen?`,
-    french: () =>
-      `High Mountain Taxi, c'est Claire. Où est-ce qu'on te prend?`,
-  },
+// Rate limiting configuration
+const RATE_LIMITS = {
+  PER_PHONE_PER_MINUTE: 10,    // Max 10 calls per phone per minute
+  PER_IP_PER_MINUTE: 30,       // Max 30 calls per IP per minute  
+  PER_PHONE_PER_HOUR: 60,      // Max 60 calls per phone per hour
+  GLOBAL_PER_MINUTE: 200       // Max 200 total calls per minute
 };
 
-// Main handler
+/**
+ * Master lookup handler - called FIRST in every Claire conversation
+ * Returns unified response with memory, iCabbi data, and pre-generated greeting
+ */
 export async function handleCallcabLookupMaster(request, env) {
   const startTime = Date.now();
-
+  
   try {
-    const body = await request.json();
-
-    // Extract phone number
-    const phone = normalizePhone(
-      body.phone ||
-        body.customer?.number ||
-        body.call?.customer?.number,
-    );
-
-    if (!phone) {
-      console.error('[LookupMaster] MISSING_PHONE');
-      return new Response(
-        JSON.stringify({
-          ok: false,
-          error: 'MISSING_PHONE',
-          message: 'Phone number is required',
-        }),
-        {
-          status: 400,
-          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-        },
-      );
+    // Handle preflight requests
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { status: 200, headers: CORS_HEADERS });
     }
 
-    console.log('[LookupMaster] Processing for:', phone);
+    if (request.method !== 'POST') {
+      return jsonResponse({ 
+        ok: false, 
+        error: 'METHOD_NOT_ALLOWED',
+        message: 'Only POST requests allowed'
+      }, 405);
+    }
 
-    // Parallel fetch: memory + iCabbi
-    const [memoryData, icabbiData] = await Promise.all([
-      getMemoryForLookup(phone, env),
-      fetchIcabbiData(phone, env),
+    const body = await request.json();
+    const { phone, name, customer } = body;
+
+    // Extract phone from multiple possible locations
+    const customerPhone = phone || customer?.number || customer?.phone;
+    
+    if (!customerPhone) {
+      return jsonResponse({
+        ok: false,
+        error: 'MISSING_PHONE',
+        message: 'Phone number is required',
+        hint: 'Include phone in request body or customer.number field'
+      }, 400);
+    }
+
+    const normalizedPhone = normalizePhone(customerPhone);
+    if (!normalizedPhone) {
+      return jsonResponse({
+        ok: false,
+        error: 'INVALID_PHONE', 
+        message: 'Invalid phone number format',
+        provided: customerPhone
+      }, 400);
+    }
+
+    // Rate limiting check
+    const clientIP = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || 'unknown';
+    const rateLimitResult = await checkRateLimit(normalizedPhone, clientIP, env);
+    
+    if (!rateLimitResult.allowed) {
+      console.warn('[LookupMaster] Rate limit exceeded:', rateLimitResult.reason);
+      return jsonResponse({
+        ok: false,
+        error: 'RATE_LIMITED',
+        message: 'Too many requests. Please wait before calling again.',
+        retry_after: rateLimitResult.retry_after || 60
+      }, 429);
+    }
+
+    console.log(`[LookupMaster] Processing lookup for: ${normalizedPhone}, name: ${name || 'none'}, IP: ${clientIP}`);
+
+    // Check required environment variables
+    const missingEnvVars = checkRequiredEnvVars(env);
+    if (missingEnvVars.length > 0) {
+      console.error('[LookupMaster] Missing environment variables:', missingEnvVars);
+      return jsonResponse({
+        ok: false,
+        error: 'CONFIGURATION_ERROR',
+        message: 'Service configuration incomplete',
+        missing_vars: missingEnvVars
+      }, 500);
+    }
+
+    // Parallel data fetching for speed
+    const [memoryData, icabbiData] = await Promise.allSettled([
+      fetchMemoryData(normalizedPhone, env),
+      fetchIcabbiData(normalizedPhone, name, env)
     ]);
 
-    // Optional: auto-create customer in iCabbi if not found
-    let finalIcabbiData = icabbiData;
+    // Process memory data
+    let memory = null;
+    let customer_data = { is_new_customer: true };
 
-    if (!icabbiData.found && (body.name || body.customer?.name)) {
-      const fullName = body.customer?.name || body.name;
-      console.log('[LookupMaster] Creating new iCabbi customer for', phone, fullName);
-
-      try {
-        const firstName = fullName.split(' ')[0] || fullName;
-        const lastName = fullName.split(' ').slice(1).join(' ') || firstName;
-
-        // FIXED: Use Basic Auth like working Vercel version
-        const BASE = (env.ICABBI_BASE_URL || "https://api.icabbi.us/us2").replace(/\/+$/, "");
-        const basic = btoa(`${env.ICABBI_APP_KEY}:${env.ICABBI_SECRET}`);
-
-        const createResponse = await fetch(
-          `${BASE}/users/create`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'accept': 'application/json',
-              'Authorization': `Basic ${basic}`,
-            },
-            body: JSON.stringify({
-              phone: phone,
-              first_name: firstName,
-              last_name: lastName,
-            }),
-          },
-        );
-
-        if (createResponse.ok) {
-          const newCustomer = await createResponse.json();
-          console.log('[LookupMaster] Customer created:', newCustomer.body?.user?.id);
-
-          finalIcabbiData = {
-            found: true,
-            is_new_customer: true,
-            user: newCustomer.body?.user,
-            hasActiveTrips: false,
-            activeTrips: [],
-          };
-        } else {
-          console.warn('[LookupMaster] Customer create failed:', createResponse.status);
-        }
-      } catch (err) {
-        console.error('[LookupMaster] Customer creation error:', err);
-      }
+    if (memoryData.status === 'fulfilled' && memoryData.value) {
+      memory = memoryData.value;
+      customer_data = processCustomerData(memory, icabbiData.status === 'fulfilled' ? icabbiData.value : null);
+    } else {
+      console.warn('[LookupMaster] Memory fetch failed:', memoryData.reason);
     }
 
-    // Build greeting + situational context
-    const greeting = generateGreeting(memoryData, finalIcabbiData);
-    const situationalContext = buildSituationalContext(
-      memoryData,
-      finalIcabbiData,
-      greeting,
-    );
+    // Process iCabbi data  
+    let icabbi = { found: false, hasActiveTrips: false };
+    if (icabbiData.status === 'fulfilled' && icabbiData.value) {
+      icabbi = icabbiData.value;
+    } else {
+      console.warn('[LookupMaster] iCabbi fetch failed:', icabbiData.reason);
+    }
 
-    const processingTime = Date.now() - startTime;
+    // Generate greeting and system context
+    const systemContext = generateGreeting(memory, icabbi, customer_data);
 
+    // Build unified response
     const response = {
       ok: true,
-
-      customer: {
-        phone: phone,
-        icabbi_customer_id: finalIcabbiData?.user?.id || null,
-        is_new_customer: finalIcabbiData?.is_new_customer || false,
-        preferred_name:
-          memoryData?.aggregated_context?.preferred_name ||
-          finalIcabbiData?.user?.first_name ||
-          null,
-        preferred_language:
-          memoryData?.aggregated_context?.preferred_language || 'english',
-        preferred_pickup_address:
-          memoryData?.aggregated_context?.preferred_pickup_address ||
-          finalIcabbiData?.primaryAddress ||
-          null,
-        vip_status: finalIcabbiData?.user?.vip || false,
-      },
-
+      timestamp: new Date().toISOString(),
+      processing_time_ms: Date.now() - startTime,
+      
+      // Customer data (prioritizes memory over iCabbi)
+      customer: customer_data,
+      
+      // Memory context
       memory: {
-        has_memory: memoryData?.has_memory || false,
-        last_3_summaries: memoryData?.last_3_summaries || [],
-        last_dropoff: memoryData?.last_call?.last_dropoff || null,
-        last_dropoff_coords: {
-          lat: memoryData?.last_call?.last_dropoff_lat || null,
-          lng: memoryData?.last_call?.last_dropoff_lng || null,
-        },
-        hours_since_last_call: memoryData?.last_call?.hours_ago || null,
-        behavior_flags: memoryData?.last_call?.behavior || null,
-        priority_notes: memoryData?.last_call?.special_instructions || null,
-        total_rides: memoryData?.aggregated_context?.total_recent || 0,
+        has_memory: !!memory,
+        last_3_summaries: memory?.last_3_summaries || [],
+        hours_since_last_call: memory ? calculateHoursSinceLastCall(memory.timestamp) : null,
+        behavior_flags: memory?.behavior || 'unknown',
+        priority_notes: memory?.operational_notes || null,
+        last_dropoff: memory?.last_dropoff || null,
+        last_trip_id: memory?.last_trip_id || null,
+        conversation_state: memory?.conversation_state || null
       },
-
+      
+      // iCabbi data
       icabbi: {
-        found: finalIcabbiData?.found || false,
-        hasActiveTrips: finalIcabbiData?.hasActiveTrips || false,
-        active_trip: finalIcabbiData?.nextTrip
-          ? {
-              trip_id: finalIcabbiData.nextTrip.trip_id,
-              pickup_address: finalIcabbiData.nextTrip.pickup_address,
-              destination_address: finalIcabbiData.nextTrip.destination_address,
-              pickup_time: finalIcabbiData.nextTrip.pickup_local_text,
-              status: finalIcabbiData.nextTrip.status,
-            }
-          : null,
-        primary_address: finalIcabbiData?.primaryAddress || null,
-        upcoming_trips_count: finalIcabbiData?.activeTrips?.length || 0,
+        found: icabbi.found,
+        customer_id: icabbi.user?.id || null,
+        hasActiveTrips: icabbi.hasActiveTrips,
+        active_trips: icabbi.activeTrips || [],
+        nextTrip: icabbi.nextTrip || null,
+        primary_address: icabbi.primaryAddress || null,
+        user: icabbi.user || null
       },
-
-      system: {
-        scenario: greeting.scenario,
-        greeting_text: greeting.text,
-        greeting_language: greeting.language,
-        processing_time_ms: processingTime,
-        situational_context: situationalContext,
-      },
+      
+      // System context (greeting, scenario, language)
+      system: systemContext
     };
 
-    return new Response(JSON.stringify(response), {
-      status: 200,
-      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-    });
+    // Update rate limit counters
+    await updateRateLimit(normalizedPhone, clientIP, env);
+
+    console.log(`[LookupMaster] ✅ Lookup completed: ${systemContext.scenario}, language: ${systemContext.greeting_language}, memory: ${!!memory}`);
+
+    return jsonResponse(response);
+
   } catch (error) {
-    console.error('[LookupMaster] Error:', error);
+    console.error('[LookupMaster] Fatal error:', error);
     console.error('[LookupMaster] Stack:', error.stack);
-    return new Response(
-      JSON.stringify({
-        ok: false,
-        error: 'LOOKUP_FAILED',
-        message: error.message,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
-      }),
-      {
-        status: 500,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-      },
-    );
+    
+    return jsonResponse({
+      ok: false,
+      error: 'INTERNAL_ERROR',
+      message: 'Service temporarily unavailable',
+      processing_time_ms: Date.now() - startTime,
+      timestamp: new Date().toISOString()
+    }, 500);
   }
 }
 
-// FIXED: Fetch iCabbi customer data using Basic Auth and correct endpoints like working Vercel version
-async function fetchIcabbiData(phone, env) {
+/**
+ * Rate limiting implementation using KV store
+ */
+async function checkRateLimit(phone, clientIP, env) {
   try {
-    if (!env.ICABBI_BASE_URL || !env.ICABBI_APP_KEY || !env.ICABBI_SECRET) {
-      console.warn('[iCabbi] Not configured, skipping');
-      return { found: false };
-    }
-
-    const BASE = (env.ICABBI_BASE_URL || "https://api.icabbi.us/us2").replace(/\/+$/, "");
-    const basic = btoa(`${env.ICABBI_APP_KEY}:${env.ICABBI_SECRET}`);
-    const BASE_HEADERS = {
-      accept: "application/json",
-      "content-type": "application/json",
-      Authorization: `Basic ${basic}`,
-    };
-
-    // Use multiple phone formats like working Vercel version
-    const norm = normalizeDigits(phone);
-    const e164 = `+1${norm}`;
-    const idd = `001${norm}`;
-    const raw = String(phone).trim();
-    const formats = Array.from(new Set([idd, e164, norm, raw])).filter(v => v && v.length >= 7);
-
-    console.log('[iCabbi] Trying phone formats:', formats);
-
-    // Try header method first (like working Vercel)
-    let user = null, upstream = null;
-
-    for (const p of formats) {
-      const response = await fetch(`${BASE}/users/index`, { 
-        method: "POST", 
-        headers: { ...BASE_HEADERS, Phone: p } 
-      });
-      const data = await safeJson(response);
-      upstream = { status: response.status, body: data };
-      user = data?.body?.user || null;
-      
-      if (user) {
-        console.log('[iCabbi] Found user with header method:', p);
-        break;
-      }
-    }
-
-    // Fallback to query method if header failed
-    if (!user) {
-      for (const p of formats) {
-        const response = await fetch(`${BASE}/users/index?phone=${encodeURIComponent(p)}`, { 
-          method: "POST", 
-          headers: BASE_HEADERS 
-        });
-        const data = await safeJson(response);
-        upstream = { status: response.status, body: data };
-        user = data?.body?.user || null;
-        
-        if (user) {
-          console.log('[iCabbi] Found user with query method:', p);
-          break;
-        }
-      }
-    }
-
-    if (!user) {
-      console.log('[iCabbi] User not found in any format');
-      return { found: false };
-    }
-
-    // Get primary address
-    let primaryAddress = null;
-    if (user.primary_address) {
-      primaryAddress = user.primary_address;
-    } else if (user.addresses && user.addresses.length > 0) {
-      const primary = user.addresses.find(a => a.is_primary) || user.addresses[0];
-      if (primary) {
-        primaryAddress = primary.formatted_address || 
-                        `${primary.address1 || ''} ${primary.address2 || ''}`.trim();
-      }
-    }
-
-    // Check for active trips using the correct phone format
-    let activeTrips = [];
-    let hasActiveTrips = false;
-    let nextTrip = null;
-
-    try {
-      const phoneForTrips = user.phone || idd;
-      const tripResponse = await fetch(`${BASE}/bookings/upcoming?phone=${encodeURIComponent(phoneForTrips)}`, {
-        method: "GET", 
-        headers: BASE_HEADERS
-      });
-      
-      if (tripResponse.ok) {
-        const tripData = await safeJson(tripResponse);
-        
-        if (Array.isArray(tripData?.body?.bookings)) {
-          const now = Date.now();
-          const allTrips = tripData.body.bookings;
-          
-          activeTrips = allTrips.filter(trip => {
-            const pickupTime = new Date(trip.pickup_date).getTime();
-            return pickupTime > now && pickupTime < (now + 24 * 60 * 60 * 1000); // next 24 hours
-          });
-          
-          hasActiveTrips = activeTrips.length > 0;
-          nextTrip = activeTrips.length > 0 ? activeTrips[0] : null;
-          
-          // Format next trip time
-          if (nextTrip) {
-            const tripTime = new Date(nextTrip.pickup_date);
-            const denver = new Intl.DateTimeFormat('en-US', {
-              timeZone: 'America/Denver',
-              hour: 'numeric',
-              minute: '2-digit',
-              hour12: true,
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric',
-            }).format(tripTime);
-            
-            nextTrip.pickup_local_text = denver.toLowerCase();
-            nextTrip.pickup_address = nextTrip.pickup_address || 'pickup location';
-            nextTrip.destination_address = nextTrip.destination_address || 'destination';
-          }
-        }
-      }
-    } catch (tripError) {
-      console.warn('[iCabbi] Trip lookup failed:', tripError.message);
-    }
-
-    return {
-      found: true,
-      user: user,
-      primaryAddress,
-      hasActiveTrips,
-      activeTrips,
-      nextTrip,
-    };
-  } catch (error) {
-    console.error('[iCabbi] Error:', error);
-    return { found: false, error: error.message };
-  }
-}
-
-// Get memory for lookup with last 3 summaries
-async function getMemoryForLookup(phone, env) {
-  try {
-    const normalizedPhone = normalizePhone(phone);
-    if (!normalizedPhone) {
-      return { has_memory: false, error: 'Invalid phone' };
-    }
-
     if (!env.CALL_MEMORIES) {
-      console.warn('[Memory] KV not configured');
-      return { has_memory: false };
+      return { allowed: true }; // No rate limiting if KV unavailable
     }
 
-    // Get latest call memory
-    const latestKey = `latest:${normalizedPhone}`;
+    const now = Date.now();
+    const minute = Math.floor(now / 60000);
+    const hour = Math.floor(now / 3600000);
+
+    // Check multiple rate limits
+    const checks = [
+      { key: `rate:phone:${phone}:${minute}`, limit: RATE_LIMITS.PER_PHONE_PER_MINUTE, window: 'minute' },
+      { key: `rate:phone:${phone}:${hour}`, limit: RATE_LIMITS.PER_PHONE_PER_HOUR, window: 'hour' },
+      { key: `rate:ip:${clientIP}:${minute}`, limit: RATE_LIMITS.PER_IP_PER_MINUTE, window: 'minute' },
+      { key: `rate:global:${minute}`, limit: RATE_LIMITS.GLOBAL_PER_MINUTE, window: 'global' }
+    ];
+
+    for (const check of checks) {
+      const current = await env.CALL_MEMORIES.get(check.key);
+      const count = current ? parseInt(current) : 0;
+      
+      if (count >= check.limit) {
+        return {
+          allowed: false,
+          reason: `${check.window} limit exceeded for ${check.window === 'global' ? 'system' : phone}`,
+          retry_after: check.window === 'hour' ? 3600 : 60
+        };
+      }
+    }
+
+    return { allowed: true };
+  } catch (error) {
+    console.warn('[RateLimit] Check failed:', error);
+    return { allowed: true }; // Allow on error
+  }
+}
+
+/**
+ * Update rate limit counters
+ */
+async function updateRateLimit(phone, clientIP, env) {
+  try {
+    if (!env.CALL_MEMORIES) return;
+
+    const now = Date.now();
+    const minute = Math.floor(now / 60000);
+    const hour = Math.floor(now / 3600000);
+
+    const updates = [
+      { key: `rate:phone:${phone}:${minute}`, ttl: 60 },
+      { key: `rate:phone:${phone}:${hour}`, ttl: 3600 },
+      { key: `rate:ip:${clientIP}:${minute}`, ttl: 60 },
+      { key: `rate:global:${minute}`, ttl: 60 }
+    ];
+
+    for (const update of updates) {
+      const current = await env.CALL_MEMORIES.get(update.key);
+      const count = current ? parseInt(current) + 1 : 1;
+      await env.CALL_MEMORIES.put(update.key, count.toString(), { expirationTtl: update.ttl });
+    }
+  } catch (error) {
+    console.warn('[RateLimit] Update failed:', error);
+  }
+}
+
+/**
+ * Check required environment variables
+ */
+function checkRequiredEnvVars(env) {
+  const required = ['ICABBI_BASE_URL', 'ICABBI_APP_KEY', 'ICABBI_SECRET'];
+  return required.filter(varName => !env[varName]);
+}
+
+/**
+ * Fetch memory data from KV store
+ */
+async function fetchMemoryData(phone, env) {
+  try {
+    if (!env.CALL_MEMORIES) {
+      console.warn('[Memory] CALL_MEMORIES KV not available');
+      return null;
+    }
+
+    const latestKey = `latest:${phone}`;
     const latestData = await env.CALL_MEMORIES.get(latestKey);
     
     if (!latestData) {
-      return { has_memory: false };
+      console.log('[Memory] No memory found for:', phone);
+      return null;
     }
 
-    const latest = JSON.parse(latestData);
-    const timestamp = new Date(latest.timestamp);
-    const hoursAgo = (Date.now() - timestamp.getTime()) / (1000 * 60 * 60);
+    const memory = JSON.parse(latestData);
+    console.log('[Memory] Retrieved for:', phone, {
+      timestamp: memory.timestamp,
+      has_aggregated: !!memory.aggregated_context,
+      outcome: memory.outcome,
+      behavior: memory.behavior
+    });
 
-    // Get last 3 call summaries
-    const last3Summaries = await getLastThreeSummaries(normalizedPhone, env);
-
+    // Build comprehensive memory object
     return {
-      has_memory: true,
-      last_call: {
-        timestamp: latest.timestamp,
-        hours_ago: hoursAgo,
-        outcome: latest.outcome,
-        behavior: latest.behavior,
-        behavior_notes: latest.behavior_notes,
-        was_dropped: latest.was_dropped,
-        last_dropoff: latest.last_dropoff,
-        last_dropoff_lat: latest.last_dropoff_lat,
-        last_dropoff_lng: latest.last_dropoff_lng,
-        conversation_state: latest.conversation_state,
-        collected_info: latest.collected_info,
-        greeting_response: latest.greeting_response,
-        relationship_context: latest.relationship_context,
-        trip_discussion: latest.trip_discussion,
-        special_instructions: latest.special_instructions,
-      },
-      last_3_summaries: last3Summaries,
-      aggregated_context: latest.aggregated_context || {},
+      timestamp: memory.timestamp,
+      outcome: memory.outcome,
+      behavior: memory.behavior || 'unknown',
+      conversation_state: memory.conversation_state,
+      last_pickup: memory.last_pickup,
+      last_dropoff: memory.last_dropoff,
+      last_dropoff_lat: memory.last_dropoff_lat,
+      last_dropoff_lng: memory.last_dropoff_lng,
+      last_trip_id: memory.last_trip_id,
+      was_dropped: memory.was_dropped || memory.outcome === 'dropped_call',
+      operational_notes: memory.operational_notes,
+      special_instructions: memory.special_instructions,
+      
+      // Aggregated context (persistent preferences)
+      aggregated_context: memory.aggregated_context || {},
+      
+      // Generate summaries (last 3 conversations)
+      last_3_summaries: generateCallSummaries(memory),
+      
+      // Personal context
+      personal_details: memory.personal_details,
+      conversation_topics: memory.conversation_topics || [],
+      jokes_shared: memory.jokes_shared,
+      relationship_context: memory.relationship_context,
+      trip_discussion: memory.trip_discussion
     };
+
   } catch (error) {
-    console.error('[Memory] Retrieval failed:', error);
-    return { has_memory: false, error: error.message };
+    console.error('[Memory] Fetch error:', error);
+    return null;
   }
 }
 
-// Get last 3 call summaries from history
-async function getLastThreeSummaries(phone, env) {
+/**
+ * Fetch iCabbi customer data with Basic Auth
+ */
+async function fetchIcabbiData(phone, name, env) {
   try {
-    const prefix = `history:${phone}:`;
-    const list = await env.CALL_MEMORIES.list({ prefix, limit: 100 });
-    
-    if (!list.keys || list.keys.length === 0) {
-      return [];
+    const baseUrl = env.ICABBI_BASE_URL;
+    const appKey = env.ICABBI_APP_KEY;
+    const secret = env.ICABBI_SECRET;
+
+    if (!baseUrl || !appKey || !secret) {
+      throw new Error('Missing iCabbi credentials');
     }
 
-    // Sort by timestamp (most recent first)
-    const sortedKeys = list.keys
-      .sort((a, b) => {
-        const timeA = a.name.split(':')[2];
-        const timeB = b.name.split(':')[2];
-        return timeB.localeCompare(timeA);
-      })
-      .slice(0, 3);
+    // Basic Authentication (CRITICAL FIX)
+    const basic = btoa(`${appKey}:${secret}`);
+    const headers = {
+      'Content-Type': 'application/json',
+      'accept': 'application/json',
+      'Authorization': `Basic ${basic}`
+    };
 
-    // Fetch actual data
-    const summaries = await Promise.all(
-      sortedKeys.map(async (key) => {
-        const data = await env.CALL_MEMORIES.get(key.name);
-        if (!data) return null;
+    // Try multiple phone formats for better success rate
+    const phoneFormats = [
+      `001${phone.replace(/\D/g, '').slice(-10)}`, // iCabbi format: 0013105551234
+      phone.startsWith('+') ? phone : `+${phone.replace(/\D/g, '')}`, // E164: +13105551234
+      phone.replace(/\D/g, '').slice(-10), // Raw: 3105551234
+      phone // Original format
+    ];
+
+    let userData = null;
+    let foundWithFormat = null;
+
+    // Try each phone format
+    for (const phoneFormat of phoneFormats) {
+      try {
+        console.log(`[iCabbi] Trying phone format: ${phoneFormat}`);
         
-        const parsed = JSON.parse(data);
-        return buildCallSummary(parsed);
-      })
-    );
+        // Method 1: Header-based lookup
+        let response = await fetch(`${baseUrl}/users/index`, {
+          method: 'POST',
+          headers: { ...headers, Phone: phoneFormat }
+        });
 
-    return summaries.filter(s => s !== null);
+        if (response.ok) {
+          const data = await response.json();
+          if (data?.body?.user) {
+            userData = data.body.user;
+            foundWithFormat = phoneFormat;
+            console.log(`[iCabbi] Found user with header method: ${phoneFormat}`);
+            break;
+          }
+        }
+
+        // Method 2: Query parameter fallback
+        response = await fetch(`${baseUrl}/users/index?phone=${encodeURIComponent(phoneFormat)}`, {
+          method: 'POST',
+          headers
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data?.body?.user) {
+            userData = data.body.user;
+            foundWithFormat = phoneFormat;
+            console.log(`[iCabbi] Found user with query method: ${phoneFormat}`);
+            break;
+          }
+        }
+      } catch (error) {
+        console.warn(`[iCabbi] Error with format ${phoneFormat}:`, error.message);
+        continue;
+      }
+    }
+
+    // If customer not found and name provided, try to create
+    if (!userData && name && name.trim()) {
+      console.log('[iCabbi] Customer not found, attempting to create:', name);
+      userData = await createIcabbiCustomer(phone, name, env, headers, baseUrl);
+    }
+
+    if (!userData) {
+      console.log('[iCabbi] Customer not found in iCabbi:', phone);
+      return { found: false, hasActiveTrips: false };
+    }
+
+    // Get active trips for this customer
+    const activeTrips = await getActiveTrips(foundWithFormat || phone, env, headers, baseUrl);
+    
+    // Get address history
+    const addresses = await getAddressHistory(foundWithFormat || phone, env, headers, baseUrl);
+
+    return {
+      found: true,
+      user: userData,
+      hasActiveTrips: activeTrips.length > 0,
+      activeTrips,
+      nextTrip: activeTrips[0] || null, // Next upcoming trip
+      primaryAddress: addresses.primary || null,
+      addressHistory: addresses.history || [],
+      found_with_format: foundWithFormat
+    };
+
   } catch (error) {
-    console.error('[Memory] Failed to get last 3 summaries:', error);
+    console.error('[iCabbi] Fetch error:', error);
+    return { found: false, hasActiveTrips: false, error: error.message };
+  }
+}
+
+/**
+ * Create new customer in iCabbi if name provided
+ */
+async function createIcabbiCustomer(phone, name, env, headers, baseUrl) {
+  try {
+    const nameParts = name.split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ') || '';
+
+    const userData = {
+      first_name: firstName,
+      last_name: lastName,
+      phone: phone.replace(/\D/g, '').slice(-10), // 10 digit format for creation
+      email: `${firstName.toLowerCase()}@autocreated.com`, // Auto-generated email
+      source: 'claire_ai_autocreate'
+    };
+
+    console.log('[iCabbi] Creating customer:', userData);
+
+    const response = await fetch(`${baseUrl}/users/create`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(userData)
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log('[iCabbi] Customer created successfully:', result.body?.user?.id);
+      return result.body?.user || null;
+    } else {
+      console.warn('[iCabbi] Customer creation failed:', response.status, await response.text());
+      return null;
+    }
+  } catch (error) {
+    console.error('[iCabbi] Customer creation error:', error);
+    return null;
+  }
+}
+
+/**
+ * Get active/upcoming trips for customer
+ */
+async function getActiveTrips(phone, env, headers, baseUrl) {
+  try {
+    const response = await fetch(`${baseUrl}/bookings/upcoming`, {
+      method: 'POST',
+      headers: { ...headers, Phone: phone }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data?.body?.bookings || [];
+    }
+    return [];
+  } catch (error) {
+    console.warn('[iCabbi] Active trips fetch error:', error);
     return [];
   }
 }
 
-// Build human-readable call summary
-function buildCallSummary(callData) {
-  const timestamp = new Date(callData.timestamp);
-  const hoursAgo = (Date.now() - timestamp.getTime()) / (1000 * 60 * 60);
+/**
+ * Get customer address history
+ */
+async function getAddressHistory(phone, env, headers, baseUrl) {
+  try {
+    // Get pickup addresses from last 365 days
+    const response = await fetch(`${baseUrl}/users/addresses?phone=${encodeURIComponent(phone)}&period=365&type=PICKUP&limit=10`, {
+      method: 'POST',
+      headers
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const addresses = data?.body?.addresses || [];
+      
+      return {
+        primary: addresses.length > 0 ? addresses[0] : null,
+        history: addresses
+      };
+    }
+    return { primary: null, history: [] };
+  } catch (error) {
+    console.warn('[iCabbi] Address history fetch error:', error);
+    return { primary: null, history: [] };
+  }
+}
+
+/**
+ * Process customer data with proper priority: Memory > iCabbi
+ */
+function processCustomerData(memory, icabbi) {
+  // Start with base data
+  const customer = {
+    is_new_customer: !memory && !icabbi?.found,
+    icabbi_customer_id: icabbi?.user?.id || null
+  };
+
+  // PRIORITY 1: Memory preferences (HIGHEST)
+  const aggregated = memory?.aggregated_context || {};
   
-  let summary = '';
-  
-  // Time reference
-  if (hoursAgo < 1) {
-    summary = `${Math.round(hoursAgo * 60)} minutes ago`;
-  } else if (hoursAgo < 24) {
-    summary = `${Math.round(hoursAgo)} hours ago`;
+  if (aggregated.preferred_name) {
+    customer.preferred_name = aggregated.preferred_name;
+    console.log('[Customer] Using memory preferred_name:', aggregated.preferred_name);
+  } else if (icabbi?.user?.first_name) {
+    customer.preferred_name = icabbi.user.first_name;
+    console.log('[Customer] Using iCabbi first_name:', icabbi.user.first_name);
+  } else if (icabbi?.user?.name) {
+    customer.preferred_name = icabbi.user.name.split(' ')[0];
+    console.log('[Customer] Using iCabbi name (first part):', customer.preferred_name);
+  }
+
+  if (aggregated.preferred_language) {
+    customer.preferred_language = aggregated.preferred_language;
+    console.log('[Customer] Using memory language:', aggregated.preferred_language);
   } else {
-    summary = `${Math.round(hoursAgo / 24)} days ago`;
+    customer.preferred_language = 'english'; // Default
   }
-  
-  // Call outcome
-  switch (callData.outcome) {
-    case 'booking_created':
-      summary += `: Booked ${callData.last_pickup || 'pickup'} to ${callData.last_dropoff || 'destination'}`;
-      break;
-    case 'booking_modified':
-      summary += `: Modified existing booking`;
-      break;
-    case 'booking_cancelled':
-      summary += `: Cancelled booking`;
-      break;
-    case 'dropped_call':
-      summary += `: Call dropped during ${callData.conversation_state || 'conversation'}`;
-      break;
-    case 'info_provided':
-      summary += `: Asked for information`;
-      break;
-    default:
-      summary += `: ${callData.outcome || 'Call completed'}`;
+
+  if (aggregated.preferred_pickup_address) {
+    customer.preferred_pickup_address = aggregated.preferred_pickup_address;
+    console.log('[Customer] Using memory pickup address:', aggregated.preferred_pickup_address);
+  } else if (icabbi?.primaryAddress) {
+    customer.preferred_pickup_address = icabbi.primaryAddress;
+    console.log('[Customer] Using iCabbi primary address:', icabbi.primaryAddress);
   }
-  
-  // Behavioral notes
-  if (callData.behavior && callData.behavior !== 'neutral') {
-    summary += ` (${callData.behavior})`;
+
+  // PRIORITY 2: iCabbi data (only if no memory preference)
+  if (icabbi?.user && !customer.preferred_name) {
+    customer.icabbi_name = icabbi.user.name;
+    customer.icabbi_first_name = icabbi.user.first_name;
+    customer.icabbi_last_name = icabbi.user.last_name;
+    customer.icabbi_email = icabbi.user.email;
   }
+
+  if (icabbi?.primaryAddress && !customer.preferred_pickup_address) {
+    customer.primary_address = icabbi.primaryAddress;
+  }
+
+  console.log('[Customer] Final customer data:', {
+    preferred_name: customer.preferred_name,
+    preferred_language: customer.preferred_language,
+    preferred_pickup_address: customer.preferred_pickup_address,
+    is_new_customer: customer.is_new_customer,
+    has_icabbi: !!customer.icabbi_customer_id
+  });
+
+  return customer;
+}
+
+/**
+ * Generate greeting with proper scenario detection
+ */
+function generateGreeting(memory, icabbi, customer) {
+  const language = customer.preferred_language || 'english';
+  const name = customer.preferred_name || null;
   
+  // Determine scenario based on comprehensive context
+  let scenario = 'new_customer';
+  let contextData = {};
+
+  if (icabbi?.hasActiveTrips && icabbi?.nextTrip) {
+    scenario = 'active_trip';
+    contextData = {
+      trip_time: icabbi.nextTrip.pickup_time,
+      pickup_address: icabbi.nextTrip.pickup_address,
+      destination_address: icabbi.nextTrip.destination_address
+    };
+  } else if (memory?.last_dropoff && memory?.hours_since_last_call < 2) {
+    scenario = 'callback';
+    contextData = {
+      last_dropoff: memory.last_dropoff,
+      hours_ago: memory.hours_since_last_call
+    };
+  } else if (memory?.was_dropped || memory?.outcome === 'dropped_call') {
+    scenario = 'dropped_call';
+    contextData = {
+      conversation_state: memory.conversation_state,
+      last_pickup: memory.last_pickup,
+      collected_info: memory.collected_info
+    };
+  } else if (memory?.trip_discussion) {
+    scenario = 'trip_discussion';
+    contextData = {
+      trip_discussion: memory.trip_discussion
+    };
+  } else if (customer.preferred_pickup_address) {
+    scenario = 'preferred_address';
+    contextData = {
+      preferred_address: customer.preferred_pickup_address
+    };
+  } else if (icabbi?.primaryAddress) {
+    scenario = 'primary_address'; 
+    contextData = {
+      primary_address: icabbi.primaryAddress
+    };
+  } else if (memory?.aggregated_context || icabbi?.found) {
+    scenario = 'known_customer';
+  }
+
+  // Generate greeting text in appropriate language
+  const greeting = generateGreetingText(scenario, language, name, contextData);
+
+  // Generate situational context for conversation
+  const situationalContext = generateSituationalContext(memory, icabbi);
+
   return {
-    timestamp: callData.timestamp,
-    hours_ago: hoursAgo,
-    summary: summary,
-    outcome: callData.outcome,
-    locations: {
-      pickup: callData.last_pickup,
-      dropoff: callData.last_dropoff
-    },
-    behavior: callData.behavior
+    scenario,
+    greeting_text: greeting.text,
+    greeting_language: language,
+    context_data: contextData,
+    situational_context: situationalContext,
+    name_used: name,
+    memory_driven: !!memory,
+    icabbi_driven: !!icabbi?.found
   };
 }
 
-// Generate greeting based on memory and iCabbi data
-function generateGreeting(memoryData, icabbiData) {
-  // Determine language (non-English only if explicitly stored)
-  let language = 'english';
-  if (
-    memoryData?.aggregated_context?.preferred_language &&
-    memoryData.aggregated_context.preferred_language !== 'english'
-  ) {
-    language = memoryData.aggregated_context.preferred_language;
-  }
-  
-  // Supported languages
-  if (!['english', 'spanish', 'portuguese', 'german', 'french'].includes(language)) {
-    language = 'english';
-  }
-
-  // Determine name
-  let name = null;
-  if (memoryData?.aggregated_context?.preferred_name) {
-    name = memoryData.aggregated_context.preferred_name;
-  } else if (icabbiData?.user?.first_name) {
-    name = icabbiData.user.first_name;
-  }
-
-  // 1) Active trip
-  if (icabbiData?.hasActiveTrips && icabbiData?.nextTrip) {
-    const trip = {
-      pickup_address: icabbiData.nextTrip.pickup_address || 'your location',
-      destination_address: icabbiData.nextTrip.destination_address || 'your destination',
-      pickup_time_human: icabbiData.nextTrip.pickup_local_text || 'soon',
-    };
-
-    return {
-      scenario: 'active_trip',
-      language,
-      text: name 
-        ? GREETING_TEMPLATES.active_trip[language](name, trip)
-        : GREETING_TEMPLATES.active_trip[language]('there', trip),
-      context: {
-        has_active_trip: true,
-        trip_id: icabbiData.nextTrip.trip_id,
-      },
-    };
-  }
-
-  // 2) Recent completed trip → callback
-  if (
-    memoryData?.last_call?.outcome === 'booking_created' &&
-    memoryData?.last_call?.last_dropoff &&
-    memoryData?.last_call?.hours_ago < 2
-  ) {
-    return {
-      scenario: 'callback',
-      language,
-      text: name
-        ? GREETING_TEMPLATES.callback[language](name, memoryData.last_call.last_dropoff)
-        : GREETING_TEMPLATES.callback[language]('there', memoryData.last_call.last_dropoff),
-      context: {
-        last_dropoff: memoryData.last_call.last_dropoff,
-        last_dropoff_coords: {
-          lat: memoryData.last_call.last_dropoff_lat,
-          lng: memoryData.last_call.last_dropoff_lng,
-        },
-      },
-    };
-  }
-
-  // 3) Dropped call within last hour
-  if (memoryData?.last_call?.was_dropped && memoryData.last_call.hours_ago < 1) {
-    const contextText = getDroppedCallContext(memoryData.last_call);
-
-    return {
-      scenario: 'dropped_call',
-      language,
-      text: name
-        ? GREETING_TEMPLATES.dropped_call[language](name, contextText)
-        : GREETING_TEMPLATES.dropped_call[language]('there', contextText),
-      context: {
-        was_dropped: true,
-        conversation_state: memoryData.last_call.conversation_state,
-      },
-    };
-  }
-
-  // 4) Trip discussion in memory
-  if (memoryData?.last_call?.trip_discussion) {
-    return {
-      scenario: 'trip_discussion',
-      language,
-      text: name
-        ? GREETING_TEMPLATES.trip_discussion[language](name, memoryData.last_call.trip_discussion)
-        : GREETING_TEMPLATES.trip_discussion[language]('there', memoryData.last_call.trip_discussion),
-      context: {
-        trip_discussion: memoryData.last_call.trip_discussion,
-      },
-    };
-  }
-
-  // 5) Preferred pickup address from aggregated context
-  if (memoryData?.aggregated_context?.preferred_pickup_address) {
-    return {
-      scenario: 'preferred_address',
-      language,
-      text: name
-        ? GREETING_TEMPLATES.preferred_address[language](
-            name,
-            memoryData.aggregated_context.preferred_pickup_address,
-          )
-        : GREETING_TEMPLATES.preferred_address[language](
-            'there',
-            memoryData.aggregated_context.preferred_pickup_address,
-          ),
-      context: {
-        preferred_pickup_address: memoryData.aggregated_context.preferred_pickup_address,
-      },
-    };
-  }
-
-  // 6) iCabbi primary address
-  if (icabbiData?.primaryAddress && name) {
-    return {
-      scenario: 'primary_address',
-      language,
-      text: GREETING_TEMPLATES.primary_address[language](name, icabbiData.primaryAddress),
-      context: {
-        primary_address: icabbiData.primaryAddress,
-      },
-    };
-  }
-
-  // 7) Known customer, no special context
-  if (name) {
-    return {
-      scenario: 'known_customer',
-      language,
-      text: GREETING_TEMPLATES.known_customer[language](name),
-      context: {
-        known_customer: true,
-      },
-    };
-  }
-
-  // 8) New customer
-  return {
-    scenario: 'new_customer',
-    language,
-    text: GREETING_TEMPLATES.new_customer[language](),
-    context: {
-      new_customer: true,
+/**
+ * Generate greeting text in multiple languages
+ */
+function generateGreetingText(scenario, language, name, contextData) {
+  const greetings = {
+    english: {
+      active_trip: `High Mountain Taxi, this is Claire. ${name ? `Hi ${name}, ` : ''}your ride to ${contextData.destination_address} is confirmed for ${contextData.trip_time}. Need to change anything?`,
+      callback: `High Mountain Taxi, this is Claire. ${name ? `Hi ${name}, ` : ''}need another ride from where I dropped you off at ${contextData.last_dropoff}?`,
+      dropped_call: `High Mountain Taxi, this is Claire. ${name ? `Hi ${name}, ` : ''}looks like we got disconnected. Where were we?`,
+      trip_discussion: `High Mountain Taxi, this is Claire. ${name ? `Hi ${name}, ` : ''}ready to book that ${contextData.trip_discussion}?`,
+      preferred_address: `High Mountain Taxi, this is Claire. ${name ? `Hi ${name}, ` : ''}${contextData.preferred_address} again?`,
+      primary_address: `High Mountain Taxi, this is Claire. ${name ? `Hi ${name}, ` : ''}${contextData.primary_address} again?`,
+      known_customer: `High Mountain Taxi, this is Claire. ${name ? `Hi ${name}, ` : ''}where can we pick you up?`,
+      new_customer: `High Mountain Taxi, this is Claire. Where can we pick you up?`
     },
+    spanish: {
+      active_trip: `High Mountain Taxi, habla Claire. ${name ? `Hola ${name}, ` : ''}tu viaje a ${contextData.destination_address} está confirmado para las ${contextData.trip_time}. ¿Necesitas cambiar algo?`,
+      callback: `High Mountain Taxi, habla Claire. ${name ? `Hola ${name}, ` : ''}¿necesitas otro taxi desde donde te dejé en ${contextData.last_dropoff}?`,
+      dropped_call: `High Mountain Taxi, habla Claire. ${name ? `Hola ${name}, ` : ''}parece que se cortó la llamada. ¿Dónde estábamos?`,
+      trip_discussion: `High Mountain Taxi, habla Claire. ${name ? `Hola ${name}, ` : ''}¿listo para reservar ese ${contextData.trip_discussion}?`,
+      preferred_address: `High Mountain Taxi, habla Claire. ${name ? `Hola ${name}, ` : ''}¿${contextData.preferred_address} otra vez?`,
+      primary_address: `High Mountain Taxi, habla Claire. ${name ? `Hola ${name}, ` : ''}¿${contextData.primary_address} otra vez?`,
+      known_customer: `High Mountain Taxi, habla Claire. ${name ? `Hola ${name}, ` : ''}¿dónde te recojo?`,
+      new_customer: `High Mountain Taxi, habla Claire. ¿Dónde te recojo?`
+    },
+    portuguese: {
+      active_trip: `High Mountain Taxi, é a Claire. ${name ? `Oi ${name}, ` : ''}sua corrida para ${contextData.destination_address} está confirmada para ${contextData.trip_time}. Precisa mudar alguma coisa?`,
+      callback: `High Mountain Taxi, é a Claire. ${name ? `Oi ${name}, ` : ''}precisa de outro táxi de onde te deixei em ${contextData.last_dropoff}?`,
+      dropped_call: `High Mountain Taxi, é a Claire. ${name ? `Oi ${name}, ` : ''}parece que a ligação caiu. Onde estávamos?`,
+      trip_discussion: `High Mountain Taxi, é a Claire. ${name ? `Oi ${name}, ` : ''}pronto para reservar essa ${contextData.trip_discussion}?`,
+      preferred_address: `High Mountain Taxi, é a Claire. ${name ? `Oi ${name}, ` : ''}${contextData.preferred_address} de novo?`,
+      primary_address: `High Mountain Taxi, é a Claire. ${name ? `Oi ${name}, ` : ''}${contextData.primary_address} de novo?`,
+      known_customer: `High Mountain Taxi, é a Claire. ${name ? `Oi ${name}, ` : ''}onde posso te pegar?`,
+      new_customer: `High Mountain Taxi, é a Claire. Onde posso te pegar?`
+    },
+    german: {
+      active_trip: `High Mountain Taxi, hier ist Claire. ${name ? `Hallo ${name}, ` : ''}Ihre Fahrt nach ${contextData.destination_address} ist für ${contextData.trip_time} bestätigt. Möchten Sie etwas ändern?`,
+      callback: `High Mountain Taxi, hier ist Claire. ${name ? `Hallo ${name}, ` : ''}brauchen Sie ein weiteres Taxi von wo ich Sie in ${contextData.last_dropoff} abgesetzt habe?`,
+      dropped_call: `High Mountain Taxi, hier ist Claire. ${name ? `Hallo ${name}, ` : ''}es scheint, als ob die Verbindung unterbrochen wurde. Wo waren wir?`,
+      trip_discussion: `High Mountain Taxi, hier ist Claire. ${name ? `Hallo ${name}, ` : ''}bereit, diese ${contextData.trip_discussion} zu buchen?`,
+      preferred_address: `High Mountain Taxi, hier ist Claire. ${name ? `Hallo ${name}, ` : ''}${contextData.preferred_address} wieder?`,
+      primary_address: `High Mountain Taxi, hier ist Claire. ${name ? `Hallo ${name}, ` : ''}${contextData.primary_address} wieder?`,
+      known_customer: `High Mountain Taxi, hier ist Claire. ${name ? `Hallo ${name}, ` : ''}wo können wir Sie abholen?`,
+      new_customer: `High Mountain Taxi, hier ist Claire. Wo können wir Sie abholen?`
+    },
+    french: {
+      active_trip: `High Mountain Taxi, ici Claire. ${name ? `Salut ${name}, ` : ''}votre course vers ${contextData.destination_address} est confirmée pour ${contextData.trip_time}. Besoin de changer quelque chose?`,
+      callback: `High Mountain Taxi, ici Claire. ${name ? `Salut ${name}, ` : ''}besoin d'un autre taxi depuis où je vous ai déposé à ${contextData.last_dropoff}?`,
+      dropped_call: `High Mountain Taxi, ici Claire. ${name ? `Salut ${name}, ` : ''}on dirait que l'appel a été coupé. Où en étions-nous?`,
+      trip_discussion: `High Mountain Taxi, ici Claire. ${name ? `Salut ${name}, ` : ''}prêt à réserver cette ${contextData.trip_discussion}?`,
+      preferred_address: `High Mountain Taxi, ici Claire. ${name ? `Salut ${name}, ` : ''}${contextData.preferred_address} encore?`,
+      primary_address: `High Mountain Taxi, ici Claire. ${name ? `Salut ${name}, ` : ''}${contextData.primary_address} encore?`,
+      known_customer: `High Mountain Taxi, ici Claire. ${name ? `Salut ${name}, ` : ''}où puis-je vous prendre?`,
+      new_customer: `High Mountain Taxi, ici Claire. Où puis-je vous prendre?`
+    }
+  };
+
+  const langGreetings = greetings[language] || greetings.english;
+  return {
+    text: langGreetings[scenario] || langGreetings.new_customer,
+    language
   };
 }
 
-// Get context text for dropped call recovery
-function getDroppedCallContext(lastCall) {
-  const collected = lastCall.collected_info || {};
-
-  if (collected.has_pickup && !collected.has_destination) {
-    return `You were at ${collected.pickup_address}. Where are you headed?`;
-  }
-
-  if (collected.has_destination && !collected.has_pickup) {
-    return `You were going to ${collected.destination_address}. Where should I pick you up?`;
-  }
-
-  if (collected.has_pickup && collected.has_destination && !collected.has_time) {
-    return `Were you confirming that ride from ${collected.pickup_address} to ${collected.destination_address}?`;
-  }
-
-  return 'Where were we?';
-}
-
-// Build situational context for follow-up questions
-function buildSituationalContext(memoryData, icabbiData, greeting) {
+/**
+ * Generate situational context for conversation guidance
+ */
+function generateSituationalContext(memory, icabbi) {
   const context = {
     suggest_luggage_question: false,
-    suggest_skis_question: false,
+    suggest_skis_question: false, 
     suggest_mobility_question: false,
+    callback_context: null,
+    conversation_topics: memory?.conversation_topics || [],
+    personal_context: memory?.personal_details || null
   };
 
-  const addrFromTrip = icabbiData?.nextTrip?.destination_address || '';
-  const addrFromPref = memoryData?.aggregated_context?.preferred_pickup_address || '';
-  const addresses = `${addrFromTrip} ${addrFromPref}`.toLowerCase();
-
-  // Airport detection
-  const hasAirport =
-    addresses.includes('airport') ||
-    addresses.includes('ase') ||
-    addresses.includes('eagle') ||
-    addresses.includes('ege') ||
-    addresses.includes('denver') ||
-    addresses.includes('den');
-
-  if (hasAirport) {
-    context.suggest_luggage_question = true;
+  // Analyze last destination for contextual questions
+  if (memory?.last_dropoff) {
+    const lastDropoff = memory.last_dropoff.toLowerCase();
+    
+    if (lastDropoff.includes('airport')) {
+      context.suggest_luggage_question = true;
+    }
+    
+    if (lastDropoff.includes('buttermilk') || lastDropoff.includes('highlands') || 
+        lastDropoff.includes('snowmass') || lastDropoff.includes('ajax')) {
+      context.suggest_skis_question = true;
+    }
+    
+    if (lastDropoff.includes('hospital') || lastDropoff.includes('clinic') || 
+        lastDropoff.includes('medical')) {
+      context.suggest_mobility_question = true;
+    }
   }
 
-  // Ski area detection
-  const skiKeywords = ['aspen mountain', 'ajax', 'highlands', 'snowmass', 'buttermilk'];
-  const isSkiTrip = skiKeywords.some((kw) => addresses.includes(kw));
-  if (isSkiTrip) {
-    context.suggest_skis_question = true;
-  }
-
-  // Hospital detection
-  const isHospitalTrip = addresses.includes('hospital');
-  if (isHospitalTrip) {
-    context.suggest_mobility_question = true;
+  // Callback context for recent dropoffs
+  if (memory?.last_dropoff && memory?.hours_since_last_call < 2) {
+    context.callback_context = {
+      suggest_return_trip: true,
+      last_dropoff_location: memory.last_dropoff,
+      time_since_dropoff: memory.hours_since_last_call
+    };
   }
 
   return context;
 }
 
-// Helper functions
+/**
+ * Generate call summaries for memory context
+ */
+function generateCallSummaries(memory) {
+  if (!memory) return [];
+
+  const summaries = [];
+  
+  // Current call summary
+  if (memory.outcome) {
+    let summary = `${memory.outcome}`;
+    
+    if (memory.last_pickup && memory.last_dropoff) {
+      summary += ` - ${memory.last_pickup} to ${memory.last_dropoff}`;
+    }
+    
+    if (memory.behavior) {
+      summary += ` (${memory.behavior})`;
+    }
+    
+    if (memory.special_instructions) {
+      summary += ` - ${memory.special_instructions}`;
+    }
+
+    summaries.push({
+      timestamp: memory.timestamp,
+      summary,
+      outcome: memory.outcome
+    });
+  }
+
+  return summaries.slice(0, 3); // Last 3 summaries max
+}
+
+/**
+ * Calculate hours since last call
+ */
+function calculateHoursSinceLastCall(timestamp) {
+  if (!timestamp) return null;
+  
+  const lastCall = new Date(timestamp);
+  const now = new Date();
+  return Math.round((now - lastCall) / (1000 * 60 * 60) * 10) / 10; // Round to 1 decimal
+}
+
+/**
+ * Normalize phone number to E.164 format  
+ */
 function normalizePhone(input) {
   if (!input) return null;
-
+  
   let digits = String(input).replace(/\D/g, '');
-
+  
+  // 10 digits: assume US/Canada
   if (digits.length === 10) {
     return `+1${digits}`;
   }
+  
+  // 11 digits starting with 1: US/Canada with country code
   if (digits.length === 11 && digits.startsWith('1')) {
     return `+${digits}`;
   }
+  
+  // Already has + prefix
   if (String(input).startsWith('+')) {
     return input;
   }
-
+  
+  // Other international numbers
   return digits.length >= 10 ? `+${digits}` : null;
 }
 
-function normalizeDigits(p) {
-  return String(p).replace(/[^\d]/g, "").replace(/^1?(\d{10})$/, "$1");
-}
-
-async function safeJson(response) {
-  const text = await response.text();
-  try { 
-    return JSON.parse(text); 
-  } catch { 
-    return { _raw: text }; 
-  }
+/**
+ * JSON response helper
+ */
+function jsonResponse(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+      ...CORS_HEADERS,
+    },
+  });
 }
