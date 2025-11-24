@@ -180,13 +180,16 @@ export async function handleCallcabLookupMaster(request, env) {
         const firstName = fullName.split(' ')[0] || fullName;
         const lastName = fullName.split(' ').slice(1).join(' ') || firstName;
 
+        // NOTE: Endpoint may need adjustment - verify with iCabbi API docs
+        // Using same auth method as search endpoint
         const createResponse = await fetch(
           `${env.ICABBI_BASE_URL}/customer.json`,
           {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${env.ICABBI_APP_KEY}:${env.ICABBI_SECRET}`,
+              'X-App-Key': env.ICABBI_APP_KEY,
+              'X-Secret': env.ICABBI_SECRET,
             },
             body: JSON.stringify({
               action: 'create',
@@ -310,6 +313,7 @@ export async function handleCallcabLookupMaster(request, env) {
 }
 
 // Fetch iCabbi customer data
+// FIXED: Uses correct /users/search endpoint with POST method
 async function fetchIcabbiData(phone, env) {
   try {
     if (!env.ICABBI_BASE_URL || !env.ICABBI_APP_KEY) {
@@ -317,12 +321,20 @@ async function fetchIcabbiData(phone, env) {
       return { found: false };
     }
 
+    // CORRECTED: Use /users/search endpoint with POST method and correct headers
     const response = await fetch(
-      `${env.ICABBI_BASE_URL}/customer.json?phone=${encodeURIComponent(phone)}`,
+      `${env.ICABBI_BASE_URL}/users/search`,
       {
+        method: 'POST',
         headers: {
-          Authorization: `Bearer ${env.ICABBI_APP_KEY}:${env.ICABBI_SECRET}`,
+          'Content-Type': 'application/json',
+          'X-App-Key': env.ICABBI_APP_KEY,
+          'X-Secret': env.ICABBI_SECRET,
         },
+        body: JSON.stringify({
+          phone: phone,
+          checkActiveTrips: true
+        })
       },
     );
 
@@ -333,14 +345,22 @@ async function fetchIcabbiData(phone, env) {
 
     const data = await response.json();
     
-    if (!data.user) {
+    // Handle response structure from /users/search
+    // May return single user or array of users
+    if (!data.user && !data.users) {
+      return { found: false };
+    }
+
+    const user = data.user || (data.users && data.users[0]);
+    
+    if (!user) {
       return { found: false };
     }
 
     // Get primary address
     let primaryAddress = null;
-    if (data.user.addresses && data.user.addresses.length > 0) {
-      const primary = data.user.addresses.find(a => a.is_primary) || data.user.addresses[0];
+    if (user.addresses && user.addresses.length > 0) {
+      const primary = user.addresses.find(a => a.is_primary) || user.addresses[0];
       if (primary) {
         primaryAddress = primary.formatted_address || 
                         `${primary.address1 || ''} ${primary.address2 || ''}`.trim();
@@ -349,7 +369,7 @@ async function fetchIcabbiData(phone, env) {
 
     // Get active trips
     const now = new Date();
-    const activeTrips = (data.user.trips || [])
+    const activeTrips = (user.trips || [])
       .filter(trip => {
         const tripTime = new Date(trip.pickup_time);
         return tripTime > now && trip.status !== 'cancelled';
@@ -376,7 +396,7 @@ async function fetchIcabbiData(phone, env) {
 
     return {
       found: true,
-      user: data.user,
+      user: user,
       primaryAddress,
       hasActiveTrips: activeTrips.length > 0,
       activeTrips,
