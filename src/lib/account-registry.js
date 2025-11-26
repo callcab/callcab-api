@@ -1,11 +1,10 @@
-// account-registry.js
+// src/lib/account-registry.js
 // CLAIRE v4.2 - Cloudflare Workers Compatible
-// This is the CLASS file - your JSON data file is separate (accounts-registry.json)
+// Includes loadAccountRegistry for backward compatibility
+
+import accountsData from '../data/accounts-registry.json';
 
 export class AccountRegistry {
-  /**
-   * @param {Object} registryData - The parsed accounts-registry.json data
-   */
   constructor(registryData) {
     if (!registryData) {
       throw new Error('[AccountRegistry] No registry data provided');
@@ -17,9 +16,6 @@ export class AccountRegistry {
     console.log(`[AccountRegistry] Initialized: ${this.accounts.length} accounts, version ${this.version}`);
   }
 
-  /**
-   * Find all accounts eligible for this booking
-   */
   findEligible(params) {
     const {
       pickup_lat,
@@ -37,7 +33,7 @@ export class AccountRegistry {
 
     let eligible = [];
 
-    // ALWAYS check geo-triggered accounts (automatic)
+    // Check geo-triggered accounts (automatic)
     const geoAccounts = this.accounts.filter(a => a.trigger_type === 'geo_automatic');
     for (const account of geoAccounts) {
       if (this.checkEligibility(account, params)) {
@@ -45,7 +41,7 @@ export class AccountRegistry {
       }
     }
 
-    // Check hint-triggered accounts (customer mentioned "tipsy", "senior", etc.)
+    // Check hint-triggered accounts
     if (account_hints.length > 0) {
       for (const hint of account_hints) {
         const account = this.findByHint(hint);
@@ -70,13 +66,9 @@ export class AccountRegistry {
       }
     }
 
-    // Sort by priority (higher = more important)
     return eligible.sort((a, b) => (b.priority || 0) - (a.priority || 0));
   }
 
-  /**
-   * Check if single account is eligible
-   */
   checkEligibility(account, params) {
     const { eligibility } = account;
     if (!eligibility) return false;
@@ -128,17 +120,12 @@ export class AccountRegistry {
     return true;
   }
 
-  /**
-   * Check if location matches (zones, keywords, or location IDs)
-   */
   matchesLocation(address, location_id, zones, keywords, location_ids) {
-    // Check location_id match
     if (location_id) {
       if (location_ids && location_ids.includes(location_id)) return true;
       if (zones && zones.includes(location_id)) return true;
     }
 
-    // Check keyword match (case-insensitive)
     if (keywords && address) {
       const lowerAddress = address.toLowerCase();
       if (keywords.some(kw => lowerAddress.includes(kw.toLowerCase()))) {
@@ -146,17 +133,12 @@ export class AccountRegistry {
       }
     }
 
-    // If no criteria specified, consider it a match
     if (!zones && !keywords && !location_ids) return true;
 
     return false;
   }
 
-  /**
-   * Check if pickup time falls within allowed window
-   */
   checkTimeWindow(pickup_time, destination_identifier, time_windows) {
-    // Get time window for destination (or default)
     let window = time_windows.default;
     
     if (destination_identifier) {
@@ -168,7 +150,7 @@ export class AccountRegistry {
       }
     }
 
-    if (!window) return true; // No restriction
+    if (!window) return true;
 
     const time = this.parseTime(pickup_time);
     if (!time) return true;
@@ -177,7 +159,6 @@ export class AccountRegistry {
     const end = this.parseTime(window.end);
     if (!start || !end) return true;
 
-    // Handle midnight (00:00 means end of day)
     if (end === '00:00') {
       return time >= start;
     }
@@ -185,9 +166,6 @@ export class AccountRegistry {
     return time >= start && time <= end;
   }
 
-  /**
-   * Check if route crosses Highway 82 (for Aspen Country Inn)
-   */
   checkCrossesHighway82(params) {
     const aciLat = 39.2150;
     const aspenCoreLat = 39.1911;
@@ -200,9 +178,6 @@ export class AccountRegistry {
     );
   }
 
-  /**
-   * Check if location is airport
-   */
   isAirport(location_id, address) {
     const airportKeywords = ['ase-airport', 'airport', 'ase', 'aspen airport', 'pitkin', 'atlantic aviation'];
     
@@ -215,9 +190,6 @@ export class AccountRegistry {
     return false;
   }
 
-  /**
-   * Find account by hint keyword
-   */
   findByHint(hint) {
     const lowerHint = hint.toLowerCase();
     
@@ -225,7 +197,6 @@ export class AccountRegistry {
       if (account.id === hint) return true;
       if (account.name.toLowerCase().includes(lowerHint)) return true;
       
-      // Check eligibility keywords
       const elig = account.eligibility;
       if (elig?.keywords?.some(kw => kw.toLowerCase().includes(lowerHint))) return true;
       if (elig?.pickup_keywords?.some(kw => kw.toLowerCase().includes(lowerHint))) return true;
@@ -234,23 +205,14 @@ export class AccountRegistry {
     }) || null;
   }
 
-  /**
-   * Find account by ID
-   */
   findById(id) {
     return this.accounts.find(a => a.id === id) || null;
   }
 
-  /**
-   * Get all accounts by trigger type
-   */
   getByTriggerType(triggerType) {
     return this.accounts.filter(a => a.trigger_type === triggerType);
   }
 
-  /**
-   * Get default regular metered account
-   */
   getDefault() {
     return {
       ok: true,
@@ -264,9 +226,6 @@ export class AccountRegistry {
     };
   }
 
-  /**
-   * Parse time string to HH:MM
-   */
   parseTime(timeString) {
     if (!timeString) return null;
     
@@ -275,13 +234,11 @@ export class AccountRegistry {
       return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     }
     
-    // HH:MM format
     const match = timeString.match(/(\d{1,2}):(\d{2})/);
     if (match) {
       return `${match[1].padStart(2, '0')}:${match[2]}`;
     }
     
-    // Handle "3pm", "15", etc.
     const hourMatch = timeString.match(/(\d{1,2})\s*(am|pm)?/i);
     if (hourMatch) {
       let hour = parseInt(hourMatch[1]);
@@ -296,21 +253,16 @@ export class AccountRegistry {
     return null;
   }
 
-  /**
-   * Format account for API response
-   */
   formatResponse(account, params = {}) {
     if (!account || account.type === 'REGULAR_METERED') {
       return this.getDefault();
     }
 
-    // Build instructions from template
     let instructions = account.instructions_template || '';
     if (params.passenger_count && instructions.includes('{{passenger_count}}')) {
       instructions = instructions.replace(/\{\{passenger_count\}\}/g, params.passenger_count);
     }
 
-    // Get appropriate script
     const claireScript = account.scripts?.claire_confirmation || 
                          account.scripts?.claire_if_yes ||
                          null;
@@ -332,3 +284,45 @@ export class AccountRegistry {
     };
   }
 }
+
+// ============================================================================
+// BACKWARD COMPATIBILITY EXPORTS
+// ============================================================================
+
+// Singleton instance
+let _registryInstance = null;
+
+/**
+ * Load and return singleton AccountRegistry instance
+ * This is what account-eligibility.js imports
+ */
+export function loadAccountRegistry() {
+  if (!_registryInstance) {
+    _registryInstance = new AccountRegistry(accountsData);
+  }
+  return _registryInstance;
+}
+
+/**
+ * Get account registry (alias for loadAccountRegistry)
+ */
+export function getAccountRegistry() {
+  return loadAccountRegistry();
+}
+
+/**
+ * Check eligibility directly (convenience function)
+ */
+export function checkAccountEligibility(params) {
+  const registry = loadAccountRegistry();
+  const eligible = registry.findEligible(params);
+  
+  if (eligible.length === 0) {
+    return registry.getDefault();
+  }
+  
+  return registry.formatResponse(eligible[0], params);
+}
+
+// Default export is the class
+export default AccountRegistry;

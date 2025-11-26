@@ -280,7 +280,7 @@ async function fetchMemoryDataWithFallbacks(phoneFormats, env) {
     const latestData = await env.CALL_MEMORIES.get(latestKey);
     
     if (latestData) {
-      console.log(`[Memory] Found with format: ${phone}`);
+      console.log(`[Memory] ✅ Found with format: ${phone}`);
       const latest = JSON.parse(latestData);
       
       // Also fetch history for comprehensive summaries
@@ -328,7 +328,65 @@ async function fetchMemoryDataWithFallbacks(phoneFormats, env) {
     }
   }
 
-  console.log('[Memory] No memory found with any format');
+  // ========================================================================
+  // FALLBACK: Try phone_index lookup (created by memory-store.js)
+  // ========================================================================
+  console.log('[Memory] Primary lookup failed, trying phone_index fallback...');
+  
+  for (const phone of phoneFormats) {
+    const digits = String(phone).replace(/\D/g, '');
+    const last10 = digits.slice(-10);
+    
+    if (last10.length === 10) {
+      const indexKey = `phone_index:${last10}`;
+      const indexData = await env.CALL_MEMORIES.get(indexKey);
+      
+      if (indexData) {
+        const index = JSON.parse(indexData);
+        console.log(`[Memory] ✅ Found phone_index pointing to: ${index.canonical_phone}`);
+        
+        // Now fetch with the canonical phone
+        const latestData = await env.CALL_MEMORIES.get(`latest:${index.canonical_phone}`);
+        
+        if (latestData) {
+          const latest = JSON.parse(latestData);
+          const historyData = await env.CALL_MEMORIES.get(`history:${index.canonical_phone}`);
+          const history = historyData ? JSON.parse(historyData) : [latest];
+          
+          const hours_since_last_call = calculateHoursSinceLastCall(latest.timestamp);
+          const last_3_summaries = buildLast3Summaries(history);
+          
+          return {
+            timestamp: latest.timestamp,
+            outcome: latest.outcome,
+            behavior: latest.behavior || 'unknown',
+            conversation_state: latest.conversation_state,
+            last_pickup: latest.last_pickup,
+            last_dropoff: latest.last_dropoff,
+            last_dropoff_lat: latest.last_dropoff_lat,
+            last_dropoff_lng: latest.last_dropoff_lng,
+            last_trip_id: latest.last_trip_id,
+            was_dropped: latest.was_dropped || latest.outcome === 'dropped_call',
+            operational_notes: latest.operational_notes,
+            special_instructions: latest.special_instructions,
+            collected_info: latest.collected_info,
+            aggregated_context: latest.aggregated_context || buildAggregatedContext(history),
+            hours_since_last_call,
+            last_3_summaries,
+            history_count: history.length,
+            personal_details: latest.personal_details,
+            conversation_topics: latest.conversation_topics || [],
+            jokes_shared: latest.jokes_shared,
+            relationship_context: latest.relationship_context,
+            trip_discussion: latest.trip_discussion,
+            _found_via: 'phone_index'
+          };
+        }
+      }
+    }
+  }
+
+  console.log('[Memory] ❌ No memory found with any format or fallback');
   return null;
 }
 
