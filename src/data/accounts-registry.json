@@ -1,182 +1,274 @@
 {
-  "version": "1.0.0",
-  "last_updated": "2024-01-15",
+  "version": "1.1.0",
+  "last_updated": "2025-11-26",
   "description": "Master registry for all High Mountain Taxi account programs",
-  
   "accounts": [
-    
     {
       "id": "5095",
       "name": "Aspen Highlands District HOA",
       "type": "FREE_RIDE",
       "trigger_type": "geo_automatic",
       "priority": 100,
-      
       "eligibility": {
-        "pickup_zones": ["highlands-district", "maroon-creek-highlands", "white-river-highlands"],
-        "pickup_keywords": ["maroon creek road", "white river drive", "ritz-carlton club", "aspen highlands", "ritz highlands"],
-        "destination_zones": ["downtown-aspen-core", "ase-airport", "atlantic-aviation-ase", "aspen-base-ops", "aspen-valley-hospital"],
-        "destination_keywords": ["main street aspen", "cooper avenue", "clark's market aspen", "city market aspen"],
+        "pickup_zones": [
+          "highlands-district",
+          "maroon-creek-highlands",
+          "white-river-highlands"
+        ],
+        "pickup_keywords": [
+          "maroon creek road",
+          "white river drive",
+          "ritz-carlton club",
+          "aspen highlands",
+          "ritz highlands"
+        ],
+        "destination_zones": [
+          "downtown-aspen-core",
+          "ase-airport",
+          "atlantic-aviation-ase",
+          "aspen-base-ops",
+          "aspen-valley-hospital"
+        ],
+        "destination_keywords": [
+          "main street aspen",
+          "cooper avenue",
+          "clark's market aspen",
+          "city market aspen",
+          "airport",
+          "aspen airport",
+          "ase",
+          "the airport",
+          "pitkin airport",
+          "hospital",
+          "valley hospital",
+          "aspen hospital",
+          "aspen valley hospital"
+        ],
         "time_windows": {
-          "downtown-aspen-core": {"start": "08:00", "end": "00:00"},
-          "ase-airport": {"start": "05:20", "end": "00:00"},
-          "atlantic-aviation-ase": {"start": "05:20", "end": "00:00"},
-          "aspen-base-ops": {"start": "05:20", "end": "00:00"},
-          "aspen-valley-hospital": {"start": "05:20", "end": "00:00"}
+          "downtown-aspen-core": {
+            "start": "08:00",
+            "end": "00:00"
+          },
+          "ase-airport": {
+            "start": "05:20",
+            "end": "00:00"
+          },
+          "atlantic-aviation-ase": {
+            "start": "05:20",
+            "end": "00:00"
+          },
+          "aspen-base-ops": {
+            "start": "05:20",
+            "end": "00:00"
+          },
+          "aspen-valley-hospital": {
+            "start": "05:20",
+            "end": "00:00"
+          }
         }
       },
-      
       "scripts": {
         "claire_confirmation": "This ride's covered by your Highlands District HOA. Tips are cash if you'd like.",
         "customer_asks_about": "The Highlands program covers rides to downtown, the airport, and the hospital.",
         "not_eligible_destination": "That destination isn't covered by the Highlands program. This'll be a regular metered ride.",
         "not_eligible_time": "That time is outside the Highlands program hours."
       },
-      
       "instructions_template": "HOA Highlands - FREE RIDE, cash tips only",
       "skip_fare_quote": true,
       "requires_voucher": false,
-      
       "restrictions": {
         "no_multiple_stops": true,
         "minimal_wait_time": true,
         "a_to_b_only": true
       },
-      
       "notes": "One end must be Highlands District address. Very minimal wait time - district doesn't pay for late passengers."
     },
-    
     {
       "id": "5140",
       "name": "Five Trees",
       "type": "FREE_RIDE",
       "trigger_type": "geo_automatic",
       "priority": 100,
-      
       "eligibility": {
-        "pickup_zones": ["five-trees", "moore-drive", "bus-barn-lane"],
-        "pickup_keywords": ["moore drive", "bus barn lane", "five trees"],
-        "destination_zones": ["downtown-aspen-core", "ase-airport", "atlantic-aviation-ase", "aspen-base-ops", "aspen-valley-hospital"],
-        "destination_keywords": ["main street aspen", "cooper avenue", "clark's market aspen", "city market aspen"],
+        "pickup_zones": [
+          "five-trees",
+          "moore-drive",
+          "bus-barn-lane"
+        ],
+        "pickup_keywords": [
+          "moore drive",
+          "bus barn lane",
+          "five trees"
+        ],
+        "destination_zones": [
+          "downtown-aspen-core",
+          "ase-airport",
+          "atlantic-aviation-ase",
+          "aspen-base-ops",
+          "aspen-valley-hospital"
+        ],
+        "destination_keywords": [
+          "main street aspen",
+          "cooper avenue",
+          "clark's market aspen",
+          "city market aspen",
+          "airport",
+          "aspen airport",
+          "ase",
+          "the airport",
+          "hospital",
+          "valley hospital"
+        ],
         "time_windows": {
-          "downtown-aspen-core": {"start": "08:00", "end": "00:00"},
-          "ase-airport": {"start": "05:20", "end": "00:00"},
-          "atlantic-aviation-ase": {"start": "05:20", "end": "00:00"},
-          "aspen-base-ops": {"start": "05:20", "end": "00:00"},
-          "aspen-valley-hospital": {"start": "05:20", "end": "00:00"}
+          "downtown-aspen-core": {
+            "start": "08:00",
+            "end": "00:00"
+          },
+          "ase-airport": {
+            "start": "05:20",
+            "end": "00:00"
+          },
+          "atlantic-aviation-ase": {
+            "start": "05:20",
+            "end": "00:00"
+          },
+          "aspen-base-ops": {
+            "start": "05:20",
+            "end": "00:00"
+          },
+          "aspen-valley-hospital": {
+            "start": "05:20",
+            "end": "00:00"
+          }
         }
       },
-      
       "scripts": {
         "claire_confirmation": "This ride's covered by Five Trees. Tips are cash if you'd like.",
         "customer_asks_about": "Five Trees covers rides to downtown, the airport, and the hospital.",
         "not_eligible_destination": "That's outside the Five Trees coverage area. This'll be a regular metered ride."
       },
-      
       "instructions_template": "Five Trees - FREE RIDE, cash tips only",
       "skip_fare_quote": true,
       "requires_voucher": false,
-      
       "restrictions": {
         "no_multiple_stops": true,
         "minimal_wait_time": true,
         "a_to_b_only": true
       },
-      
       "notes": "One end must be Five Trees address. Very minimal wait time."
     },
-    
     {
       "id": "5060",
       "name": "Snowmass Village Dial-a-Ride",
       "type": "SUBSIDIZED",
       "trigger_type": "geo_automatic",
       "priority": 100,
-      
       "eligibility": {
-        "pickup_zones": ["snowmass-village"],
-        "pickup_keywords": ["snowmass village"],
-        "destination_zones": ["snowmass-village"],
-        "destination_keywords": ["snowmass village"],
+        "pickup_zones": [
+          "snowmass-village"
+        ],
+        "pickup_keywords": [
+          "snowmass village"
+        ],
+        "destination_zones": [
+          "snowmass-village"
+        ],
+        "destination_keywords": [
+          "snowmass village",
+          "snowmass",
+          "snowmass base",
+          "elk camp"
+        ],
         "must_be_off_shuttle_route": true,
         "time_windows": {
-          "default": {"start": "08:00", "end": "21:00"}
+          "default": {
+            "start": "08:00",
+            "end": "21:00"
+          }
         }
       },
-      
       "scripts": {
         "claire_confirmation": "This qualifies for Snowmass Village Dial-a-Ride. It's just a dollar per person, and we collect that when the driver picks you up.",
         "customer_asks_about": "Snowmass Dial-a-Ride is a dollar per person for trips within Snowmass Village.",
         "customer_no_cash": "No worries if you don't have cash — we'll work it out with the driver."
       },
-      
       "instructions_template": "SNOWMASS DIAL-A-RIDE - Collect ${{passenger_count}} ($1 per person x {{passenger_count}} passengers)",
       "skip_fare_quote": true,
       "requires_voucher": false,
       "passenger_payment": "$1 per person",
-      
       "restrictions": {
         "no_multiple_stops": true,
         "minimal_wait_time": true,
         "within_snowmass_only": true,
         "one_end_off_shuttle_route": true
       },
-      
       "notes": "One end must be OFF the Snowmass Village shuttle route. 8 AM - 9 PM throughout winter season. Town doesn't pay wait time. Write number of people on voucher."
     },
-    
     {
       "id": "5005",
       "name": "Aspen Country Inn",
       "type": "FREE_RIDE_CONDITIONAL",
       "trigger_type": "geo_automatic",
       "priority": 100,
-      
       "eligibility": {
-        "pickup_location_ids": ["aspen-country-inn"],
-        "pickup_keywords": ["aspen country inn", "country inn", "aci"],
-        "destination_location_ids": ["aspen-country-inn"],
-        "destination_keywords": ["aspen country inn", "country inn"],
+        "pickup_location_ids": [
+          "aspen-country-inn"
+        ],
+        "pickup_keywords": [
+          "aspen country inn",
+          "country inn",
+          "aci"
+        ],
+        "destination_location_ids": [
+          "aspen-country-inn"
+        ],
+        "destination_keywords": [
+          "aspen country inn",
+          "country inn"
+        ],
         "must_cross_highway_82": true
       },
-      
       "scripts": {
         "claire_confirmation": "Since you're crossing the highway, Aspen Country Inn covers this ride. Tips are cash if you'd like.",
         "not_eligible_reason": "That's a regular metered ride — Aspen Country Inn only covers rides when you have to cross Highway Eighty-Two.",
         "customer_asks_about": "Aspen Country Inn covers rides when you need to cross Highway 82 - there's no tunnel to the bus stop on the downvalley side."
       },
-      
       "instructions_template": "ASPEN COUNTRY INN - Free ride (crossing Hwy 82), cash tips only",
       "skip_fare_quote": true,
       "requires_voucher": true,
-      
       "notes": "Free if crossing Highway 82. Common routes: ACI to/from Inn at Aspen, Airport/ABC, Brush Creek Park & Ride. NOT free: ACI to downtown Aspen (can take bus without crossing 82). Customer must have ACI voucher."
     },
-    
     {
       "id": "5180",
       "name": "Tipsy Taxi",
       "type": "FREE_RIDE",
       "trigger_type": "customer_mention",
       "priority": 200,
-      
       "eligibility": {
         "requires_voucher": true,
-        "voucher_sources": ["police", "sheriff", "bartender"],
+        "voucher_sources": [
+          "police",
+          "sheriff",
+          "bartender"
+        ],
         "anywhere_in_service_area": true,
-        "keywords": ["tipsy taxi", "tipsy", "drunk", "too much to drink", "impaired", "intoxicated"]
+        "keywords": [
+          "tipsy taxi",
+          "tipsy",
+          "drunk",
+          "too much to drink",
+          "impaired",
+          "intoxicated"
+        ]
       },
-      
       "scripts": {
         "claire_confirmation": "Got it—Tipsy Taxi. That's our free ride program. We'll get you home safe.",
         "never_mention_fare": true,
         "never_quote_price": true
       },
-      
       "instructions_template": "TIPSY TAXI - Free ride, impaired passenger",
       "skip_fare_quote": true,
       "requires_voucher": true,
-      
       "special_rules": {
         "never_mention_cost": true,
         "never_ask_payment": true,
@@ -185,406 +277,416 @@
         "need_legible_passenger_name": true,
         "medical_emergency_guidelines": "Call 911 if passenger can't walk, respond, is throwing up, had injury, or is combative"
       },
-      
       "notes": "COMPLETELY FREE - voucher from police/sheriff/bartender. For intoxicated passengers being taken home safely. NEVER mention fare or cost. NEVER ask for payment."
     },
-    
     {
       "id": "5150",
       "name": "Senior Dial-a-Ride",
       "type": "SUBSIDIZED",
       "trigger_type": "customer_mention",
       "priority": 150,
-      
       "eligibility": {
         "requires_senior_status": true,
-        "pickup_zones": ["aspen", "snowmass-village", "surrounding-areas"],
-        "destination_zones": ["aspen", "snowmass-village", "woody-creek", "aspen-village"],
+        "pickup_zones": [
+          "aspen",
+          "snowmass-village",
+          "surrounding-areas"
+        ],
+        "destination_zones": [
+          "aspen",
+          "snowmass-village",
+          "woody-creek",
+          "aspen-village"
+        ],
         "destination_limits": {
           "northern_limit": "woody-creek",
           "southern_limit": "aspen-village"
         },
         "time_windows": {
-          "default": {"start": "00:00", "end": "23:59"}
+          "default": {
+            "start": "00:00",
+            "end": "23:59"
+          }
         },
-        "keywords": ["senior", "i'm a senior", "senior discount", "senior ride"]
+        "keywords": [
+          "senior",
+          "i'm a senior",
+          "senior discount",
+          "senior ride"
+        ]
       },
-      
       "scripts": {
         "claire_confirmation": "That qualifies for our Senior Dial-a-Ride program. It's half price — you'd pay half in cash, we cover the other half.",
         "customer_asks_about": "Our Senior Dial-a-Ride is half off any ride from Aspen to the surrounding area. You pay half, we cover half."
       },
-      
       "instructions_template": "SENIOR DIAL-A-RIDE - Customer pays 50% cash, voucher covers 50%",
       "skip_fare_quote": false,
       "passenger_payment": "50% of meter in cash",
-      
       "notes": "Senior citizens only. ANY TIME including weekends. Customer pays 50% of meter in cash. Other 50% on voucher. Cash tips accepted. Can use manual credit card form if no cash."
     },
-    
     {
       "id": "5080",
       "name": "Emergency Ride Home",
       "type": "FREE_RIDE",
       "trigger_type": "customer_mention",
       "priority": 150,
-      
       "eligibility": {
         "requires_voucher": true,
-        "pickup_zones": ["service-area"],
+        "pickup_zones": [
+          "service-area"
+        ],
         "destination_limits": {
           "max_highway_133": "redstone",
           "max_i70": "silt"
         },
         "allows_one_stop": true,
-        "keywords": ["emergency ride home", "erh", "erh voucher", "emergency voucher"]
+        "keywords": [
+          "emergency ride home",
+          "erh",
+          "erh voucher",
+          "emergency voucher"
+        ]
       },
-      
       "scripts": {
         "claire_confirmation": "Got it — Emergency Ride Home program. That's covered. Where are you headed?",
         "customer_asks_about": "Emergency Ride Home is for workers who normally bus but need a backup. You need a voucher from the program."
       },
-      
       "instructions_template": "EMERGENCY RIDE HOME - Metered + 20% tip charged to program",
       "skip_fare_quote": true,
       "requires_voucher": true,
-      
       "special_rules": {
         "allows_one_stop": "hospital, daycare, schools on way home",
         "distance_limit": "Redstone on Highway 133 or Silt on I-70"
       },
-      
       "notes": "For workers who normally take RFTA bus. Emergency situations where bus isn't available. Customer must have ERH voucher. Metered + 20% tip charged to program."
     },
-    
     {
       "id": "1020",
       "name": "Hotel Jerome",
       "type": "HOTEL_ACCOUNT",
       "trigger_type": "do_not_volunteer",
       "priority": 50,
-      
       "eligibility": {
-        "pickup_location_ids": ["hotel-jerome"],
-        "pickup_keywords": ["hotel jerome", "jerome"],
+        "pickup_location_ids": [
+          "hotel-jerome"
+        ],
+        "pickup_keywords": [
+          "hotel jerome",
+          "jerome"
+        ],
         "requires_authorization": true,
         "authorization_source": "front_desk"
       },
-      
       "scripts": {
         "claire_if_customer_asks": "Let me check with your front desk if this goes on your hotel account.",
         "do_not_volunteer": true
       },
-      
       "billing": {
         "type": "metered",
         "tip": "at_discretion_of_front_desk"
       },
-      
       "notes": "330 E Main Street, Aspen. Rarely used. Must be arranged by Hotel Jerome front desk or bell stand. Metered, tip at discretion of front desk/bell stand."
     },
-    
     {
       "id": "1230",
       "name": "The Gant",
       "type": "HOTEL_ACCOUNT",
       "trigger_type": "do_not_volunteer",
       "priority": 50,
-      
       "eligibility": {
-        "pickup_location_ids": ["the-gant"],
-        "pickup_keywords": ["the gant", "gant"],
+        "pickup_location_ids": [
+          "the-gant"
+        ],
+        "pickup_keywords": [
+          "the gant",
+          "gant"
+        ],
         "requires_authorization": true,
         "authorization_source": "front_desk"
       },
-      
       "scripts": {
         "claire_if_customer_asks": "I can put this on The Gant account if your front desk approved it.",
         "do_not_volunteer": true
       },
-      
       "billing": {
         "type": "metered",
         "tip": "at_discretion_of_front_desk_sometimes_cash"
       },
-      
       "notes": "610 S West End Street, Aspen. Must be arranged by front desk OR customer must ask for account. Metered, tip at discretion of front desk (sometimes cash)."
     },
-    
     {
       "id": "1040",
       "name": "Dancing Bear",
       "type": "HOTEL_ACCOUNT",
       "trigger_type": "do_not_volunteer",
       "priority": 50,
-      
       "eligibility": {
-        "pickup_location_ids": ["dancing-bear-aspen"],
-        "pickup_keywords": ["dancing bear"],
+        "pickup_location_ids": [
+          "dancing-bear-aspen"
+        ],
+        "pickup_keywords": [
+          "dancing bear"
+        ],
         "requires_authorization": true,
         "authorization_source": "front_desk"
       },
-      
       "scripts": {
         "claire_if_customer_asks": "I can set this up on your Dancing Bear account if the front desk arranged it.",
         "do_not_volunteer": true
       },
-      
       "billing": {
         "type": "metered_plus_tip",
         "tip_percentage": 20
       },
-      
       "notes": "205 S Galena Street, Aspen. Must be arranged by front desk. Metered + 20% tip. Usually early morning ASE transfers."
     },
-    
     {
       "id": "1845",
       "name": "Mollie Aspen",
       "type": "HOTEL_ACCOUNT",
       "trigger_type": "do_not_volunteer",
       "priority": 50,
-      
       "eligibility": {
-        "pickup_location_ids": ["mollie-aspen"],
-        "pickup_keywords": ["mollie aspen", "mollie", "molly"],
+        "pickup_location_ids": [
+          "mollie-aspen"
+        ],
+        "pickup_keywords": [
+          "mollie aspen",
+          "mollie",
+          "molly"
+        ],
         "requires_authorization": true,
         "authorization_source": "front_desk"
       },
-      
       "scripts": {
         "claire_if_customer_asks": "I can set this up on your Mollie account if the front desk approves it. They're open twenty-four seven.",
         "do_not_volunteer": true
       },
-      
       "billing": {
         "type": "metered_plus_tip",
         "tip_percentage": 20
       },
-      
       "special_rules": {
         "requires_signature": "All vouchers need legible signature from front desk (open 24/7)"
       },
-      
       "notes": "101 W Main Street, Aspen. Must be arranged by front desk OR customer must ask. Metered + 20% tip. All vouchers need legible signature from front desk (open 24/7)."
     },
-    
     {
       "id": "1070",
       "name": "Stonebridge Inn",
       "type": "HOTEL_ACCOUNT",
       "trigger_type": "do_not_volunteer",
       "priority": 50,
-      
       "eligibility": {
-        "pickup_location_ids": ["stonebridge-inn"],
-        "pickup_keywords": ["stonebridge inn"],
+        "pickup_location_ids": [
+          "stonebridge-inn"
+        ],
+        "pickup_keywords": [
+          "stonebridge inn"
+        ],
         "requires_authorization": true,
         "authorization_source": "front_desk"
       },
-      
       "scripts": {
         "claire_if_customer_asks": "I can put this on your Stonebridge Inn account if the front desk approved it.",
         "do_not_volunteer": true,
         "disambiguation": "Just to confirm — Stonebridge Inn or Stonebridge Condos?"
       },
-      
       "billing": {
         "type": "metered",
         "tip": "cash"
       },
-      
       "notes": "300 Carriage Way, Snowmass Village. Must be arranged by front desk OR customer must ask. Metered + cash tip. IMPORTANT: Confirm which property - Inn or Condos."
     },
-    
     {
       "id": "1060",
       "name": "Stonebridge Condos",
       "type": "HOTEL_ACCOUNT",
       "trigger_type": "do_not_volunteer",
       "priority": 50,
-      
       "eligibility": {
-        "pickup_location_ids": ["stonebridge-condos"],
-        "pickup_keywords": ["stonebridge condos", "stonebridge condominiums"],
+        "pickup_location_ids": [
+          "stonebridge-condos"
+        ],
+        "pickup_keywords": [
+          "stonebridge condos",
+          "stonebridge condominiums"
+        ],
         "requires_authorization": true,
         "authorization_source": "front_desk"
       },
-      
       "scripts": {
         "claire_if_customer_asks": "I can put this on your Stonebridge Condos account if the front desk arranged it.",
         "do_not_volunteer": true,
         "disambiguation": "Just to confirm — Stonebridge Condos or Stonebridge Inn?"
       },
-      
       "billing": {
         "type": "metered",
         "tip": "cash"
       },
-      
       "notes": "Snowmass Village (different from Stonebridge Inn). Must be arranged by front desk. Metered + cash tip."
     },
-    
     {
       "id": "1090",
       "name": "Timbers Club",
       "type": "HOTEL_ACCOUNT",
       "trigger_type": "do_not_volunteer",
       "priority": 50,
-      
       "eligibility": {
-        "pickup_location_ids": ["timbers-club-snowmass"],
-        "pickup_keywords": ["timbers club"],
+        "pickup_location_ids": [
+          "timbers-club-snowmass"
+        ],
+        "pickup_keywords": [
+          "timbers club"
+        ],
         "requires_authorization": true,
         "authorization_source": "front_desk"
       },
-      
       "scripts": {
         "claire_if_customer_asks": "I can set this up on your Timbers Club account. Are you a guest or staff?",
         "do_not_volunteer": true
       },
-      
       "billing": {
         "type": "metered_plus_tip",
         "tip_percentage": 20
       },
-      
       "notes": "Snowmass Village. DO NOT VOLUNTEER. Metered + 20% tip. Usually ASE transfers, staff transport."
     },
-    
     {
       "id": "1270",
       "name": "Whitman Fine Properties",
       "type": "PROPERTY_ACCOUNT",
       "trigger_type": "do_not_volunteer",
       "priority": 50,
-      
       "eligibility": {
-        "pickup_location_ids": ["whitman-properties"],
-        "pickup_keywords": ["whitman", "whitman properties"],
+        "pickup_location_ids": [
+          "whitman-properties"
+        ],
+        "pickup_keywords": [
+          "whitman",
+          "whitman properties"
+        ],
         "requires_authorization": true,
         "authorization_source": "property_manager"
       },
-      
       "scripts": {
         "claire_if_customer_asks": "I can put this on your Whitman Fine Properties account if they arranged it.",
         "do_not_volunteer": true
       },
-      
       "billing": {
         "type": "metered",
         "tip": "cash_for_guests"
       },
-      
       "special_rules": {
         "when_wendy_or_ryan": "When Wendy or Ryan is passenger, they can add any tip on account"
       },
-      
       "notes": "Various rental properties managed by Whitman. Metered + cash tip (for guests). Special: When Wendy or Ryan is passenger, they can add any tip on account."
     },
-    
     {
       "id": "1030",
       "name": "Limelight Hotel Aspen",
       "type": "HOTEL_ACCOUNT",
       "trigger_type": "location_optional",
       "priority": 70,
-      
       "eligibility": {
-        "pickup_location_ids": ["limelight-hotel-aspen"],
-        "pickup_keywords": ["limelight aspen", "limelight hotel"],
+        "pickup_location_ids": [
+          "limelight-hotel-aspen"
+        ],
+        "pickup_keywords": [
+          "limelight aspen",
+          "limelight hotel"
+        ],
         "requires_authorization": true,
         "authorization_source": "front_desk"
       },
-      
       "scripts": {
         "claire_should_ask": "Is the front desk putting this on your hotel account?",
         "claire_if_yes": "I'll put this on your Limelight account.",
         "claire_if_no": "No problem, we'll bill it normally."
       },
-      
       "billing": {
         "type": "metered_plus_tip",
         "tip_percentage": 20
       },
-      
       "notes": "355 S Monarch Street, Aspen. ASK if pickup from hotel. Must be arranged by front desk OR approved upon arrival. Metered + 20% tip. Usually ASE transfers, moving between Limelight locations, skier transport."
     },
-    
     {
       "id": "1100",
       "name": "Limelight Hotel Snowmass",
       "type": "HOTEL_ACCOUNT",
       "trigger_type": "location_optional",
       "priority": 70,
-      
       "eligibility": {
-        "pickup_location_ids": ["limelight-hotel-snowmass"],
-        "pickup_keywords": ["limelight snowmass", "snowmass limelight"],
+        "pickup_location_ids": [
+          "limelight-hotel-snowmass"
+        ],
+        "pickup_keywords": [
+          "limelight snowmass",
+          "snowmass limelight"
+        ],
         "requires_authorization": true,
         "authorization_source": "front_desk"
       },
-      
       "scripts": {
         "claire_should_ask": "Is the front desk putting this on your hotel account?",
         "claire_if_yes": "I'll put this on your Limelight account.",
         "claire_if_no": "No problem, we'll bill it normally."
       },
-      
       "billing": {
         "type": "metered_plus_tip",
         "tip_percentage": 20
       },
-      
       "notes": "65 Wood Road, Snowmass Village. ASK if pickup from hotel. Must be arranged by front desk OR approved upon arrival. Metered + 20% tip. Usually ASE transfers, moving between Limelight locations."
     },
-    
     {
       "id": "1010",
       "name": "Aspen Meadows",
       "type": "HOTEL_ACCOUNT",
       "trigger_type": "location_optional",
       "priority": 70,
-      
       "eligibility": {
-        "pickup_location_ids": ["aspen-meadows-resort"],
-        "pickup_keywords": ["aspen meadows", "meadows resort"],
+        "pickup_location_ids": [
+          "aspen-meadows-resort"
+        ],
+        "pickup_keywords": [
+          "aspen meadows",
+          "meadows resort"
+        ],
         "requires_authorization": true,
         "authorization_source": "front_desk"
       },
-      
       "scripts": {
         "claire_should_ask": "Are you putting this on your hotel account or paying directly?",
         "claire_if_hotel": "I'll put this on your Aspen Meadows account.",
         "claire_if_direct": "No problem, we'll bill it directly."
       },
-      
       "billing": {
         "type": "metered_plus_tip",
         "tip_percentage": 20
       },
-      
       "notes": "845 Meadows Road, Aspen. ASK if pickup from hotel. Use if entitled. Metered + 20% tip. Usually ASE transfers and Aspen crosstown. NOT eligible for Highlands HOA program."
     },
-    
     {
       "id": "1080",
       "name": "Laurelwood",
       "type": "FLAT_RATE_ACCOUNT",
       "trigger_type": "location_optional",
       "priority": 70,
-      
       "eligibility": {
-        "pickup_location_ids": ["laurelwood-condos"],
-        "pickup_keywords": ["laurelwood"],
-        "destination_location_ids": ["ase-airport"],
+        "pickup_location_ids": [
+          "laurelwood-condos"
+        ],
+        "pickup_keywords": [
+          "laurelwood"
+        ],
+        "destination_location_ids": [
+          "ase-airport"
+        ],
         "ase_transfers_only": true
       },
-      
       "scripts": {
         "claire_confirmation": "Laurelwood to the airport is a flat sixty dollars. Sound good?"
       },
-      
       "billing": {
         "type": "flat_rate",
         "amount": 60,
@@ -593,33 +695,33 @@
           "tip": 10
         }
       },
-      
       "voucher": {
         "type": "LAURELWOOD_VOUCHER",
         "notes": "Not HMT voucher. If no voucher, get name and room number - office will obtain voucher"
       },
-      
       "notes": "Snowmass Village. FLAT $60 ($50 + $10 tip) for ASE transfers ONLY. Uses LAURELWOOD VOUCHER (not HMT voucher). If no voucher, get name and room number - office will obtain voucher."
     },
-    
     {
       "id": "2250",
       "name": "Timberline",
       "type": "FLAT_RATE_ACCOUNT",
       "trigger_type": "location_optional",
       "priority": 70,
-      
       "eligibility": {
-        "pickup_location_ids": ["timberline-condos"],
-        "pickup_keywords": ["timberline"],
-        "destination_location_ids": ["ase-airport"],
+        "pickup_location_ids": [
+          "timberline-condos"
+        ],
+        "pickup_keywords": [
+          "timberline"
+        ],
+        "destination_location_ids": [
+          "ase-airport"
+        ],
         "ase_transfers_only": true
       },
-      
       "scripts": {
         "claire_confirmation": "Timberline to the airport is a flat sixty dollars."
       },
-      
       "billing": {
         "type": "flat_rate",
         "amount": 60,
@@ -628,60 +730,125 @@
           "tip": 10
         }
       },
-      
       "notes": "FLAT $60 ($50 + $10 tip). Similar to Laurelwood."
     },
-    
     {
       "id": "1240",
       "name": "Frias Properties",
       "type": "PROPERTY_ACCOUNT",
       "trigger_type": "customer_mention",
       "priority": 50,
-      
       "eligibility": {
         "requires_exact_address": true,
         "requires_unit_number": true,
-        "keywords": ["frias", "frias properties"]
+        "keywords": [
+          "frias",
+          "frias properties"
+        ]
       },
-      
       "scripts": {
         "claire_if_customer_mentions": "Got it — Frias property. I'll need your exact rental address.",
         "do_not_volunteer": true
       },
-      
       "billing": {
         "type": "metered",
         "tip": "cash"
       },
-      
       "notes": "Various rental properties. Metered + cash tip. Need exact address and/or unit number. Usually ASE pickup → Frias office for keys → rental unit."
     },
-    
     {
       "id": "1250",
       "name": "Aspen Signature Properties",
       "type": "PROPERTY_ACCOUNT",
       "trigger_type": "customer_mention",
       "priority": 50,
-      
       "eligibility": {
         "requires_exact_address": true,
         "requires_legible_passenger_name": true,
-        "keywords": ["signature properties", "aspen signature"]
+        "keywords": [
+          "signature properties",
+          "aspen signature"
+        ]
       },
-      
       "scripts": {
         "claire_if_customer_mentions": "Got it — Signature Properties rental. What's your exact address?",
         "do_not_volunteer": true
       },
-      
       "billing": {
         "type": "metered_plus_tip",
         "tip_percentage": 15
       },
-      
       "notes": "Various rental properties. Metered + 15% tip. Need exact address and legible passenger name. Rarely used."
+    },
+    {
+      "id": "1021",
+      "name": "Little Nell",
+      "type": "HOTEL_ACCOUNT",
+      "trigger_type": "location_optional",
+      "priority": 80,
+      "eligibility": {
+        "pickup_location_ids": [
+          "little-nell",
+          "element-47",
+          "ajax-tavern"
+        ],
+        "pickup_keywords": [
+          "little nell",
+          "the nell",
+          "ajax tavern",
+          "element 47",
+          "element forty seven",
+          "lil nell"
+        ],
+        "requires_authorization": true,
+        "authorization_source": "front_desk"
+      },
+      "scripts": {
+        "claire_should_ask": "Is the front desk putting this on your hotel account?",
+        "claire_if_yes": "I'll put this on your Little Nell account.",
+        "claire_if_no": "No problem, this will be a regular fare."
+      },
+      "billing": {
+        "type": "metered_plus_tip",
+        "tip_percentage": 20
+      },
+      "instructions_template": "LITTLE NELL ACCOUNT - Metered + 20% tip",
+      "skip_fare_quote": false,
+      "notes": "675 E Durant Ave, Aspen. Element 47 and Ajax Tavern are part of Little Nell property."
+    },
+    {
+      "id": "1022",
+      "name": "St. Regis Aspen",
+      "type": "HOTEL_ACCOUNT",
+      "trigger_type": "location_optional",
+      "priority": 80,
+      "eligibility": {
+        "pickup_location_ids": [
+          "st-regis-aspen"
+        ],
+        "pickup_keywords": [
+          "st regis",
+          "saint regis",
+          "st. regis",
+          "regis aspen",
+          "st regis aspen"
+        ],
+        "requires_authorization": true,
+        "authorization_source": "front_desk"
+      },
+      "scripts": {
+        "claire_should_ask": "Is the front desk putting this on your hotel account?",
+        "claire_if_yes": "I'll put this on your St. Regis account.",
+        "claire_if_no": "No problem, we'll bill it normally."
+      },
+      "billing": {
+        "type": "metered_plus_tip",
+        "tip_percentage": 20
+      },
+      "instructions_template": "ST REGIS ACCOUNT - Metered + 20% tip",
+      "skip_fare_quote": false,
+      "notes": "315 E Dean St, Aspen. Luxury 5-star property."
     }
-  ]
+  ],
+  "patched_by": "CLAIRE v4.2 consolidation"
 }
